@@ -1,4 +1,13 @@
 .env
-*.bak*
+config.js
+index.html.bak
+patch*.sh
+setup.sh
 .DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
 node_modules/
+npm-debug.log*

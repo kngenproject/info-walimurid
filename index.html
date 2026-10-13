@@ -690,21 +690,63 @@ async function getSchool() {
 async function saveSchool(data) { await setDoc(doc(db, 'settings', 'main'), data, { merge: true }); }
 async function getClasses() { const s = await getDocs(collection(db, 'kelas')); const o = {}; s.forEach(d => o[d.id] = d.data().wali || ''); return o; }
 async function getStudents() { const s = await getDocs(collection(db, 'siswa')); const o = []; s.forEach(d => o.push({ id: d.id, ...d.data() })); return o; }
-async function getNilai(sid, period) {
-  try { const s = await getDoc(doc(db, 'nilai', sid + '__' + period)); if (!s.exists()) return ['', '', '', '']; const d = s.data(); return [d.a0 || '', d.a1 || '', d.a2 || '', d.a3 || '']; }
-  catch (e) { return ['', '', '', '']; }
+function taKey(ta) { return String(ta || getTA()).replace(/[\/\s]/g, '-'); }
+function nilaiDocId(sid, period, ta) { return sid + '__' + taKey(ta) + '__' + period.replace(/\s/g, '_'); }
+function absenDocId(sid, period, ta) { return sid + '__' + taKey(ta) + '__' + period.replace(/\s/g, '_'); }
+
+async function getNilai(sid, period, ta) {
+  const t = ta || getTA();
+  try {
+    const s = await getDoc(doc(db, 'nilai', nilaiDocId(sid, period, t)));
+    if (!s.exists()) return ['', '', '', ''];
+    const d = s.data();
+    return [d.a0 || '', d.a1 || '', d.a2 || '', d.a3 || ''];
+  } catch (e) { return ['', '', '', '']; }
 }
-async function saveNilai(sid, period, arr) { await setDoc(doc(db, 'nilai', sid + '__' + period), { siswaId: sid, period, a0: arr[0], a1: arr[1], a2: arr[2], a3: arr[3], tahun_ajaran: getTA(), semester: getSem() }); }
-async function getAbsen(sid, period) {
-  try { const s = await getDoc(doc(db, 'absensi', sid + '__' + period)); if (!s.exists()) return { hadir: 0, sakit: 0, izin: 0, alfa: 0 }; return s.data(); }
-  catch (e) { return { hadir: 0, sakit: 0, izin: 0, alfa: 0 }; }
+async function saveNilai(sid, period, arr, ta) {
+  const t = ta || getTA();
+  await setDoc(doc(db, 'nilai', nilaiDocId(sid, period, t)), {
+    siswaId: sid, period, tahun_ajaran: t, semester: getSem(),
+    a0: arr[0], a1: arr[1], a2: arr[2], a3: arr[3]
+  });
 }
-async function saveAbsen(sid, period, data) { await setDoc(doc(db, 'absensi', sid + '__' + period), { siswaId: sid, period, ...data, tahun_ajaran: getTA(), semester: getSem() }); }
-async function getCatatan(sid, period) {
-  try { const s = await getDocs(collection(db, 'catatan')); const o = []; s.forEach(d => { const v = d.data(); if (v.siswaId === sid && (!period || v.period === period)) o.push({ id: d.id, ...v }); }); o.sort((a, b) => (b.ts?.seconds || 0) - (a.ts?.seconds || 0)); return o; }
-  catch (e) { return []; }
+async function getAbsen(sid, period, ta) {
+  const t = ta || getTA();
+  try {
+    const s = await getDoc(doc(db, 'absensi', absenDocId(sid, period, t)));
+    if (!s.exists()) return { hadir: 0, sakit: 0, izin: 0, alfa: 0 };
+    return s.data();
+  } catch (e) { return { hadir: 0, sakit: 0, izin: 0, alfa: 0 }; }
 }
-async function addCatatan(sid, period, text) { await addDoc(collection(db, 'catatan'), { siswaId: sid, period, text, tahun_ajaran: getTA(), semester: getSem(), ts: serverTimestamp() }); }
+async function saveAbsen(sid, period, data, ta) {
+  const t = ta || getTA();
+  await setDoc(doc(db, 'absensi', absenDocId(sid, period, t)), {
+    siswaId: sid, period, tahun_ajaran: t, semester: getSem(), ...data
+  });
+}
+async function getCatatan(sid, period, ta) {
+  const t = ta || getTA();
+  try {
+    const s = await getDocs(collection(db, 'catatan'));
+    const o = [];
+    s.forEach(d => {
+      const v = d.data();
+      if (v.siswaId !== sid) return;
+      if (period && v.period !== period) return;
+      if (v.tahun_ajaran !== t) return;
+      o.push({ id: d.id, ...v });
+    });
+    o.sort((a, b) => (b.ts?.seconds || 0) - (a.ts?.seconds || 0));
+    return o;
+  } catch (e) { return []; }
+}
+async function addCatatan(sid, period, text, ta) {
+  const t = ta || getTA();
+  await addDoc(collection(db, 'catatan'), {
+    siswaId: sid, period, text,
+    tahun_ajaran: t, semester: getSem(), ts: serverTimestamp()
+  });
+}
 
 async function seedIfEmpty() {
   const stu = await getStudents();
@@ -826,11 +868,11 @@ function parseRoute() { return (window.location.hash || '#/').slice(1).split('/'
 async function render() {
   const parts = parseRoute();
   try {
-    if (!parts.length) return await renderHome();
-    if (parts[0] === 'admin') return await renderAdmin(parts.slice(1));
-    if (parts[0] === 'kelas' && parts[1]) return await renderKelas(parts[1]);
-    if (parts[0] === 'siswa' && parts[1]) return await renderSiswa(parts[1], parts[2] ? decodeURIComponent(parts[2]) : PERIODS[0]);
-    return await renderHome();
+    if (!parts.length) await renderHome();
+    else if (parts[0] === 'admin') await renderAdmin(parts.slice(1));
+    else if (parts[0] === 'kelas' && parts[1]) await renderKelas(parts[1]);
+    else if (parts[0] === 'siswa' && parts[1]) await renderSiswa(parts[1], parts[2] ? decodeURIComponent(parts[2]) : PERIODS[0]);
+    else await renderHome();
   } catch (e) {
     console.error(e);
     document.getElementById('app').innerHTML = '<div class="alert aer">Error: ' + esc(e.message) + '</div>';
@@ -909,7 +951,39 @@ async function renderHome() {
         <div class="ttl">Belum ada data siswa</div>
         <div class="dsc">Minta guru/admin menambahkan data terlebih dahulu</div>
       </div>`;
+  } else {
+    renderClassList();
   }
+}
+
+function renderClassList() {
+  const box = document.getElementById('gResultBox');
+  if (!box) return;
+  let list = _allStudents.slice();
+  if (_activeKelas !== 'all') list = list.filter(s => s.kelas === _activeKelas);
+  list.sort((a, b) => a.nama.localeCompare(b.nama));
+  if (!list.length) {
+    box.innerHTML = '<div class="gEmpty"><div class="ico">🔍</div><div class="ttl">Tidak ada siswa</div><div class="dsc">Coba pilih kelas lain</div></div>';
+    return;
+  }
+  const title = _activeKelas === 'all' ? 'Semua Siswa' : ('Kelas ' + _activeKelas);
+  box.innerHTML = '<div class="gResults"><div class="hd"><div class="cnt"><b>' + list.length + '</b> siswa · ' + title + '</div></div>' +
+    list.map((s, i) => {
+      const ini = s.nama.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+      return '<div class="gRow" onclick="go(\'/siswa/' + s.id + '\')">' +
+        '<div class="rAv av' + (i % 6) + '">' + ini + '</div>' +
+        '<div class="rInfo"><div class="rN">' + esc(s.nama) + '</div>' +
+        '<div class="rM">Kelas ' + esc(s.kelas) + ' · ' + esc(s.access_code || '') + '</div></div>' +
+        '<div class="rS sEm" id="rs' + i + '">—</div></div>';
+    }).join('') + '</div>';
+  list.forEach(async (s, i) => {
+    const n = hitungNilai(await getNilai(s.id, PERIODS[0]));
+    const el = document.getElementById('rs' + i);
+    if (!el) return;
+    const [, kc] = kategori(n);
+    el.textContent = n !== null ? n : '—';
+    el.className = 'rS s' + kc;
+  });
 }
 
 // Google-style search
@@ -925,7 +999,7 @@ window.gInput = function (q) {
     box.classList.remove('show');
     box.innerHTML = '';
     gSugList = [];
-    document.getElementById('gResultBox').innerHTML = '';
+    renderClassList();
     return;
   }
   gTimer = setTimeout(() => {
@@ -1024,8 +1098,9 @@ window.gChip = function (k) {
     c.classList.toggle('act', c.dataset.kelas === k);
   });
   const inp = document.getElementById('gIn');
-  if (inp && inp.value.trim()) gInput(inp.value);
   if (inp) inp.placeholder = k === 'all' ? 'Cari nama anak...' : 'Cari di Kelas ' + k + '...';
+  if (inp && inp.value.trim()) gInput(inp.value);
+  else renderClassList();
 };
 
 document.addEventListener('keydown', e => {
@@ -1263,7 +1338,7 @@ async function renderAdmin(sub) {
   }
   const years = await getAvailableYears();
   const yearOpts = years.map(y => '<option value="' + y + '" ' + (y === getTA() ? 'selected' : '') + '>' + y + '</option>').join('');
-  const isArchived = archivedTA && archivedTA !== getTA();
+  const isArchived = !!archivedTA;
   const yearBar = '<div class="yearBar"><label>Tahun Ajaran</label><select id="selTA" onchange="switchTA(this.value)">' + yearOpts + '</select><label>Semester</label><select id="selSem" onchange="switchSem(this.value)"><option ' + (getSem() === 'Ganjil' ? 'selected' : '') + '>Ganjil</option><option ' + (getSem() === 'Genap' ? 'selected' : '') + '>Genap</option></select>' + (isArchived ? '<span class="badgeArch">📦 Melihat Arsip</span>' : '') + '</div>';
   app.innerHTML = '<div class="shead"><div><h2>Panel Guru</h2><p class="sub" style="margin-bottom:0">Kelola nilai, siswa, dan pengaturan &middot; ' + getTALabel() + '</p></div></div><div class="card">' + yearBar + tabs + content + '</div>';
 }
@@ -1343,8 +1418,13 @@ window.editSiswa = async function (ev, sid) {
 window.hapusSiswa = async function (sid, nama) {
   if (!confirm('Hapus siswa "' + nama + '"?')) return;
   await deleteDoc(doc(db, 'siswa', sid));
-  for (const p of PERIODS) { await deleteDoc(doc(db, 'nilai', sid + '__' + p)); await deleteDoc(doc(db, 'absensi', sid + '__' + p)); }
-  const notes = await getCatatan(sid, null);
+  for (const col of ['nilai', 'absensi']) {
+    const snap = await getDocs(collection(db, col));
+    const dels = [];
+    snap.forEach(d => { if (d.id.startsWith(sid + '__')) dels.push(deleteDoc(d.ref)); });
+    await Promise.all(dels);
+  }
+  const notes = await getCatatan(sid, null, null);
   for (const n of notes) await deleteDoc(doc(db, 'catatan', n.id));
   toast('🗑️ Dihapus', 'ok');
   render();
@@ -1370,12 +1450,11 @@ window.resetData = async function () {
   const verif = prompt('Ketik "HAPUS" (huruf besar) untuk konfirmasi:');
   if (verif !== 'HAPUS') { toast('Dibatalkan', 'inf'); return; }
   await logAction('reset_data', 'Semua data siswa dihapus');
-  const students = await getStudents();
-  for (const s of students) {
-    await deleteDoc(doc(db, 'siswa', s.id));
-    for (const p of PERIODS) { await deleteDoc(doc(db, 'nilai', s.id + '__' + p)); await deleteDoc(doc(db, 'absensi', s.id + '__' + p)); }
-    const notes = await getCatatan(s.id, null);
-    for (const n of notes) await deleteDoc(doc(db, 'catatan', n.id));
+  for (const col of ['siswa', 'nilai', 'absensi', 'catatan']) {
+    const snap = await getDocs(collection(db, col));
+    const dels = [];
+    snap.forEach(d => dels.push(deleteDoc(d.ref)));
+    await Promise.all(dels);
   }
   toast('🗑️ Semua data dihapus', 'ok');
   render();
@@ -1384,7 +1463,7 @@ window.backupData = async function () {
   toast('Menyiapkan...', 'inf');
   try {
     const data = { version: 1, ts: new Date().toISOString(), collections: {} };
-    for (const c of ['settings', 'kelas', 'siswa', 'nilai', 'absensi', 'catatan']) {
+    for (const c of ['settings', 'kelas', 'siswa', 'nilai', 'absensi', 'catatan', 'audit']) {
       const snap = await getDocs(collection(db, c));
       data.collections[c] = {};
       snap.forEach(d => data.collections[c][d.id] = d.data());
@@ -1442,7 +1521,7 @@ window.importCSVSiswa = function () {
         const ref = doc(db, 'siswa', kode.toUpperCase());
         const ex = await getDoc(ref);
         if (ex.exists()) { skip++; continue; }
-        await setDoc(ref, { access_code: kode.toUpperCase(), nama, kelas: kelas.toUpperCase() });
+        await setDoc(ref, { access_code: kode.toUpperCase(), nama, kelas: kelas.toUpperCase(), tahun_ajaran: getTA() });
         ok++;
       }
       toast('✅ ' + ok + ' ditambah, ' + skip + ' dilewati', 'ok');
@@ -1489,8 +1568,9 @@ window.loadAudit = async function () {
 
 // ---------- SWITCH TAHUN ----------
 window.switchTA = function (val) {
-  archivedTA = (val !== getTA()) ? val : '';
-  if (archivedTA) toast('📦 Mode arsip: ' + val, 'inf');
+  const cur = school.tahun_ajaran || '2025/2026';
+  if (val === cur) { currentTA = ''; archivedTA = ''; }
+  else { currentTA = val; archivedTA = val; toast('📦 Mode arsip: ' + val, 'inf'); }
   render();
 };
 window.switchSem = function (val) {
