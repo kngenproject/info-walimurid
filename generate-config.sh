@@ -1,7 +1,9 @@
-#!/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
+# Load .env dan generate config.js
 set -a
 source .env
 set +a
+
 cat > config.js << JS
 window.FIREBASE_CONFIG = {
   apiKey: "${FIREBASE_API_KEY}",
@@ -12,4 +14,5 @@ window.FIREBASE_CONFIG = {
   appId: "${FIREBASE_APP_ID}"
 };
 JS
+
 echo "✅ config.js dibuat dari .env"

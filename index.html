@@ -3,763 +3,310 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MIT Al Falah · Info Walimurid</title>
-<meta property="og:title" content="MIT Al Falah · Info Walimurid">
-<meta property="og:description" content="Pantau perkembangan belajar dan nilai siswa secara langsung.">
-<meta property="og:type" content="website">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="description" content="MIT Al Falah — Pantau perkembangan belajar anak Anda">
-<meta name="theme-color" content="#059669">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23059669'/%3E%3Ctext x='16' y='24' font-size='20' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'%3EM%3C/text%3E%3C/svg%3E">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Info Walimurid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<style>:root{
-  --bg:#fafafa;--sf:#ffffff;--sf2:#f4f4f5;--tx:#18181b;--tx2:#52525b;--mt:#71717a;
-  --bd:#e4e4e7;--bd2:#d4d4d8;--pr:#059669;--pr6:#047857;--p50:#ecfdf5;
-  --ok:#059669;--okb:#ecfdf5;--wn:#d97706;--wnb:#fffbeb;
-  --er:#dc2626;--erb:#fef2f2;--inf:#2563eb;--infb:#eff6ff;
-  --sh:0 4px 20px -2px rgba(24,24,27,.05);
-  --shl:0 12px 32px -4px rgba(5,150,105,.15);
-  --r:18px;--rsm:12px;--rxs:8px;
-}
-
+<style>
+:root{--bg:#f8fafc;--surface:#fff;--surface2:#f1f5f9;--text:#0f172a;--text2:#475569;--muted:#64748b;
+--border:#e2e8f0;--primary:#1e40af;--primary6:#1d4ed8;--p50:#eff6ff;--ok:#059669;--okbg:#ecfdf5;
+--warn:#b45309;--warnbg:#fffbeb;--err:#dc2626;--errbg:#fef2f2;--sh:0 1px 3px rgba(15,23,42,.08);--shl:0 10px 15px -3px rgba(15,23,42,.08)}
+[data-theme="dark"]{--bg:#0b1220;--surface:#131c2e;--surface2:#1a2438;--text:#e2e8f0;--text2:#cbd5e1;
+--muted:#94a3b8;--border:#26324a;--primary:#60a5fa;--primary6:#3b82f6;--p50:#1e293b;--okbg:#064e3b;--warnbg:#78350f;--errbg:#7f1d1d}
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Plus Jakarta Sans','Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);
-color:var(--tx);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;
-min-height:100vh;letter-spacing:-.011em;overflow-x:hidden}
-.header{background:rgba(255,255,255,.8);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:50;transition:all .3s}
-
-.hinner{max-width:1120px;margin:0 auto;padding:.85rem 1.5rem;display:flex;
-justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:.75rem;text-decoration:none;color:inherit;cursor:pointer;transition:transform .2s}
-.brand:hover{transform:scale(1.02)}
-.blogo{width:42px;height:42px;background:linear-gradient(135deg,var(--pr),#10b981);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;color:#fff;flex-shrink:0;font-weight:800;letter-spacing:-.03em;overflow:hidden;box-shadow:0 4px 12px rgba(5,150,105,.3)}
-.brand h1{font-size:1rem;font-weight:800;line-height:1.2;letter-spacing:-.02em}
-.brand p{font-size:.75rem;color:var(--mt);font-weight:500}
-.nav{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
-.nav a{color:var(--tx2);text-decoration:none;padding:.5rem .95rem;border-radius:99px;
-font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s ease}
-.nav a:hover{background:var(--sf2);color:var(--tx);transform:translateY(-1px)}
-.nav a.act{background:var(--p50);color:var(--pr);font-weight:700;box-shadow:0 2px 8px rgba(5,150,105,.15)}
-.tbtn{width:40px;height:40px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);
-border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;
-justify-content:center;transition:all .25s ease;box-shadow:var(--sh)}
-.tbtn:hover{background:var(--sf2);border-color:var(--bd2);transform:rotate(15deg) scale(1.05)}
-.container{max-width:1120px;margin:0 auto;padding:2rem 1.5rem 5rem}
-.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);
-padding:1.75rem;margin-bottom:1.25rem;box-shadow:var(--sh);transition:all .3s ease;animation:fadeInUp .4s ease both}
-.card:hover{box-shadow:var(--shl)}
-h2{font-size:1.75rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.35rem;line-height:1.2}
-h3{font-size:1.05rem;font-weight:700;letter-spacing:-.02em;margin-bottom:1rem;
-display:flex;align-items:center;gap:.5rem}
-.sub{color:var(--mt);font-size:.9rem;margin-bottom:1.5rem}
-.shead{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;
-flex-wrap:wrap;margin-bottom:1.5rem}
-.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.7rem 1.25rem;
-border-radius:99px;font-size:.875rem;font-weight:700;text-decoration:none;
-border:1px solid transparent;cursor:pointer;font-family:inherit;transition:all .25s cubic-bezier(.4,0,.2,1);
-white-space:nowrap;line-height:1;letter-spacing:-.01em}
-.bp{background:linear-gradient(135deg,var(--pr),#10b981);color:#fff;box-shadow:0 4px 14px rgba(5,150,105,.3)}
-.bp:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 6px 20px rgba(5,150,105,.4)}
-.bo{background:var(--sf);color:var(--tx);border-color:var(--bd);box-shadow:var(--sh)}
-.bo:hover{border-color:var(--bd2);background:var(--sf2);transform:translateY(-1px)}
-.bs{background:#059669;color:#fff}
-.bs:hover{background:#047857;transform:translateY(-2px)}
-.bd{background:#dc2626;color:#fff}
-.bd:hover{background:#b91c1c;transform:translateY(-2px)}
-.b-sm{padding:.45rem .95rem;font-size:.8rem}
-input,select,textarea{width:100%;padding:.75rem 1rem;border:1px solid var(--bd);
-border-radius:var(--rsm);font-size:.9rem;font-family:inherit;background:var(--sf);
-color:var(--tx);transition:all .2s;letter-spacing:-.01em}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pr);
-box-shadow:0 0 0 4px rgba(5,150,105,.15)}
-input.err,select.err,textarea.err{border-color:var(--er);box-shadow:0 0 0 4px rgba(220,38,38,.15)}
-label{display:block;margin-bottom:.45rem;font-size:.8rem;font-weight:700;
-color:var(--tx2);letter-spacing:-.005em}
-.fg{margin-bottom:1.15rem}
-.search{position:relative;margin-bottom:1.25rem}
-.search input{padding-left:2.5rem}
-.search::before{content:'🔍';position:absolute;left:.9rem;top:50%;transform:translateY(-50%);
-font-size:.85rem;opacity:.5;pointer-events:none}
-.alert{padding:.85rem 1.1rem;border-radius:var(--rsm);margin-bottom:1.15rem;
-font-size:.875rem;font-weight:600;animation:fadeIn .3s ease}
-.aok{background:var(--okb);color:var(--ok);border:1px solid rgba(5,150,105,.2)}
-.aer{background:var(--erb);color:var(--er);border:1px solid rgba(220,38,38,.2)}
-.ainf{background:var(--infb);color:var(--inf);border:1px solid rgba(37,99,235,.2)}
-.badge{display:inline-flex;align-items:center;justify-content:center;
-padding:.35rem .75rem;border-radius:99px;font-size:.75rem;font-weight:800;
-min-width:40px;letter-spacing:.01em;transition:transform .2s}
-.badge:hover{transform:scale(1.08)}
-.bL{background:var(--okb);color:var(--ok)}
-.bCL{background:var(--wnb);color:var(--wn)}
-.bKL{background:var(--erb);color:var(--er)}
-.bE{background:var(--sf2);color:var(--mt)}
-.grid{display:grid;gap:1.25rem}
-.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
-.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-.g4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-.listrow{display:flex;align-items:center;gap:1rem;padding:1.1rem 1.25rem;
-border-radius:var(--rsm);color:var(--tx);cursor:pointer;transition:all .25s ease;
-border:1px solid transparent}
-.listrow:hover{background:var(--sf2);border-color:var(--bd);transform:translateX(4px)}
-.lbadge{width:52px;height:52px;background:var(--p50);color:var(--pr);border-radius:var(--rsm);
-display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;
-flex-shrink:0;letter-spacing:-.02em}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+.header{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:var(--sh)}
+.hinner{max-width:1200px;margin:0 auto;padding:.85rem 1.25rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.75rem;text-decoration:none;color:inherit;cursor:pointer}
+.blogo{width:42px;height:42px;background:linear-gradient(135deg,var(--primary),#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;color:#fff;flex-shrink:0}
+.brand h1{font-size:.95rem;font-weight:700;line-height:1.2}
+.brand p{font-size:.72rem;color:var(--muted)}
+.nav{display:flex;gap:.35rem;align-items:center;flex-wrap:wrap}
+.nav a{color:var(--text2);text-decoration:none;padding:.45rem .8rem;border-radius:8px;font-size:.85rem;font-weight:500;cursor:pointer;transition:all .15s}
+.nav a:hover{background:var(--surface2);color:var(--primary)}
+.nav a.act{background:var(--p50);color:var(--primary);font-weight:600}
+.tbtn{width:38px;height:38px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:8px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.tbtn:hover{background:var(--surface2)}
+.container{max-width:1200px;margin:0 auto;padding:1.5rem 1.25rem 4rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;box-shadow:var(--sh);margin-bottom:1.25rem}
+h2{font-size:1.35rem;font-weight:700;letter-spacing:-.4px;margin-bottom:.25rem}
+h3{font-size:1rem;font-weight:600;margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem}
+.sub{color:var(--muted);font-size:.875rem;margin-bottom:1.25rem}
+.shead{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.6rem 1.1rem;border-radius:9px;font-size:.875rem;font-weight:600;text-decoration:none;border:1px solid transparent;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap;line-height:1}
+.bp{background:var(--primary);color:#fff}
+.bp:hover{background:var(--primary6)}
+.bo{background:var(--surface);color:var(--text);border-color:var(--border)}
+.bo:hover{border-color:var(--primary);color:var(--primary)}
+.bs{background:var(--ok);color:#fff}
+.bd{background:var(--err);color:#fff}
+.bd:hover{filter:brightness(1.1)}
+.b-sm{padding:.4rem .75rem;font-size:.8rem}
+input,select,textarea{width:100%;padding:.6rem .8rem;border:1px solid var(--border);border-radius:8px;font-size:.875rem;font-family:inherit;background:var(--surface);color:var(--text)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(30,64,175,.1)}
+label{display:block;margin-bottom:.4rem;font-size:.8rem;font-weight:600;color:var(--text2)}
+.fg{margin-bottom:1rem}
+.search{position:relative;margin-bottom:1rem}
+.search input{padding-left:2.4rem}
+.search::before{content:'🔍';position:absolute;left:.85rem;top:50%;transform:translateY(-50%);font-size:.85rem;opacity:.5}
+.alert{padding:.75rem 1rem;border-radius:8px;margin-bottom:1rem;font-size:.85rem;border-left:3px solid;font-weight:500}
+.alert-ok{background:var(--okbg);color:var(--ok);border-color:var(--ok)}
+.alert-err{background:var(--errbg);color:var(--err);border-color:var(--err)}
+.alert-info{background:var(--p50);color:var(--primary);border-color:var(--primary)}
+.badge{display:inline-flex;align-items:center;justify-content:center;padding:.28rem .7rem;border-radius:6px;font-size:.75rem;font-weight:700;min-width:38px}
+.bL{background:var(--okbg);color:var(--ok)}.bCL{background:var(--warnbg);color:var(--warn)}.bKL{background:var(--errbg);color:var(--err)}
+.bE{background:var(--surface2);color:var(--muted)}
+.grid{display:grid;gap:1rem}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.listrow{display:flex;align-items:center;gap:1rem;padding:1rem 1.15rem;border-radius:10px;text-decoration:none;color:var(--text);border:1px solid transparent;cursor:pointer}
+.listrow:hover{background:var(--p50);border-color:var(--border)}
+.lbadge{width:52px;height:52px;background:linear-gradient(135deg,var(--primary),#3b82f6);color:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;flex-shrink:0}
 .li{flex:1;min-width:0}
-.lt{font-size:1rem;font-weight:700;letter-spacing:-.02em}
-.lm{font-size:.82rem;color:var(--mt);margin-top:.2rem}
-.la{color:var(--pr);font-size:1.2rem;font-weight:800;transition:transform .2s}
-.listrow:hover .la{transform:translateX(6px)}
-.srow{display:flex;align-items:center;gap:.9rem;padding:1rem 1.2rem;background:var(--sf);
-border:1px solid var(--bd);border-radius:var(--rsm);cursor:pointer;margin-bottom:.65rem;
-transition:all .25s ease;box-shadow:var(--sh)}
-.srow:hover{border-color:var(--pr);background:var(--p50);transform:translateY(-2px) scale(1.01);box-shadow:var(--shl)}
-
-.av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;
-justify-content:center;font-weight:800;color:#fff;font-size:.9rem;flex-shrink:0;
-letter-spacing:-.02em;box-shadow:0 3px 10px rgba(0,0,0,.15)}
-.av0{background:linear-gradient(135deg,#3b82f6,#2563eb)}
-.av1{background:linear-gradient(135deg,#10b981,#059669)}
-.av2{background:linear-gradient(135deg,#f59e0b,#d97706)}
-.av3{background:linear-gradient(135deg,#8b5cf6,#7c3aed)}
-.av4{background:linear-gradient(135deg,#ec4899,#db2777)}
-.av5{background:linear-gradient(135deg,#06b6d4,#0891b2)}
+.lt{font-size:1rem;font-weight:700}
+.lm{font-size:.82rem;color:var(--muted);margin-top:.15rem}
+.la{color:var(--primary);font-size:1.1rem;font-weight:700}
+.srow{display:flex;align-items:center;gap:.9rem;padding:.85rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);cursor:pointer;margin-bottom:.4rem}
+.srow:hover{border-color:var(--primary);background:var(--p50)}
+.av{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.8rem;flex-shrink:0}
+.av0{background:linear-gradient(135deg,#3b82f6,#2563eb)}.av1{background:linear-gradient(135deg,#10b981,#059669)}
+.av2{background:linear-gradient(135deg,#f59e0b,#d97706)}.av3{background:linear-gradient(135deg,#8b5cf6,#7c3aed)}
+.av4{background:linear-gradient(135deg,#ec4899,#db2777)}.av5{background:linear-gradient(135deg,#06b6d4,#0891b2)}
+.avT{color:#fff}
 .sinfo{flex:1;min-width:0}
-.sn{font-weight:700;font-size:.95rem;white-space:nowrap;overflow:hidden;
-text-overflow:ellipsis;letter-spacing:-.015em}
-.sm{font-size:.8rem;color:var(--mt);margin-top:.15rem}
-.ssc{font-size:1.6rem;font-weight:800;line-height:1;letter-spacing:-.03em}
-.tw{overflow-x:auto;border-radius:var(--rsm);border:1px solid var(--bd)}
-table{width:100%;border-collapse:collapse;font-size:.875rem}
-th,td{padding:.9rem 1.1rem;text-align:left;border-bottom:1px solid var(--bd)}
-th{background:var(--sf2);font-weight:700;font-size:.75rem;text-transform:uppercase;
-letter-spacing:.05em;color:var(--tx2);white-space:nowrap}
+.sn{font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sm{font-size:.78rem;color:var(--muted);margin-top:.1rem}
+.ssc{font-size:1.35rem;font-weight:800;line-height:1}
+.tw{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th,td{padding:.7rem .85rem;text-align:left;border-bottom:1px solid var(--border)}
+th{background:var(--surface2);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;color:var(--text2);white-space:nowrap}
 tbody tr:last-child td{border-bottom:none}
-tbody tr{transition:background .2s}
-tbody tr:hover{background:var(--sf2)}
+tbody tr:hover{background:var(--surface2)}
 .tc{text-align:center}
-.asp{padding:1.35rem 1rem;border:1px solid var(--bd);border-radius:var(--rsm);
-background:var(--sf);text-align:center;position:relative;transition:all .25s ease;box-shadow:var(--sh)}
-.asp:hover{border-color:var(--pr);transform:translateY(-4px);box-shadow:var(--shl)}
-.asp[data-v="L"]{border-color:rgba(5,150,105,.4);background:linear-gradient(180deg,var(--sf),var(--okb))}
-.asp[data-v="CL"]{border-color:rgba(217,119,6,.4);background:linear-gradient(180deg,var(--sf),var(--wnb))}
-.asp[data-v="KL"]{border-color:rgba(220,38,38,.4);background:linear-gradient(180deg,var(--sf),var(--erb))}
-.asp .al{font-size:.75rem;color:var(--mt);text-transform:uppercase;
-letter-spacing:.06em;font-weight:800;margin-bottom:.75rem}
-.asp .ad{font-size:.8rem;color:var(--tx2);margin-top:.5rem;font-weight:600}
-.sbig{font-size:3.5rem;font-weight:800;line-height:1;letter-spacing:-.05em;animation:pop .4s cubic-bezier(.175,.885,.32,1.275)}
-@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
-.sOk{color:var(--ok)}.sCu{color:var(--wn)}.sPe{color:var(--er)}.sEm{color:var(--mt)}
-.prog{height:8px;background:var(--sf2);border-radius:99px;overflow:hidden;margin-top:1rem}
-.pbar{height:100%;background:linear-gradient(90deg,var(--pr),#34d399);
-border-radius:99px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
-.tabs{display:flex;gap:.35rem;border-bottom:1px solid var(--bd);margin-bottom:1.5rem;
-overflow-x:auto;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{padding:.75rem 1.2rem;border:none;background:none;cursor:pointer;font-size:.875rem;
-font-weight:600;color:var(--mt);border-bottom:3px solid transparent;margin-bottom:-1px;
-font-family:inherit;white-space:nowrap;transition:all .2s;letter-spacing:-.01em}
-.tab.act{color:var(--pr);border-bottom-color:var(--pr);font-weight:700}
-.tab:hover:not(.act){color:var(--tx)}
-.tc-c{display:none}
-.tc-c.act{display:block;animation:fadeInUp .35s ease}
-.tl{position:relative;padding-left:1.75rem}
-.tl::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:var(--bd)}
-.tli{position:relative;padding-bottom:1.25rem}
-.tli::before{content:'';position:absolute;left:-1.75rem;top:4px;width:14px;height:14px;
-border-radius:50%;background:var(--sf);border:3px solid var(--pr);box-shadow:0 0 0 3px var(--p50)}
-.tli .dt{font-size:.72rem;color:var(--mt);font-weight:700;margin-bottom:.3rem;
-text-transform:uppercase;letter-spacing:.04em}
-.tli .tx{font-size:.9rem;color:var(--tx)}
-.stat{display:flex;align-items:center;gap:1rem;padding:1.25rem;background:var(--sf);
-border:1px solid var(--bd);border-radius:var(--r);box-shadow:var(--sh)}
-.si{width:52px;height:52px;border-radius:var(--rsm);display:flex;align-items:center;
-justify-content:center;font-size:1.4rem;flex-shrink:0}
-.siB{background:var(--p50);color:var(--pr)}.siG{background:var(--okb);color:var(--ok)}
-.siA{background:var(--wnb);color:var(--wn)}
-.sv{font-size:1.85rem;font-weight:800;line-height:1;letter-spacing:-.03em}
-.sl{font-size:.72rem;color:var(--mt);font-weight:700;text-transform:uppercase;
-margin-top:.3rem;letter-spacing:.05em}
-.cs{position:relative;height:220px;max-width:220px;margin:0 auto}
-.cw{position:relative;height:260px}
-.periods{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.5rem;padding:.4rem;
-background:var(--sf2);border-radius:99px;width:fit-content}
-.per{padding:.5rem 1.25rem;border-radius:99px;font-size:.82rem;font-weight:700;
-color:var(--tx2);cursor:pointer;transition:all .25s ease}
-.per:hover{color:var(--pr)}
-.per.act{background:var(--sf);color:var(--pr);box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.rec{padding:1.25rem 1.5rem;border-radius:var(--rsm);background:var(--p50);
-border-left:4px solid var(--pr);font-size:.9rem;line-height:1.7;color:var(--tx)}
-
-.rec ul{margin:.7rem 0 0 1.2rem}
-.rec li{margin-bottom:.35rem}
-.crumb{font-size:.82rem;color:var(--mt);margin-bottom:1.25rem;font-weight:600}
-.crumb a{color:var(--pr);cursor:pointer;text-decoration:none;transition:color .2s}
-.crumb a:hover{text-decoration:underline;color:var(--pr6)}
-.crumb span{margin:0 .4rem;opacity:.4}
-.attgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.85rem;margin-bottom:1rem}
-.atti{padding:1.25rem .75rem;border-radius:var(--rsm);text-align:center;transition:transform .2s;box-shadow:var(--sh)}
-.atti:hover{transform:translateY(-2px)}
-.atti.h{background:var(--okb);color:var(--ok);border:1px solid rgba(5,150,105,.2)}
-.atti.s{background:var(--wnb);color:var(--wn);border:1px solid rgba(217,119,6,.2)}
-.atti.i{background:var(--infb);color:var(--inf);border:1px solid rgba(37,99,235,.2)}
-.atti.a{background:var(--erb);color:var(--er);border:1px solid rgba(220,38,38,.2)}
-.atti .n{font-size:1.85rem;font-weight:800;line-height:1;letter-spacing:-.03em}
-.atti .l{font-size:.72rem;font-weight:800;margin-top:.35rem;text-transform:uppercase;
-letter-spacing:.05em;opacity:.9}
-.footer{text-align:center;padding:2.5rem 1.5rem;color:var(--mt);font-size:.85rem;
-border-top:1px solid var(--bd);background:var(--sf)}
-.empty{padding:3rem 1.5rem;text-align:center;color:var(--mt);font-size:.9rem}
-.empty .ico{font-size:2.5rem;margin-bottom:.75rem;opacity:.5;animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-#loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;
-justify-content:center;gap:1rem;font-size:1rem;font-weight:600;color:var(--mt);z-index:9999}
+.asp{padding:1.1rem .9rem;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-align:center;position:relative;overflow:hidden}
+.asp::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--border)}
+.asp[data-v="L"]::before{background:var(--ok)}.asp[data-v="CL"]::before{background:var(--warn)}.asp[data-v="KL"]::before{background:var(--err)}
+.asp .al{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:.6rem}
+.asp .ad{font-size:.75rem;color:var(--text2);margin-top:.4rem}
+.sbig{font-size:3.2rem;font-weight:800;line-height:1;letter-spacing:-2px}
+.sOk{color:var(--ok)}.sCu{color:var(--warn)}.sPe{color:var(--err)}.sEm{color:var(--muted)}
+.prog{height:6px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-top:.75rem}
+.pbar{height:100%;background:linear-gradient(90deg,var(--primary),#3b82f6);border-radius:99px;width:0;transition:width 1s}
+.tabs{display:flex;gap:.25rem;border-bottom:1px solid var(--border);margin-bottom:1.25rem;overflow-x:auto}
+.tab{padding:.7rem 1rem;border:none;background:none;cursor:pointer;font-size:.85rem;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit;white-space:nowrap}
+.tab.act{color:var(--primary);border-bottom-color:var(--primary)}
+.tab:hover{color:var(--text)}
+.tc-c{display:none}.tc-c.act{display:block}
+.tl{position:relative;padding-left:1.5rem}
+.tl::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:var(--border)}
+.tli{position:relative;padding-bottom:1rem}
+.tli::before{content:'';position:absolute;left:-1.5rem;top:6px;width:10px;height:10px;border-radius:50%;background:var(--primary);border:2px solid var(--surface)}
+.tli .dt{font-size:.72rem;color:var(--muted);font-weight:600;margin-bottom:.2rem;text-transform:uppercase}
+.tli .tx{font-size:.875rem}
+.stat{display:flex;align-items:center;gap:1rem;padding:1.1rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:10px}
+.si{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.siB{background:var(--p50);color:var(--primary)}.siG{background:var(--okbg);color:var(--ok)}
+.siA{background:var(--warnbg);color:var(--warn)}.siR{background:var(--errbg);color:var(--err)}
+.sv{font-size:1.55rem;font-weight:800;line-height:1;letter-spacing:-.5px}
+.sl{font-size:.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:.2rem}
+.cs{position:relative;height:200px;max-width:200px;margin:0 auto}
+.cw{position:relative;height:240px}
+.periods{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.25rem;padding:.35rem;background:var(--surface2);border-radius:10px;width:fit-content}
+.per{padding:.4rem 1rem;border-radius:7px;font-size:.82rem;font-weight:600;color:var(--text2);cursor:pointer}
+.per:hover{color:var(--primary)}
+.per.act{background:var(--surface);color:var(--primary);box-shadow:var(--sh)}
+.rec{padding:1rem 1.15rem;border-radius:10px;background:var(--p50);border-left:3px solid var(--primary);font-size:.875rem;line-height:1.65}
+.rec ul{margin:.6rem 0 0 1.2rem}.rec li{margin-bottom:.3rem}
+.crumb{font-size:.82rem;color:var(--muted);margin-bottom:.75rem;font-weight:500}
+.crumb a{color:var(--primary);cursor:pointer}
+.crumb a:hover{text-decoration:underline}
+.crumb span{margin:0 .35rem;opacity:.5}
+.attgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:.75rem}
+.atti{padding:.9rem;border-radius:10px;text-align:center}
+.atti.h{background:var(--okbg);color:var(--ok)}.atti.s{background:var(--warnbg);color:var(--warn)}
+.atti.i{background:var(--p50);color:var(--primary)}.atti.a{background:var(--errbg);color:var(--err)}
+.atti .n{font-size:1.5rem;font-weight:800;line-height:1}
+.atti .l{font-size:.72rem;font-weight:600;margin-top:.15rem;opacity:.85}
+.footer{text-align:center;padding:2rem 1.25rem;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border);background:var(--surface)}
+.empty{padding:2rem;text-align:center;color:var(--muted);font-size:.875rem}
+.empty .ico{font-size:2rem;margin-bottom:.5rem;opacity:.5}
+#loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--muted);z-index:9999}
 #loading.hide{display:none}
-.spinner{width:32px;height:32px;border:3px solid var(--bd);border-top-color:var(--pr);
-border-radius:50%;animation:sp .7s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-.favCard{position:relative;display:block;padding:1.35rem;background:var(--sf);
-border:1px solid var(--bd);border-radius:var(--r);cursor:pointer;transition:all .25s ease;box-shadow:var(--sh)}
-.favCard:hover{transform:translateY(-4px);border-color:var(--pr);box-shadow:var(--shl)}
-.favCard .fb{width:48px;height:48px;background:linear-gradient(135deg,var(--pr),#10b981);color:#fff;border-radius:var(--rsm);
-display:inline-flex;align-items:center;justify-content:center;font-weight:800;
-font-size:1rem;margin-bottom:.85rem;letter-spacing:-.02em;box-shadow:0 4px 12px rgba(5,150,105,.25)}
-.favCard .fn{font-weight:800;font-size:1rem;margin-bottom:.25rem;line-height:1.3;
-letter-spacing:-.02em}
-.favCard .fm{font-size:.8rem;color:var(--mt)}
-.favCard .fdel{position:absolute;top:.75rem;right:.75rem;background:transparent;border:none;
-width:30px;height:30px;border-radius:50%;cursor:pointer;color:var(--mt);font-size:1.1rem;
-display:flex;align-items:center;justify-content:center;transition:all .2s;line-height:1}
-.favCard .fdel:hover{background:var(--erb);color:var(--er);transform:scale(1.1)}
-.qrCard{display:flex;gap:1.75rem;align-items:center;flex-wrap:wrap;background:var(--sf);
-border:1px solid var(--bd);border-radius:var(--r);padding:1.75rem;margin-bottom:1.5rem;box-shadow:var(--sh)}
-.qrCard img{border-radius:var(--rxs);border:1px solid var(--bd);padding:8px;background:#fff;display:block;box-shadow:0 4px 12px rgba(0,0,0,.05)}
-.qrCard p{font-size:.85rem;color:var(--mt);margin-bottom:.85rem;line-height:1.55}
-.qrCopy{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
-.qrCopy input{flex:1;min-width:180px;font-size:.8rem;
-font-family:'SF Mono',Menlo,monospace;background:var(--sf2);border-radius:var(--rxs)}
-.pinBox{max-width:400px;margin:4rem auto;text-align:center;animation:fadeInUp .4s ease}
-.pinBox .pic{font-size:3.5rem;margin-bottom:1rem;animation:float 3s ease-in-out infinite}
-.pinBox input{text-align:center;font-size:1.85rem;letter-spacing:.6rem;padding:1.1rem;
-font-weight:800;margin-bottom:1rem;font-family:'SF Mono',Menlo,monospace;border-radius:var(--rsm)}
-.pinBox button{width:100%;justify-content:center;padding:1rem;font-size:1rem}
-.hero{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);
-padding:2.5rem 1.75rem;margin-bottom:1.75rem;text-align:center;box-shadow:var(--sh)}
-.hero h2{font-size:2rem;font-weight:800;letter-spacing:-.035em;margin-bottom:.5rem;line-height:1.15}
-.hero p{color:var(--mt);font-size:.95rem;margin-bottom:1.75rem;max-width:480px;
-margin-left:auto;margin-right:auto}
-.yearBar{display:flex;gap:.65rem;align-items:center;padding:.85rem 1.15rem;
-background:var(--sf2);border-radius:var(--rsm);margin-bottom:1.5rem;flex-wrap:wrap}
-.yearBar label{font-size:.72rem;font-weight:800;text-transform:uppercase;
-letter-spacing:.05em;color:var(--mt);margin:0}
-.yearBar select{padding:.45rem .75rem;font-size:.85rem;width:auto;min-width:130px;font-weight:700}
-.yearBar .badgeArch{background:var(--wnb);color:var(--wn);padding:.4rem .8rem;
-border-radius:var(--rxs);font-size:.78rem;font-weight:800}
-.errMsg{color:var(--er);font-size:.8rem;margin-top:.4rem;display:none;font-weight:600}
-.errMsg.show{display:block}
-.auditItem{padding:.85rem 1.1rem;background:var(--sf2);border-radius:var(--rxs);
-font-size:.82rem;margin-bottom:.5rem;border-left:4px solid var(--pr);transition:transform .2s}
-.auditItem:hover{transform:translateX(4px)}
-.auditItem .who{font-weight:800;color:var(--pr)}
-.auditItem .when{color:var(--mt);font-size:.72rem;margin-top:.2rem}
-
-/* ===== GOOGLE-LIKE HOME MODERN ===== */
-.gHome{max-width:720px;margin:1rem auto 0;padding:2rem 1rem;animation:fadeInUp .5s cubic-bezier(.16,1,.3,1)}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.gLogo{text-align:center;margin-bottom:2.5rem}
-.gLogo .mark{font-size:3.75rem;line-height:1;margin-bottom:.75rem;
-background:linear-gradient(135deg,#059669,#10b981,#34d399);
--webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-font-weight:900;letter-spacing:-.06em;font-family:'Plus Jakarta Sans','Inter',sans-serif;
-filter:drop-shadow(0 4px 12px rgba(5,150,105,.2))}
-.gLogo .tag{font-size:1.15rem;color:var(--mt);font-weight:600;letter-spacing:-.02em}
-.gLogo .school{font-size:.9rem;color:var(--tx2);font-weight:700;margin-top:.35rem;letter-spacing:.02em;text-transform:uppercase}
-.gSearch{position:relative;margin-bottom:1.75rem}
-.gSearch input{width:100%;font-size:1.05rem;padding:1.25rem 4rem 1.25rem 3.5rem;
-border-radius:99px;border:2px solid var(--bd);background:var(--sf);
-box-shadow:0 8px 30px rgba(0,0,0,.04);font-weight:600;transition:all .3s ease;
-letter-spacing:-.015em}
-.gSearch input:hover{border-color:var(--bd2);box-shadow:0 12px 36px rgba(0,0,0,.08)}
-.gSearch input:focus{border-color:var(--pr);box-shadow:0 12px 40px rgba(5,150,105,.2),0 0 0 4px rgba(5,150,105,.12);outline:none}
-.gSearch .icoL{position:absolute;left:1.35rem;top:50%;transform:translateY(-50%);
-font-size:1.2rem;opacity:.5;pointer-events:none;z-index:1}
-.gSearch .icoR{position:absolute;right:1rem;top:50%;transform:translateY(-50%);
-width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--pr),#10b981);color:#fff;border:none;
-cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;
-transition:all .2s ease;opacity:0;pointer-events:none;box-shadow:0 4px 12px rgba(5,150,105,.3)}
-.gSearch input:not(:placeholder-shown)~.icoR,
-.gSearch input:focus~.icoR{opacity:1;pointer-events:auto}
-.gSearch .icoR:hover{transform:translateY(-50%) scale(1.1);box-shadow:0 6px 16px rgba(5,150,105,.4)}
-.gSuggest{position:absolute;top:calc(100% + .75rem);left:0;right:0;background:var(--sf);
-border:1px solid var(--bd);border-radius:20px;box-shadow:0 16px 48px rgba(0,0,0,.15);
-padding:.65rem;max-height:400px;overflow-y:auto;z-index:100;
-animation:gDrop .25s ease;display:none;backdrop-filter:blur(16px)}
-.gSuggest.show{display:block}
-@keyframes gDrop{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-.gSugItem{display:flex;align-items:center;gap:.85rem;padding:.85rem 1.1rem;
-border-radius:14px;cursor:pointer;transition:all .15s ease}
-.gSugItem:hover,.gSugItem.hl{background:var(--sf2);transform:translateX(4px)}
-.gSugItem .sIco{width:36px;height:36px;border-radius:50%;background:var(--p50);
-color:var(--pr);display:flex;align-items:center;justify-content:center;
-font-weight:800;font-size:.8rem;flex-shrink:0;letter-spacing:-.02em}
-.gSugItem .sTxt{flex:1;min-width:0}
-.gSugItem .sN{font-size:.92rem;font-weight:700;color:var(--tx);
-white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.015em}
-.gSugItem .sN b{color:var(--pr);font-weight:800}
-.gSugItem .sM{font-size:.78rem;color:var(--mt);margin-top:.1rem}
-.gSugItem .sSc{font-size:1.1rem;font-weight:800;letter-spacing:-.02em}
-.gChips{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem}
-.gChip{padding:.55rem 1.25rem;border:1.5px solid var(--bd);background:var(--sf);
-color:var(--tx2);border-radius:99px;font-size:.85rem;font-weight:700;cursor:pointer;
-font-family:inherit;transition:all .2s ease;letter-spacing:-.01em;box-shadow:var(--sh)}
-.gChip:hover{border-color:var(--pr);color:var(--pr);transform:translateY(-2px);
-box-shadow:0 6px 16px rgba(5,150,105,.15)}
-.gChip.act{background:linear-gradient(135deg,var(--pr),#10b981);color:#fff;border-color:transparent;
-box-shadow:0 6px 18px rgba(5,150,105,.3);transform:translateY(-1px)}
-.gQuick{margin-top:2.5rem;padding-top:1.75rem;border-top:1px solid var(--bd);text-align:center}
-.gQuick .lbl{font-size:.75rem;color:var(--mt);font-weight:800;text-transform:uppercase;
-letter-spacing:.08em;margin-bottom:1.25rem}
-.gQuick .shorts{display:grid;grid-template-columns:repeat(auto-fill,minmax(95px,1fr));
-gap:1rem;max-width:640px;margin:0 auto}
-.gShort{padding:1.1rem .6rem;border-radius:16px;background:var(--sf);border:1px solid var(--bd);
-cursor:pointer;text-decoration:none;color:var(--tx);display:flex;flex-direction:column;
-align-items:center;gap:.6rem;position:relative;transition:all .25s ease;box-shadow:var(--sh)}
-.gShort:hover{background:var(--sf2);transform:translateY(-4px);
-box-shadow:var(--shl);border-color:var(--pr)}
-.gShort .sAv{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;
-justify-content:center;color:#fff;font-weight:800;font-size:.9rem;letter-spacing:-.02em;
-box-shadow:0 4px 12px rgba(0,0,0,.15)}
-.gShort .sNm{font-size:.75rem;font-weight:700;text-align:center;line-height:1.3;
-max-width:100%;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;
--webkit-box-orient:vertical;word-break:break-word}
-.gShort .sDl{position:absolute;top:.35rem;right:.35rem;background:var(--sf);border:1px solid var(--bd);
-width:22px;height:22px;border-radius:50%;cursor:pointer;color:var(--mt);font-size:.85rem;
-line-height:1;display:none;align-items:center;justify-content:center;padding:0;transition:all .2s}
-.gShort:hover .sDl{display:flex}
-.gShort .sDl:hover{background:var(--erb);color:var(--er);border-color:var(--er);transform:scale(1.1)}
-.gResults{max-width:720px;margin:0 auto;animation:fadeInUp .35s ease}
-.gResults .hd{display:flex;justify-content:space-between;align-items:center;
-margin-bottom:1rem;padding:0 .25rem}
-.gResults .hd .cnt{font-size:.85rem;color:var(--mt);font-weight:600}
-.gResults .hd .cnt b{color:var(--tx);font-weight:800}
-.gResults .hd .clr{background:transparent;border:none;color:var(--pr);cursor:pointer;
-font-size:.85rem;font-weight:700;font-family:inherit;padding:.35rem .65rem;
-border-radius:8px;transition:background .15s}
-.gResults .hd .clr:hover{background:var(--p50)}
-.gRow{display:flex;align-items:center;gap:1rem;padding:1.1rem 1.35rem;
-background:var(--sf);border:1px solid var(--bd);border-radius:16px;
-cursor:pointer;margin-bottom:.75rem;transition:all .25s ease;box-shadow:var(--sh);animation:fadeInUp .3s ease both}
-.gRow:hover{border-color:var(--pr);background:var(--sf);
-box-shadow:var(--shl);transform:translateY(-3px)}
-.gRow .rAv{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;
-justify-content:center;color:#fff;font-weight:800;font-size:.95rem;flex-shrink:0;
-letter-spacing:-.02em;box-shadow:0 4px 12px rgba(0,0,0,.15)}
-.gRow .rInfo{flex:1;min-width:0}
-.gRow .rN{font-size:1rem;font-weight:700;letter-spacing:-.015em;
-white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gRow .rM{font-size:.8rem;color:var(--mt);margin-top:.2rem}
-.gRow .rS{font-size:1.6rem;font-weight:800;letter-spacing:-.03em;flex-shrink:0}
-.gEmpty{text-align:center;padding:3rem 1rem;color:var(--mt)}
-.gEmpty .ico{font-size:3.5rem;margin-bottom:1rem;opacity:.5;animation:float 3s ease-in-out infinite}
-.gEmpty .ttl{font-size:1.1rem;font-weight:700;color:var(--tx2);margin-bottom:.35rem}
-.gEmpty .dsc{font-size:.88rem}
-
-@media(max-width:640px){
-  .gHome{padding:1.5rem .85rem}
-  .gLogo .mark{font-size:3rem}
-  .gLogo .tag{font-size:1rem}
-  .gSearch input{font-size:1rem;padding:1.1rem 3.5rem 1.1rem 3rem}
-  .gSearch .icoL{left:1.1rem;font-size:1.1rem}
-  .gQuick .shorts{grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:.65rem}
-  .gRow{padding:1rem 1.1rem}
-  .gRow .rAv{width:42px;height:42px;font-size:.85rem}
-  .gRow .rS{font-size:1.35rem}
-  body{font-size:14px}
-  .container{padding:1.25rem 1rem 3rem}
-  .card{padding:1.35rem;border-radius:14px}
-  h2{font-size:1.5rem}
-  .hero{padding:1.75rem 1.15rem}
-  .hero h2{font-size:1.5rem}
-  .hero p{font-size:.875rem}
-  .sbig{font-size:2.75rem}
-  .attgrid{grid-template-columns:repeat(2,1fr)}
-  .brand h1{font-size:.9rem}
-  .qrCard{padding:1.25rem;gap:1rem}
-  .hinner{padding:.75rem 1rem}
-  .yearBar{padding:.7rem .85rem}
-  .yearBar select{font-size:.8rem;min-width:110px}
-}
-@media print{
-  .header,.footer,.btn,.tbtn,.tabs,.periods,.crumb,.np,.qrCard,.hero{display:none!important}
-  .card{box-shadow:none;border:1px solid #ddd;padding:1.25rem}
-  .tc-c{display:block!important;margin-bottom:1.5rem}
-  body{background:#fff;color:#000}
-}
-
-/* ===== EFEK RIPPLE KLIK ===== */
-.ripple {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(5, 150, 105, 0.35);
-  transform: scale(0);
-  animation: rippleFx .5s linear;
-  pointer-events: none;
-}
-
-@keyframes rippleFx {
-  to { transform: scale(4); opacity: 0; }
-}
-
-/* ===== ANIMASI KARTU & INTERAKSI ===== */
-.card, .gShort, .gRow, .srow, .asp, .favCard, .btn, .gChip, .tab {
-  position: relative;
-  overflow: hidden;
-  will-change: transform;
-}
-
-/* Glow Shimmer Effect saat Hover */
-.card::after, .gRow::after, .srow::after {
-  content: '';
-  position: absolute;
-  top: -50%; left: -50%;
-  width: 200%; height: 200%;
-  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.13), transparent);
-  transform: rotate(30deg) translateY(-100%);
-  transition: transform .6s ease;
-  pointer-events: none;
-}
-.card:hover::after, .gRow:hover::after, .srow:hover::after {
-  transform: rotate(30deg) translateY(100%);
-}
-
-/* Active Press Scaling Effect */
-.btn:active, .gChip:active, .tab:active, .gShort:active, .srow:active, .gRow:active {
-  transform: scale(0.95) !important;
-  transition: transform 0.1s ease !important;
-}
-
-/* Pulse Glow Badge */
-.badge {
-  animation: pulseBadge 2.5s infinite;
-}
-@keyframes pulseBadge {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.2); }
-  50% { box-shadow: 0 0 0 6px rgba(5, 150, 105, 0); }
-}
-
-/* Page Transition Smooth Fade & Slide */
-#app {
-  animation: pageSlide .4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-@keyframes pageSlide {
-  from { opacity: 0; transform: translateY(16px) scale(0.99); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-
-/* ===== MOBILE OPTIMIZATION ===== */
-@media (max-width: 640px) {
-  :root {
-    --r: 16px;
-    --rsm: 12px;
-  }
-
-  /* Safe Area Padding untuk HP Layar Poni/Notch */
-  body {
-    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)) !important;
-    overscroll-behavior-y: contain;
-  }
-
-  .header {
-    padding-top: env(safe-area-inset-top);
-  }
-
-  .container {
-    padding: 1rem 0.85rem 2rem !important;
-  }
-
-  /* Mencegah Auto Zoom di iOS/Chrome Mobile saat ketik input */
-  input, select, textarea {
-    font-size: 16px !important;
-    min-height: 46px;
-  }
-
-  /* Touch Target Minimum 44px */
-  .btn, .tbtn, .gChip, .per, .tab {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* Card Spacing & Typography */
-  .card {
-    padding: 1.25rem 1rem !important;
-    margin-bottom: 1rem !important;
-  }
-
-  .sbig {
-    font-size: 2.75rem !important;
-  }
-
-  .gLogo .mark {
-    font-size: 2.8rem !important;
-  }
-
-  .gSearch input {
-    padding: 1rem 3.25rem 1rem 2.85rem !important;
-  }
-
-  /* Bottom Navigation Bar ala App Native */
-  .mBottomNav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: calc(3.8rem + env(safe-area-inset-bottom));
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-top: 1px solid var(--bd);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding-bottom: env(safe-area-inset-bottom);
-    z-index: 1000;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
-  }
-
-  
-
-  .mNavItem {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.15rem;
-    color: var(--mt);
-    text-decoration: none;
-    font-size: 0.72rem;
-    font-weight: 700;
-    flex: 1;
-    height: 100%;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-
-  .mNavItem .ico {
-    font-size: 1.25rem;
-  }
-
-  .mNavItem.act {
-    color: var(--pr);
-  }
-}
-
-/* Sembunyikan Nav Bawah di Desktop */
-@media (min-width: 641px) {
-  .mBottomNav {
-    display: none !important;
-  }
-}
-
-
-/* ===== PERBAIKAN TEKS TERPOTONG & LAYOUT MOBILE ===== */
-* {
-  word-break: break-word;
-  overflow-wrap: anywhere;
-}
-
-/* Memastikan Judul & Brand Teks Flexibel */
-.brand {
-  min-width: 0;
-  flex: 1;
-}
-.brand h1 {
-  white-space: normal !important;
-  word-break: break-word;
-  line-height: 1.25;
-}
-
-.gLogo .mark {
-  font-size: clamp(2.2rem, 8vw, 3.75rem) !important;
-  line-height: 1.15 !important;
-  word-break: keep-all !important;
-  white-space: normal !important;
-  padding: 0 0.5rem;
-}
-
-.gLogo .tag {
-  font-size: clamp(0.95rem, 4vw, 1.15rem) !important;
-  white-space: normal !important;
-}
-
-/* Memastikan Input & Tombol Tidak Memotong Teks */
-.gSearch input {
-  text-overflow: ellipsis;
-}
-
-.btn, .gChip, .chip, .per, .tab {
-  white-space: normal !important;
-  text-align: center;
-  word-break: keep-all !important;
-}
-
-/* Perbaikan Kartu & Baris Teks */
-.sn, .lt, .rN, .fn {
-  white-space: normal !important;
-  word-break: break-word !important;
-  line-height: 1.35 !important;
-}
-
-/* Penyesuaian Grid Aspek Nilai agar Pas di HP Kecil */
-@media (max-width: 480px) {
-  .g4 {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.75rem !important;
-  }
-  .asp {
-    padding: 1rem 0.5rem !important;
-  }
-  .asp .al {
-    font-size: 0.7rem !important;
-  }
-}
-
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin-right:.75rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:640px){.container{padding:1rem .85rem 3rem}.card{padding:1.15rem}.sbig{font-size:2.6rem}.attgrid{grid-template-columns:repeat(2,1fr)}.brand h1{font-size:.85rem}}
+@media print{.header,.footer,.btn,.tbtn,.tabs,.periods,.crumb,.np{display:none!important}.card{box-shadow:none;border:1px solid #ddd}.tc-c{display:block!important}body{background:#fff}}
 </style>
+<script src="config.js"></script>
 </head>
 <body>
-<div id="loading"><div class="spinner"></div>Memuat…</div>
+
+<div id="loading"><div class="spinner"></div> Memuat…</div>
+
 <header class="header" id="hdr" style="display:none">
   <div class="hinner">
     <a class="brand" onclick="go('/')">
-      <div class="blogo" id="blogo">M</div>
-      <div><h1 id="bname">MIT Al Falah</h1><p id="binfo">Memuat…</p></div>
+      <div class="blogo" id="blogo">🏫</div>
+      <div><h1 id="bname">Memuat…</h1><p id="binfo"></p></div>
     </a>
     <nav class="nav">
       <a onclick="go('/')" id="nav-home">Beranda</a>
       <a onclick="go('/admin')" id="nav-admin">Panel Guru</a>
-      
+      <button class="tbtn" onclick="toggleTheme()" id="tbtn">🌙</button>
     </nav>
   </div>
 </header>
+
 <main class="container" id="app"></main>
-<footer class="footer" id="ftr" style="display:none"><div id="fname"></div><div style="margin-top:.4rem">Sistem Informasi Perkembangan Siswa</div></footer>
-<script src="config.js"></script>
+
+<footer class="footer" id="ftr" style="display:none">
+  <div id="fname"></div>
+  <div style="margin-top:.4rem">Sistem Informasi Perkembangan Siswa</div>
+</footer>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, serverTimestamp, writeBatch }
+  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+// ==================================================================
+// 🔥 GANTI DENGAN FIREBASE CONFIG MILIKMU
+// ==================================================================
 const firebaseConfig = window.FIREBASE_CONFIG;
-if (!firebaseConfig || !firebaseConfig.apiKey || firebaseConfig.apiKey === 'ISI_API_KEY') {
-  document.getElementById('loading').innerHTML = '<div class="alert aer" style="max-width:420px">⚠️ config.js belum dibuat atau belum diisi.<br><br>1. Edit <code>.env</code> dengan config Firebase<br>2. Jalankan <code>bash generate-config.sh</code><br>3. Refresh halaman</div>';
-  throw new Error('Missing Firebase config');
+if (!firebaseConfig || !firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith('ISI')) {
+  document.getElementById('loading').innerHTML = '⚠️ Konfigurasi Firebase belum diisi (config.js)';
+  throw new Error('Firebase config belum valid');
 }
-const db = getFirestore(initializeApp(firebaseConfig));
+// ==================================================================
 
-const DEFAULT_SCHOOL = { name: 'MIT Al Falah', address: 'Jl. Pendidikan No. 1', npsn: '12345678', logo: 'M', year: '2025/2026', headmaster: 'Kepala Madrasah' };
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
+const auth = getAuth(firebaseApp);
+let currentUser = null, authReady = false;
+onAuthStateChanged(auth, u => {
+  currentUser = u; authReady = true;
+  if (parseRoute()[0] === 'admin') render();
+});
+
+// ============ KONFIGURASI ============
+const DEFAULT_SCHOOL = {
+  name: 'SD Negeri Contoh',
+  address: 'Jl. Pendidikan No. 1, Kota Contoh',
+  npsn: '12345678',
+  logo: '🏫',
+  year: '2025/2026',
+  headmaster: 'Drs. H. Ahmad Subarjo, M.Pd.'
+};
 const ASPECTS = ['Membaca', 'Menulis', 'Berhitung', 'Menghafal'];
 const ASPECT_SCORES = { L: 90, CL: 80, KL: 70 };
 const ASPECT_LABELS = { L: 'Lancar', CL: 'Cukup Lancar', KL: 'Kurang Lancar', '': 'Belum dinilai' };
 const PERIODS = ['STS 1', 'STS 2', 'SAS'];
-const DEFAULT_CLASSES = { '4B': 'Wali Kelas 4B', '4C': 'Wali Kelas 4C', '4D': 'Wali Kelas 4D' };
+const DEFAULT_CLASSES = { '4B': 'Siti Aminah, S.Pd.', '4C': 'Ahmad Fauzi, S.Pd.', '4D': 'Nur Hasanah, S.Pd.' };
+
 const SEED = {
   '4B': [['ADZKIYA RARAS MAHFUDZA','CL','KL','L','L'],['ALMAIRA ZEA ACHMAD','CL','CL','L','L'],['ANANDA SYIFA FATHIMATUZZAHRA','KL','CL','KL','KL'],['APRILIA RAFANIA','KL','KL','KL','CL'],['ARUM BAHARI LUTHFIKA ALI','L','L','CL','CL'],['ARUM ZAHWA ALIFA','L','L','L','L'],['AYRA ASKADINA SALSABILA','CL','CL','KL','KL'],['ELVINA AMIRA SALSABILA','KL','L','KL','KL'],['EMBUN SEKAR ARUMINGRATRI','KL','KL','KL','KL'],['FITRIYA FATHIYYATURAHMA','CL','KL','KL','KL'],['JANE CALISTA PUTRI','CL','KL','KL','KL'],['KAILA ZAFIRA','CL','KL','L','CL'],['MAFAZA ILYANA PRAYUDI','CL','L','L','L'],['MARSA AZKA FITRIA','KL','CL','CL','L'],['NAJMA ASHFA GAYATRI','CL','L','L','L'],['NESSA ARYANA TSURAYYA','L','KL','L','L'],['YOLANDA SISILIA','L','L','L','L'],['ZIVANA ADZKIYA AULIA','KL','KL','KL','KL']],
   '4C': [['ABDUL JALAL SAPUTRA','KL','KL','KL','KL'],['ABIDZAR DWIQI AL FATIH','KL','KL','KL','KL'],['ADE ARVIE ASSLAM','','','',''],['AHMAD ATHALLA OKTAVIAN','CL','L','CL','L'],['AHMAD BRILIANSYAH','L','KL','KL','KL'],['AHMAD FAIZ HUSAIN NAJIB','KL','KL','KL','KL'],['AHMAD TAJ ATHIF','CL','CL','L','L'],['ALFA FALAQUN NAJAH','L','L','L','L'],['ANDRYAN PRADIPTA','L','KL','KL','KL'],['ARKA WIJAYANTO','KL','L','CL','L'],['ATHA RAQILLA KHALIF','KL','KL','L','L'],['HAIDAR FARUQ','CL','KL','L','L'],['MUHAMMAD ABBAD NAILUN NABHAN','KL','KL','KL','KL'],['MUHAMMAD ASYRAF ABRORI','L','L','CL','CL'],['MUHAMMAD DAVID NAJMI','KL','KL','KL','KL'],['MUHAMMAD FALAH AKBAR','L','KL','KL','KL'],['MUHAMMAD HAWWIN ALAINA','KL','CL','L','L'],['MUHAMMAD KENZIE ARZIQI PUTRA','L','L','CL','L'],['MUHAMMAD RAKHUL ABYAN AQIL','KL','L','L','L'],['MUHAMMAD SHOLAHUDDIN AL HADI','CL','L','L','L'],['RAJA AHZA AHURAYAZDA','KL','KL','KL','CL'],['SATRIA WICAKSONO PUTRA RIFAN','L','KL','KL','KL'],['YUSHFIKA ARFAN MAULANA','CL','KL','CL','L'],['YUSUF FATIH ARZAQI','KL','KL','KL','CL'],['ZAIDAN ARIYANTO','KL','KL','KL','L']],
   '4D': [['ABYAN SHIHAB PRANAJA','','','',''],['AHMAD FAIZUL MUIZ','L','L','L','L'],['AHMAD FARIS HABIBI','KL','KL','KL','KL'],['AHMAD HISYAM MAULANA','CL','KL','KL','KL'],['AHMAD MUGHNI LABIB','L','L','L','L'],['AHMAD ULIN NUHA','L','L','L','L'],['ARCHANDRA SEAN ALFARIZ','KL','KL','KL','KL'],['ARSYA AHMAD JAKA ARDHANI','KL','KL','KL','KL'],['AULIAN GHAIDA FATTANA','KL','KL','KL','KL'],['AZKA EVAN MAULANA','L','L','L','L'],['AZKAL HIMAM SYAUQI','L','KL','L','CL'],['ISMAIL NIZAM ARKANUDDIN EL KAFEEL','CL','L','CL','L'],['MALVIN MESHACH AGAM AGLER','KL','KL','KL','KL'],['MUHAMMAD ABID RAJENDRA','KL','KL','KL','KL'],['MUHAMMAD ADRIAN PRADIPTA','KL','CL','KL','L'],['MUHAMMAD AL GENTZA','KL','KL','CL','CL'],['MUHAMMAD BAYU SATRIO','KL','KL','KL','KL'],['MUHAMMAD BIMA MUJTABA','L','KL','KL','CL'],['MUHAMMAD LUTHFI','CL','L','CL','L'],['MUHAMMAD MAULANA ISHAQ','CL','CL','KL','L'],['MUHAMMAD SALUM ASWHIN DARMAWAN','L','L','L','L'],['MUHAMMAD ULIL ALBAB','L','CL','CL','L'],['RAFAN SAUQI FIL ARDHA','KL','CL','CL','L'],['SHAQUILLE GIBRAN ALAIKASSALAM','L','L','CL','L'],['SUKMA ARFAN FAELANI','L','KL','KL','KL']]
 };
 
+// ============ STATE ============
 let school = { ...DEFAULT_SCHOOL };
-let currentTA = '';     // Tahun ajaran aktif
-let currentSem = '';    // Ganjil/Genap
-let archivedTA = '';    // Arsip TA
+let classesCache = {};  // {kelas: {wali}}
+let studentsCache = []; // [{id, nama, kelas, access_code}]
+let state = { route: '/', data: {} };
 let charts = [];
-let _allStudents = [];
-let _activeKelas = 'all';
-let _activeQuery = '';
 
-// ---------- Firestore helpers ----------
+// ============ FIREBASE HELPERS ============
 async function getSchool() {
-  try { const s = await getDoc(doc(db, 'settings', 'main')); if (s.exists()) return { ...DEFAULT_SCHOOL, ...s.data() }; } catch (e) {}
+  try {
+    const snap = await getDoc(doc(db, 'settings', 'main'));
+    if (snap.exists()) return { ...DEFAULT_SCHOOL, ...snap.data() };
+  } catch (e) { console.warn('getSchool', e); }
   return { ...DEFAULT_SCHOOL };
 }
-async function saveSchool(data) { await setDoc(doc(db, 'settings', 'main'), data, { merge: true }); }
-async function getClasses() { const s = await getDocs(collection(db, 'kelas')); const o = {}; s.forEach(d => o[d.id] = d.data().wali || ''); return o; }
-async function getStudents() { const s = await getDocs(collection(db, 'siswa')); const o = []; s.forEach(d => o.push({ id: d.id, ...d.data() })); return o; }
-function taKey(ta) { return String(ta || getTA()).replace(/[\/\s]/g, '-'); }
-function nilaiDocId(sid, period, ta) { return sid + '__' + taKey(ta) + '__' + period.replace(/\s/g, '_'); }
-function absenDocId(sid, period, ta) { return sid + '__' + taKey(ta) + '__' + period.replace(/\s/g, '_'); }
 
-async function getNilai(sid, period, ta) {
-  const t = ta || getTA();
-  try {
-    const s = await getDoc(doc(db, 'nilai', nilaiDocId(sid, period, t)));
-    if (!s.exists()) return ['', '', '', ''];
-    const d = s.data();
-    return [d.a0 || '', d.a1 || '', d.a2 || '', d.a3 || ''];
-  } catch (e) { return ['', '', '', '']; }
+async function saveSchool(data) {
+  await setDoc(doc(db, 'settings', 'main'), data, { merge: true });
 }
-async function saveNilai(sid, period, arr, ta) {
-  const t = ta || getTA();
-  await setDoc(doc(db, 'nilai', nilaiDocId(sid, period, t)), {
-    siswaId: sid, period, tahun_ajaran: t, semester: getSem(),
-    a0: arr[0], a1: arr[1], a2: arr[2], a3: arr[3]
+
+async function getClasses() {
+  const snap = await getDocs(collection(db, 'kelas'));
+  const out = {};
+  snap.forEach(d => { out[d.id] = d.data().wali || ''; });
+  return out;
+}
+
+async function getStudents() {
+  const snap = await getDocs(collection(db, 'siswa'));
+  const out = [];
+  snap.forEach(d => out.push({ id: d.id, ...d.data() }));
+  return out;
+}
+
+async function getNilai(sid, period) {
+  const snap = await getDoc(doc(db, 'nilai', `${sid}__${period}`));
+  if (!snap.exists()) return ['', '', '', ''];
+  const d = snap.data();
+  return [d.a0 || '', d.a1 || '', d.a2 || '', d.a3 || ''];
+}
+
+async function saveNilai(sid, period, arr) {
+  await setDoc(doc(db, 'nilai', `${sid}__${period}`), {
+    siswaId: sid, period, a0: arr[0], a1: arr[1], a2: arr[2], a3: arr[3]
   });
 }
-async function getAbsen(sid, period, ta) {
-  const t = ta || getTA();
-  try {
-    const s = await getDoc(doc(db, 'absensi', absenDocId(sid, period, t)));
-    if (!s.exists()) return { hadir: 0, sakit: 0, izin: 0, alfa: 0 };
-    return s.data();
-  } catch (e) { return { hadir: 0, sakit: 0, izin: 0, alfa: 0 }; }
+
+async function getAbsen(sid, period) {
+  const snap = await getDoc(doc(db, 'absensi', `${sid}__${period}`));
+  if (!snap.exists()) return { hadir: 0, sakit: 0, izin: 0, alfa: 0 };
+  return snap.data();
 }
-async function saveAbsen(sid, period, data, ta) {
-  const t = ta || getTA();
-  await setDoc(doc(db, 'absensi', absenDocId(sid, period, t)), {
-    siswaId: sid, period, tahun_ajaran: t, semester: getSem(), ...data
+
+async function saveAbsen(sid, period, data) {
+  await setDoc(doc(db, 'absensi', `${sid}__${period}`), { siswaId: sid, period, ...data });
+}
+
+async function getCatatan(sid, period) {
+  const snap = await getDocs(collection(db, 'catatan'));
+  const out = [];
+  snap.forEach(d => {
+    const v = d.data();
+    if (v.siswaId === sid && (!period || v.period === period)) {
+      out.push({ id: d.id, ...v });
+    }
   });
+  out.sort((a, b) => (b.ts?.seconds || 0) - (a.ts?.seconds || 0));
+  return out;
 }
-async function getCatatan(sid, period, ta) {
-  const t = ta || getTA();
-  try {
-    const s = await getDocs(collection(db, 'catatan'));
-    const o = [];
-    s.forEach(d => {
-      const v = d.data();
-      if (v.siswaId !== sid) return;
-      if (period && v.period !== period) return;
-      if (v.tahun_ajaran !== t) return;
-      o.push({ id: d.id, ...v });
-    });
-    o.sort((a, b) => (b.ts?.seconds || 0) - (a.ts?.seconds || 0));
-    return o;
-  } catch (e) { return []; }
-}
-async function addCatatan(sid, period, text, ta) {
-  const t = ta || getTA();
+
+async function addCatatan(sid, period, text) {
   await addDoc(collection(db, 'catatan'), {
-    siswaId: sid, period, text,
-    tahun_ajaran: t, semester: getSem(), ts: serverTimestamp()
+    siswaId: sid, period, text, ts: serverTimestamp()
   });
 }
 
+// ============ SEED ============
 async function seedIfEmpty() {
-  const stu = await getStudents();
-  if (stu.length > 0) return false;
+  const students = await getStudents();
+  if (students.length > 0) return false;
   const b = writeBatch(db);
-  for (const [k, w] of Object.entries(DEFAULT_CLASSES)) b.set(doc(db, 'kelas', k), { wali: w });
+  for (const [kelas, wali] of Object.entries(DEFAULT_CLASSES)) {
+    b.set(doc(db, 'kelas', kelas), { wali });
+  }
   b.set(doc(db, 'settings', 'main'), DEFAULT_SCHOOL);
   await b.commit();
+
   for (const [kelas, arr] of Object.entries(SEED)) {
     for (let i = 0; i < arr.length; i++) {
       const s = arr[i];
-      const sid = kelas + '-' + String(i + 1).padStart(3, '0');
-      await setDoc(doc(db, 'siswa', sid), { nama: s[0], kelas, access_code: sid, tahun_ajaran: getTA() });
+      const sid = `${kelas}-${String(i + 1).padStart(3, '0')}`;
+      await setDoc(doc(db, 'siswa', sid), {
+        nama: s[0], kelas, access_code: sid
+      });
       await saveNilai(sid, PERIODS[0], [s[1], s[2], s[3], s[4]]);
       await saveAbsen(sid, PERIODS[0], { hadir: 20, sakit: 0, izin: 0, alfa: 0 });
     }
@@ -767,393 +314,189 @@ async function seedIfEmpty() {
   return true;
 }
 
-// ---------- TAHUN AJARAN ----------
-function getTA() { return currentTA || school.tahun_ajaran || '2025/2026'; }
-function getSem() { return currentSem || school.semester || 'Ganjil'; }
-function getTALabel() { return getTA() + ' · ' + getSem(); }
-
-async function getAllStudentsArchived(ta) {
-  const all = await getStudents();
-  if (!ta || ta === getTA()) return all;
-  return all.filter(s => (s.tahun_ajaran || getTA()) === ta);
+// ============ UTIL ============
+function hitungNilai(a) {
+  const v = a.filter(x => x);
+  if (!v.length) return null;
+  return Math.round(v.reduce((s, x) => s + (ASPECT_SCORES[x] || 0), 0) / v.length);
 }
 
-async function getAvailableYears() {
-  const out = new Set([getTA()]);
-  try {
-    const all = await getStudents();
-    all.forEach(s => { if (s.tahun_ajaran) out.add(s.tahun_ajaran); });
-  } catch (e) {}
-  return [...out].sort().reverse();
+function kategori(n) {
+  if (n === null) return ['Belum Dinilai', 'Em'];
+  if (n >= 85) return ['Baik', 'Ok'];
+  if (n >= 75) return ['Cukup', 'Cu'];
+  return ['Perlu Pendampingan', 'Pe'];
 }
 
-// ---------- VALIDASI ----------
-function validateRequired(field, msg) {
-  const v = (field.value || '').trim();
-  if (!v) { field.classList.add('err'); return msg || 'Wajib diisi'; }
-  field.classList.remove('err');
-  return '';
-}
-function showError(id, msg) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  if (msg) { el.textContent = msg; el.classList.add('show'); }
-  else { el.textContent = ''; el.classList.remove('show'); }
+function badge(v) {
+  const cls = v === 'L' ? 'bL' : v === 'CL' ? 'bCL' : v === 'KL' ? 'bKL' : 'bE';
+  return `<span class="badge ${cls}">${v || '—'}</span>`;
 }
 
-// ---------- AUDIT LOG ----------
-async function logAction(action, detail) {
-  try {
-    await addDoc(collection(db, 'audit'), {
-      action, detail: detail || '',
-      tahun_ajaran: getTA(), semester: getSem(),
-      ts: serverTimestamp()
-    });
-  } catch (e) { console.warn('logAction fail', e); }
-}
-async function getAuditLog(limit = 50) {
-  try {
-    const s = await getDocs(collection(db, 'audit'));
-    const o = [];
-    s.forEach(d => o.push({ id: d.id, ...d.data() }));
-    o.sort((a, b) => (b.ts?.seconds || 0) - (a.ts?.seconds || 0));
-    return o.slice(0, limit);
-  } catch (e) { return []; }
-}
-
-// ---------- Utilities ----------
-function hitungNilai(a) { const v = a.filter(x => x); if (!v.length) return null; return Math.round(v.reduce((s, x) => s + (ASPECT_SCORES[x] || 0), 0) / v.length); }
-function kategori(n) { if (n === null) return ['Belum Dinilai', 'Em']; if (n >= 85) return ['Baik', 'Ok']; if (n >= 75) return ['Cukup', 'Cu']; return ['Perlu Pendampingan', 'Pe']; }
-function badge(v) { const c = v === 'L' ? 'bL' : v === 'CL' ? 'bCL' : v === 'KL' ? 'bKL' : 'bE'; return '<span class="badge ' + c + '">' + (v || '—') + '</span>'; }
 function rekomendasi(a) {
   if (!a.some(x => x)) return ['Guru belum menginput nilai. Silakan hubungi wali kelas.', []];
   const items = [];
-  a.forEach((v, i) => { if (v === 'KL') items.push('Perlu pendampingan intensif pada <b>' + ASPECTS[i] + '</b>.'); else if (v === 'CL') items.push('Perlu penguatan rutin pada <b>' + ASPECTS[i] + '</b>.'); });
+  a.forEach((v, i) => {
+    if (v === 'KL') items.push(`Perlu pendampingan intensif pada <b>${ASPECTS[i]}</b>.`);
+    else if (v === 'CL') items.push(`Perlu penguatan rutin pada <b>${ASPECTS[i]}</b>.`);
+  });
   if (!items.length) return ['Ananda menunjukkan penguasaan baik di semua aspek. Berikan pengayaan dan apresiasi.', []];
   return ['Beberapa aspek masih perlu perhatian khusus:', items];
 }
-function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 function toast(msg, type = 'ok') {
   const d = document.createElement('div');
-  d.className = 'alert a' + (type === 'ok' ? 'ok' : type === 'err' ? 'er' : 'inf');
+  d.className = `alert alert-${type}`;
   d.textContent = msg;
-  d.style.cssText = 'position:fixed;top:1rem;right:1rem;z-index:99999;max-width:320px;box-shadow:0 12px 30px rgba(0,0,0,.15);animation:fadeInUp .3s ease';
+  d.style.cssText = 'position:fixed;top:1rem;right:1rem;z-index:99999;max-width:320px;box-shadow:0 10px 15px rgba(0,0,0,.1)';
   document.body.appendChild(d);
   setTimeout(() => d.remove(), 3000);
 }
 
-// ---------- Favorites ----------
-function getFavs() { try { return JSON.parse(localStorage.getItem('walimurid_favs') || '[]'); } catch (e) { return []; } }
-function setFavs(a) { localStorage.setItem('walimurid_favs', JSON.stringify(a)); }
-function isFav(sid) { return getFavs().some(x => x.id === sid); }
-function toggleFav(sid, nama, kelas) {
-  let f = getFavs();
-  const i = f.findIndex(x => x.id === sid);
-  if (i >= 0) f.splice(i, 1); else f.unshift({ id: sid, nama, kelas });
-  setFavs(f);
-  toast(isFav(sid) ? '⭐ Ditambahkan ke Anak Saya' : 'Dihapus dari Anak Saya', 'ok');
-  render();
+// ============ ROUTER ============
+function go(path) {
+  window.location.hash = '#' + path;
 }
-function removeFav(sid, ev) { if (ev) { ev.preventDefault(); ev.stopPropagation(); } setFavs(getFavs().filter(x => x.id !== sid)); render(); }
 
-// ---------- Admin PIN ----------
-function getPin() { return localStorage.getItem('walimurid_pin') || '1234'; }
-function setPin(p) { localStorage.setItem('walimurid_pin', p); }
-function isAdminOk() { return sessionStorage.getItem('walimurid_admin_ok') === '1'; }
-
-// ---------- Router ----------
-function go(p) { window.location.hash = '#' + p; }
-function parseRoute() { return (window.location.hash || '#/').slice(1).split('/').filter(Boolean); }
+function parseRoute() {
+  const hash = (window.location.hash || '#/').slice(1);
+  return hash.split('/').filter(Boolean).map(decodeURIComponent);
+}
 
 async function render() {
+  updateNav();
   const parts = parseRoute();
   try {
-    if (!parts.length) await renderHome();
-    else if (parts[0] === 'admin') await renderAdmin(parts.slice(1));
-    else if (parts[0] === 'kelas' && parts[1]) await renderKelas(parts[1]);
-    else if (parts[0] === 'siswa' && parts[1]) await renderSiswa(parts[1], parts[2] ? decodeURIComponent(parts[2]) : PERIODS[0]);
-    else await renderHome();
+    if (parts.length === 0) { homeStudents = []; await renderHome(); return homeSearch(''); }
+    if (parts[0] === 'admin') return await renderAdmin(parts.slice(1));
+    if (parts[0] === 'kelas' && parts[1]) return await renderKelas(parts[1]);
+    if (parts[0] === 'siswa' && parts[1]) return await renderSiswa(parts[1], parts[2] || PERIODS[0]);
+    return await renderHome();
   } catch (e) {
     console.error(e);
-    document.getElementById('app').innerHTML = '<div class="alert aer">Error: ' + esc(e.message) + '</div>';
+    document.getElementById('app').innerHTML = `<div class="alert alert-err">Error: ${esc(e.message)}</div>`;
   }
-  updateNav();
 }
+
 function updateNav() {
-  const p = parseRoute();
-  const c = p[0] || '';
-  const isHome = c === '' || c === 'home';
-  const isAdmin = c === 'admin';
-
-  document.getElementById('nav-home')?.classList.toggle('act', isHome);
-  document.getElementById('nav-admin')?.classList.toggle('act', isAdmin);
-
-  document.getElementById('mNav-home')?.classList.toggle('act', isHome);
-  document.getElementById('mNav-admin')?.classList.toggle('act', isAdmin);
+  const parts = parseRoute();
+  const cur = parts[0] || 'home';
+  document.getElementById('nav-home').classList.toggle('act', cur === 'home' || cur === '');
+  document.getElementById('nav-admin').classList.toggle('act', cur === 'admin');
 }
 
-// ---------- HOME ----------
+// ============ RENDER: HOME ============
 async function renderHome() {
   const app = document.getElementById('app');
   const students = await getStudents();
   const classes = await getClasses();
   const kelasSet = [...new Set(students.map(s => s.kelas))].sort();
 
-  _allStudents = students;
-  _activeKelas = 'all';
-  _activeQuery = '';
-
-  const favs = getFavs();
-  const quickHtml = favs.length ? `
-    <div class="gQuick">
-      <div class="lbl">⭐ Anak Saya</div>
-      <div class="shorts">
-        ${favs.map((f, i) => `
-          <div class="gShort" onclick="go('/siswa/${f.id}')">
-            <button class="sDl" onclick="event.stopPropagation();removeFav('${f.id}',event)" title="Hapus">&times;</button>
-            <div class="sAv av${i % 6}">${f.nama.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()}</div>
-            <div class="sNm">${esc(f.nama.split(' ')[0])}</div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  ` : '';
+  // hitung rata-rata per kelas
+  const rows = [];
+  for (const k of kelasSet) {
+    const list = students.filter(s => s.kelas === k);
+    const vals = [];
+    for (const s of list) {
+      const n = hitungNilai(await getNilai(s.id, PERIODS[0]));
+      if (n !== null) vals.push(n);
+    }
+    const avg = vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : null;
+    rows.push({ kelas: k, jumlah: list.length, avg, wali: classes[k] || '' });
+  }
 
   app.innerHTML = `
-    <div class="gHome">
-      <div class="gLogo">
-        <div class="mark">${esc(school.name)}</div>
-        <div class="tag">Info Perkembangan Anak</div>
+    <div class="shead">
+      <div>
+        <h2>Selamat Datang, Bapak/Ibu Walimurid</h2>
+        <p class="sub" style="margin-bottom:0">Silakan pilih kelas anak Anda untuk melihat laporan perkembangan belajar.</p>
       </div>
-
-      <div class="gSearch">
-        <span class="icoL">🔍</span>
-        <input id="gIn" placeholder="Cari nama anak..." autocomplete="off" autofocus
-               oninput="gInput(this.value)" onfocus="gFocus()" onblur="gBlur()">
-        <button class="icoR" onclick="gGo()" title="Cari">→</button>
-        <div class="gSuggest" id="gSuggest"></div>
-      </div>
-
-      <div class="gChips">
-        <button class="gChip act" data-kelas="all" onclick="gChip('all')">Semua</button>
-        ${kelasSet.map(k => `<button class="gChip" data-kelas="${k}" onclick="gChip('${k}')">Kelas ${k}</button>`).join('')}
-      </div>
-
-      ${quickHtml}
     </div>
-    <div id="gResultBox"></div>
-  `;
-
-  if (!students.length) {
-    document.getElementById('gResultBox').innerHTML = `
-      <div class="gEmpty">
-        <div class="ico">📚</div>
-        <div class="ttl">Belum ada data siswa</div>
-        <div class="dsc">Minta guru/admin menambahkan data terlebih dahulu</div>
-      </div>`;
-  } else {
-    renderClassList();
-  }
-}
-
-function renderClassList() {
-  const box = document.getElementById('gResultBox');
-  if (!box) return;
-  let list = _allStudents.slice();
-  if (_activeKelas !== 'all') list = list.filter(s => s.kelas === _activeKelas);
-  list.sort((a, b) => a.nama.localeCompare(b.nama));
-  if (!list.length) {
-    box.innerHTML = '<div class="gEmpty"><div class="ico">🔍</div><div class="ttl">Tidak ada siswa</div><div class="dsc">Coba pilih kelas lain</div></div>';
-    return;
-  }
-  const title = _activeKelas === 'all' ? 'Semua Siswa' : ('Kelas ' + _activeKelas);
-  box.innerHTML = '<div class="gResults"><div class="hd"><div class="cnt"><b>' + list.length + '</b> siswa · ' + title + '</div></div>' +
-    list.map((s, i) => {
-      const ini = s.nama.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
-      return '<div class="gRow" onclick="go(\'/siswa/' + s.id + '\')">' +
-        '<div class="rAv av' + (i % 6) + '">' + ini + '</div>' +
-        '<div class="rInfo"><div class="rN">' + esc(s.nama) + '</div>' +
-        '<div class="rM">Kelas ' + esc(s.kelas) + ' · ' + esc(s.access_code || '') + '</div></div>' +
-        '<div class="rS sEm" id="rs' + i + '">—</div></div>';
-    }).join('') + '</div>';
-  list.forEach(async (s, i) => {
-    const n = hitungNilai(await getNilai(s.id, PERIODS[0]));
-    const el = document.getElementById('rs' + i);
-    if (!el) return;
-    const [, kc] = kategori(n);
-    el.textContent = n !== null ? n : '—';
-    el.className = 'rS s' + kc;
-  });
-}
-
-// Google-style search
-let gTimer = null;
-let gHL = -1;
-let gSugList = [];
-
-window.gInput = function (q) {
-  clearTimeout(gTimer);
-  _activeQuery = q.toLowerCase().trim();
-  const box = document.getElementById('gSuggest');
-  if (!_activeQuery) {
-    box.classList.remove('show');
-    box.innerHTML = '';
-    gSugList = [];
-    renderClassList();
-    return;
-  }
-  gTimer = setTimeout(() => {
-    let list = _allStudents.slice();
-    if (_activeKelas !== 'all') list = list.filter(s => s.kelas === _activeKelas);
-    list = list.filter(s =>
-      s.nama.toLowerCase().includes(_activeQuery) ||
-      (s.access_code || '').toLowerCase().includes(_activeQuery)
-    );
-    list.sort((a, b) => {
-      const sa = a.nama.toLowerCase().startsWith(_activeQuery) ? 0 : 1;
-      const sb = b.nama.toLowerCase().startsWith(_activeQuery) ? 0 : 1;
-      if (sa !== sb) return sa - sb;
-      return a.nama.localeCompare(b.nama);
-    });
-    list = list.slice(0, 8);
-    gSugList = list;
-    gHL = -1;
-
-    if (!list.length) {
-      box.innerHTML = `<div style="padding:1rem;text-align:center;color:var(--mt);font-size:.85rem">
-        Tidak ada nama yang cocok dengan "<b>${esc(q)}</b>"
-      </div>`;
-      box.classList.add('show');
-      return;
-    }
-
-    box.innerHTML = list.map((s, i) => {
-      const hi = highlight(s.nama, _activeQuery);
-      const ini = s.nama.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
-      return `<div class="gSugItem" data-i="${i}" onclick="gPick(${i})" onmouseenter="gHover(${i})">
-        <div class="sIco av${i % 6}">${ini}</div>
-        <div class="sTxt">
-          <div class="sN">${hi}</div>
-          <div class="sM">Kelas ${s.kelas} · ${s.access_code}</div>
+    <div class="search"><input placeholder="Cari nama anak..." oninput="homeSearch(this.value)"></div>
+    <div id="hres"></div>
+    <div class="card" style="padding:.75rem" id="hkelas">
+      ${rows.map(r => `
+        <div class="listrow" onclick="go('/kelas/${r.kelas}')">
+          <div class="lbadge">${r.kelas}</div>
+          <div class="li">
+            <div class="lt">Kelas ${r.kelas}</div>
+            <div class="lm">${r.jumlah} siswa terdaftar${r.wali ? ` &middot; Wali: ${esc(r.wali)}` : ''}</div>
+          </div>
+          <div class="la">→</div>
         </div>
-        <div class="sSc s${kategoriSilent(s)}" id="gSc${i}"></div>
-      </div>`;
-    }).join('');
-    box.classList.add('show');
-
-    list.forEach(async (s, i) => {
-      const n = hitungNilai(await getNilai(s.id, PERIODS[0]));
-      const el = document.getElementById('gSc' + i);
-      if (el) {
-        const [, kc] = kategori(n);
-        el.textContent = n !== null ? n : '—';
-        el.className = 'sSc s' + kc;
-      }
-    });
-  }, 80);
-};
-
-function kategoriSilent() { return 'Em'; }
-
-function highlight(text, q) {
-  const idx = text.toLowerCase().indexOf(q);
-  if (idx < 0) return esc(text);
-  const before = text.slice(0, idx);
-  const match = text.slice(idx, idx + q.length);
-  const after = text.slice(idx + q.length);
-  return esc(before) + '<b>' + esc(match) + '</b>' + esc(after);
+      `).join('') || '<div class="empty"><div class="ico">📚</div>Belum ada data kelas.</div>'}
+    </div>
+    <div class="card" style="background:var(--p50);border-color:transparent">
+      <h3>💡 Panduan Penggunaan</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:.5rem">
+        <div><b>1.</b> Pilih kelas anak Anda</div>
+        <div><b>2.</b> Klik nama anak</div>
+        <div><b>3.</b> Lihat nilai, absensi &amp; catatan guru</div>
+      </div>
+    </div>
+  `;
 }
 
-window.gPick = function (i) {
-  const s = gSugList[i];
-  if (s) go('/siswa/' + s.id);
-};
-
-window.gHover = function (i) {
-  gHL = i;
-  document.querySelectorAll('.gSugItem').forEach((el, idx) => {
-    el.classList.toggle('hl', idx === i);
-  });
-};
-
-window.gFocus = function () {
-  const box = document.getElementById('gSuggest');
-  if (box.innerHTML.trim() && _activeQuery) box.classList.add('show');
-};
-
-window.gBlur = function () {
-  setTimeout(() => {
-    const box = document.getElementById('gSuggest');
-    if (box) box.classList.remove('show');
-  }, 200);
-};
-
-window.gGo = function () {
-  if (gSugList.length) go('/siswa/' + gSugList[0].id);
-};
-
-window.gChip = function (k) {
-  _activeKelas = k;
-  document.querySelectorAll('.gChip').forEach(c => {
-    c.classList.toggle('act', c.dataset.kelas === k);
-  });
-  const inp = document.getElementById('gIn');
-  if (inp) inp.placeholder = k === 'all' ? 'Cari nama anak...' : 'Cari di Kelas ' + k + '...';
-  if (inp && inp.value.trim()) gInput(inp.value);
-  else renderClassList();
-};
-
-document.addEventListener('keydown', e => {
-  const box = document.getElementById('gSuggest');
-  if (!box || !box.classList.contains('show')) return;
-  const items = document.querySelectorAll('.gSugItem');
-  if (!items.length) return;
-  if (e.key === 'ArrowDown') {
-    e.preventDefault();
-    gHL = Math.min(gHL + 1, items.length - 1);
-    items.forEach((el, i) => el.classList.toggle('hl', i === gHL));
-    items[gHL].scrollIntoView({ block: 'nearest' });
-  } else if (e.key === 'ArrowUp') {
-    e.preventDefault();
-    gHL = Math.max(gHL - 1, 0);
-    items.forEach((el, i) => el.classList.toggle('hl', i === gHL));
-    items[gHL].scrollIntoView({ block: 'nearest' });
-  } else if (e.key === 'Enter' && gHL >= 0) {
-    e.preventDefault();
-    gPick(gHL);
-  } else if (e.key === 'Escape') {
-    box.classList.remove('show');
-  }
-});
-
-// ---------- KELAS ----------
+// ============ RENDER: KELAS ============
 async function renderKelas(kelas) {
   const app = document.getElementById('app');
   const all = await getStudents();
   const list = all.filter(s => s.kelas === kelas).sort((a, b) => a.nama.localeCompare(b.nama));
   const classes = await getClasses();
-  if (!list.length) { app.innerHTML = '<div class="alert aer">Kelas tidak ditemukan.</div>'; return; }
+  const wali = classes[kelas] || '';
+
+  if (!list.length) {
+    app.innerHTML = `<div class="alert alert-err">Kelas tidak ditemukan.</div>`;
+    return;
+  }
+
   const items = [];
   for (let i = 0; i < list.length; i++) {
     const s = list[i];
     const n = hitungNilai(await getNilai(s.id, PERIODS[0]));
     const [kt, kc] = kategori(n);
     const ini = s.nama.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
-    items.push('<div class="srow" onclick="go(\'/siswa/' + s.id + '\')"><div class="av av' + (i % 6) + '">' + ini + '</div><div class="sinfo"><div class="sn">' + esc(s.nama) + '</div><div class="sm">' + esc(s.access_code) + ' &middot; ' + kt + '</div></div><div class="ssc s' + kc + '">' + (n !== null ? n : '—') + '</div></div>');
+    items.push(`
+      <div class="srow" onclick="go('/siswa/${s.id}')">
+        <div class="av av${i % 6}">${ini}</div>
+        <div class="sinfo">
+          <div class="sn">${esc(s.nama)}</div>
+          <div class="sm">${esc(s.access_code)} &middot; ${kt}</div>
+        </div>
+        <div class="ssc s${kc}">${n !== null ? n : '—'}</div>
+      </div>
+    `);
   }
-  app.innerHTML = '<div class="crumb"><a onclick="go(\'/\')">Beranda</a><span>›</span>Kelas ' + kelas + '</div>' +
-    '<div class="shead"><div><h2>Kelas ' + kelas + '</h2><p class="sub" style="margin-bottom:0">' + list.length + ' siswa' + (classes[kelas] ? ' &middot; Wali: <b>' + esc(classes[kelas]) + '</b>' : '') + '</p></div><button class="btn bo b-sm" onclick="go(\'/\')">← Kembali</button></div>' +
-    '<div class="card"><div class="search"><input placeholder="Cari nama anak..." oninput="filterRows(this.value,\'.srow\')" autofocus></div>' + items.join('') + '</div>';
+
+  app.innerHTML = `
+    <div class="crumb"><a onclick="go('/')">Beranda</a><span>›</span>Kelas ${kelas}</div>
+    <div class="shead">
+      <div>
+        <h2>Kelas ${kelas}</h2>
+        <p class="sub" style="margin-bottom:0">${list.length} siswa${wali ? ` &middot; Wali: <b>${esc(wali)}</b>` : ''}</p>
+      </div>
+      <button class="btn bo b-sm" onclick="go('/')">← Kembali</button>
+    </div>
+    <div class="card">
+      <div class="search"><input placeholder="Cari nama anak..." oninput="filterRows(this.value,'.srow')" autofocus></div>
+      ${items.join('')}
+    </div>
+  `;
 }
 
-// ---------- SISWA ----------
+// ============ RENDER: SISWA ============
 async function renderSiswa(sid, period) {
   const app = document.getElementById('app');
   const snap = await getDoc(doc(db, 'siswa', sid));
-  if (!snap.exists()) { app.innerHTML = '<div class="alert aer">Siswa tidak ditemukan.</div>'; return; }
+  if (!snap.exists()) { app.innerHTML = `<div class="alert alert-err">Siswa tidak ditemukan.</div>`; return; }
   const s = { id: snap.id, ...snap.data() };
   const classes = await getClasses();
   const wali = classes[s.kelas] || '';
+
   const a = await getNilai(sid, period);
   const nilai = hitungNilai(a);
   const [kat, kc] = kategori(nilai);
@@ -1161,133 +504,274 @@ async function renderSiswa(sid, period) {
   const cnt = { L: a.filter(x => x === 'L').length, CL: a.filter(x => x === 'CL').length, KL: a.filter(x => x === 'KL').length };
   const att = await getAbsen(sid, period);
   const notes = await getCatatan(sid, period);
+
+  // history
   const hist = [];
-  for (const p of PERIODS) { const h = await getNilai(sid, p); hist.push({ period: p, nilai: hitungNilai(h), aspects: h }); }
-  const pBtns = PERIODS.map(p => '<div class="per ' + (p === period ? 'act' : '') + '" onclick="go(\'/siswa/' + sid + '/' + encodeURIComponent(p) + '\')">' + p + '</div>').join('');
+  for (const p of PERIODS) {
+    const h = await getNilai(sid, p);
+    const hn = hitungNilai(h);
+    hist.push({ period: p, nilai: hn, aspects: h });
+  }
+
+  const periodBtns = PERIODS.map(p =>
+    `<div class="per ${p === period ? 'act' : ''}" onclick="go('/siswa/${sid}/${encodeURIComponent(p)}')">${p}</div>`
+  ).join('');
+
   const aspHtml = a.map((v, i) => {
-    const c = v === 'L' ? 'bL' : v === 'CL' ? 'bCL' : v === 'KL' ? 'bKL' : 'bE';
-    return '<div class="asp" data-v="' + v + '"><div class="al">' + ASPECTS[i] + '</div><span class="badge ' + c + '" style="font-size:1rem;padding:.4rem .85rem">' + (v || '—') + '</span><div class="ad">' + (ASPECT_LABELS[v] || 'Belum dinilai') + '</div><div style="font-size:.7rem;color:var(--mt);margin-top:.35rem">Skor ' + (ASPECT_SCORES[v] || '—') + '</div></div>';
+    const cls = v === 'L' ? 'bL' : v === 'CL' ? 'bCL' : v === 'KL' ? 'bKL' : 'bE';
+    return `<div class="asp" data-v="${v}">
+      <div class="al">${ASPECTS[i]}</div>
+      <span class="badge ${cls}" style="font-size:1rem;padding:.4rem .85rem">${v || '—'}</span>
+      <div class="ad">${ASPECT_LABELS[v] || 'Belum dinilai'}</div>
+      <div style="font-size:.7rem;color:var(--muted);margin-top:.35rem">Skor ${ASPECT_SCORES[v] || '—'}</div>
+    </div>`;
   }).join('');
-  const tH = att.hadir + att.sakit + att.izin + att.alfa;
-  const pct = tH ? Math.round(att.hadir / tH * 100) : 0;
-  const attHtml = '<div class="attgrid"><div class="atti h"><div class="n">' + att.hadir + '</div><div class="l">Hadir</div></div><div class="atti s"><div class="n">' + att.sakit + '</div><div class="l">Sakit</div></div><div class="atti i"><div class="n">' + att.izin + '</div><div class="l">Izin</div></div><div class="atti a"><div class="n">' + att.alfa + '</div><div class="l">Alfa</div></div></div><div style="text-align:center;font-size:.85rem;color:var(--mt)">Total <b>' + tH + '</b> hari &middot; Kehadiran <b>' + pct + '%</b></div>';
-  const notesHtml = notes.length ? notes.map(n => '<div class="tli"><div class="dt">' + (n.ts ? new Date(n.ts.seconds * 1000).toLocaleString('id-ID') : '-') + ' &middot; ' + esc(n.period || '') + '</div><div class="tx">' + esc(n.text) + '</div></div>').join('') : '<div class="empty"><div class="ico">📝</div>Belum ada catatan dari guru.</div>';
-  const rekHtml = '<div class="rec">' + rekText + (rekItems.length ? '<ul>' + rekItems.map(x => '<li>' + x + '</li>').join('') + '</ul>' : '') + '</div>';
+
+  const totalHari = att.hadir + att.sakit + att.izin + att.alfa;
+  const pct = totalHari ? Math.round(att.hadir / totalHari * 100) : 0;
+  const attHtml = `
+    <div class="attgrid">
+      <div class="atti h"><div class="n">${att.hadir}</div><div class="l">Hadir</div></div>
+      <div class="atti s"><div class="n">${att.sakit}</div><div class="l">Sakit</div></div>
+      <div class="atti i"><div class="n">${att.izin}</div><div class="l">Izin</div></div>
+      <div class="atti a"><div class="n">${att.alfa}</div><div class="l">Alfa</div></div>
+    </div>
+    <div style="text-align:center;font-size:.85rem;color:var(--muted)">Total <b>${totalHari}</b> hari &middot; Kehadiran <b>${pct}%</b></div>`;
+
+  const notesHtml = notes.length ? notes.map(n => `
+    <div class="tli">
+      <div class="dt">${n.ts ? new Date(n.ts.seconds * 1000).toLocaleString('id-ID') : '-'} &middot; ${esc(n.period || '')}</div>
+      <div class="tx">${esc(n.text)}</div>
+    </div>`).join('') : '<div class="empty"><div class="ico">📝</div>Belum ada catatan dari guru.</div>';
+
+  const rekHtml = `<div class="rec">${rekText}${rekItems.length ? `<ul>${rekItems.map(x => `<li>${x}</li>`).join('')}</ul>` : ''}</div>`;
+
   let prevN = null;
   const histRows = hist.map(h => {
-    let tr = '<span style="color:var(--mt)">—</span>';
+    let tr = '<span style="color:var(--muted)">—</span>';
     if (h.nilai !== null && prevN !== null) {
-      if (h.nilai > prevN) tr = '<span style="color:var(--ok);font-weight:700">▲ +' + (h.nilai - prevN) + '</span>';
-      else if (h.nilai < prevN) tr = '<span style="color:var(--er);font-weight:700">▼ ' + (h.nilai - prevN) + '</span>';
-      else tr = '<span style="color:var(--mt)">=</span>';
+      if (h.nilai > prevN) tr = `<span style="color:var(--ok);font-weight:700">▲ +${h.nilai - prevN}</span>`;
+      else if (h.nilai < prevN) tr = `<span style="color:var(--err);font-weight:700">▼ ${h.nilai - prevN}</span>`;
+      else tr = '<span style="color:var(--muted)">=</span>';
     }
     const [kt2, kc2] = kategori(h.nilai);
-    const aspS = h.aspects.map(v => badge(v)).join(' ');
+    const aspSmall = h.aspects.map(v => badge(v)).join(' ');
     if (h.nilai !== null) prevN = h.nilai;
-    return '<tr><td><b>' + h.period + '</b></td><td>' + aspS + '</td><td class="tc"><span class="sbig s' + kc2 + '" style="font-size:1.15rem">' + (h.nilai !== null ? h.nilai : '—') + '</span></td><td>' + kt2 + '</td><td class="tc">' + tr + '</td></tr>';
+    return `<tr>
+      <td><b>${h.period}</b></td>
+      <td>${aspSmall}</td>
+      <td class="tc"><span class="sbig s${kc2}" style="font-size:1.15rem">${h.nilai !== null ? h.nilai : '—'}</span></td>
+      <td>${kt2}</td>
+      <td class="tc">${tr}</td>
+    </tr>`;
   }).join('');
-  const shortUrl = location.origin + location.pathname + '#/siswa/' + sid;
-  const favOk = isFav(sid);
-  app.innerHTML = '<div class="crumb"><a onclick="go(\'/\')">Beranda</a><span>›</span><a onclick="go(\'/kelas/' + s.kelas + '\')">Kelas ' + s.kelas + '</a><span>›</span>' + esc(s.nama) + '</div>' +
-    '<div class="shead"><div><h2>' + esc(s.nama) + '</h2><p class="sub" style="margin-bottom:0">Kelas <b>' + s.kelas + '</b> &middot; Kode <code>' + esc(s.access_code) + '</code>' + (wali ? ' &middot; Wali: <b>' + esc(wali) + '</b>' : '') + '</p></div>' +
-    '<div style="display:flex;gap:.5rem;flex-wrap:wrap" class="np">' +
-    '<button class="btn bo b-sm" id="favBtn" data-sid="' + s.id + '" data-nama="' + esc(s.nama) + '" data-kelas="' + s.kelas + '" onclick="toggleFav(this.dataset.sid,this.dataset.nama,this.dataset.kelas)" style="' + (favOk ? 'color:#d97706;border-color:#d97706' : '') + '">' + (favOk ? '&#9733; Tersimpan' : '&#9734; Simpan ke Anak Saya') + '</button>' +
-    '<button class="btn bo b-sm" onclick="go(\'/kelas/' + s.kelas + '\')">← Kembali</button>' +
-    '<button class="btn bp b-sm" onclick="window.print()">🖨 Cetak</button>' +
-    '</div></div>' +
-    '<div class="periods np">' + pBtns + '</div>' +
-    '<div class="qrCard np"><div style="text-align:center"><img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&margin=6&data=' + encodeURIComponent(shortUrl) + '" width="130" height="130"><div style="font-size:.7rem;color:var(--mt);margin-top:.4rem">Scan untuk akses cepat</div></div>' +
-    '<div style="flex:1;min-width:220px"><h3>🔗 Link Pintas</h3><p>Simpan link ini di HP agar bisa langsung buka laporan anak.</p><div class="qrCopy"><input id="shortUrl" value="' + esc(shortUrl) + '" readonly onclick="this.select()"><button class="btn bp b-sm" id="copyBtn" onclick="copyText(\'shortUrl\',\'copyBtn\')">Salin</button></div></div></div>' +
-    '<div class="grid g2">' +
-    '<div class="card" style="text-align:center;padding:1.75rem"><div style="font-size:.72rem;color:var(--mt);text-transform:uppercase;letter-spacing:1.2px;font-weight:700">Nilai Akhir &middot; ' + period + '</div><div class="sbig s' + kc + '" style="margin:.5rem 0">' + (nilai !== null ? nilai : '—') + '</div><div style="font-size:1rem;font-weight:700">' + kat + '</div><div class="prog"><div class="pbar" data-w="' + (nilai || 0) + '"></div></div><div style="font-size:.72rem;color:var(--mt);margin-top:.5rem">' + a.filter(x => x).length + '/' + ASPECTS.length + ' aspek terisi</div></div>' +
-    '<div class="card" style="text-align:center"><h3 style="justify-content:center">📊 Distribusi</h3><div class="cs"><canvas id="dc"></canvas></div><div style="display:flex;justify-content:center;gap:1rem;margin-top:.85rem;font-size:.8rem;font-weight:600"><span><span class="badge bL">L</span> ' + cnt.L + '</span><span><span class="badge bCL">CL</span> ' + cnt.CL + '</span><span><span class="badge bKL">KL</span> ' + cnt.KL + '</span></div></div>' +
-    '</div>' +
-    '<div class="card"><div class="tabs np"><button class="tab act" onclick="showTab(\'t1\',this)">Aspek</button><button class="tab" onclick="showTab(\'t2\',this)">Riwayat</button><button class="tab" onclick="showTab(\'t3\',this)">Absensi</button><button class="tab" onclick="showTab(\'t4\',this)">Rekomendasi</button><button class="tab" onclick="showTab(\'t5\',this)">Catatan</button></div>' +
-    '<div id="t1" class="tc-c act"><div class="grid g4">' + aspHtml + '</div><div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--bd);font-size:.78rem;color:var(--mt)"><b>Keterangan:</b> <span class="badge bL">L</span> Lancar (90) &nbsp;<span class="badge bCL">CL</span> Cukup Lancar (80) &nbsp;<span class="badge bKL">KL</span> Kurang Lancar (70)</div></div>' +
-    '<div id="t2" class="tc-c"><h3>Perkembangan Nilai</h3><div class="cw"><canvas id="tc"></canvas></div><h3 style="margin-top:1.5rem">Riwayat per Periode</h3><div class="tw"><table><thead><tr><th>Periode</th><th>Aspek</th><th class="tc">Nilai</th><th>Kategori</th><th class="tc">Tren</th></tr></thead><tbody>' + histRows + '</tbody></table></div></div>' +
-    '<div id="t3" class="tc-c"><h3>Rekap Absensi ' + period + '</h3>' + attHtml + '</div>' +
-    '<div id="t4" class="tc-c">' + rekHtml + '</div>' +
-    '<div id="t5" class="tc-c"><div class="tl">' + notesHtml + '</div></div>' +
-    '</div>';
+
+  app.innerHTML = `
+    <div class="crumb">
+      <a onclick="go('/')">Beranda</a><span>›</span>
+      <a onclick="go('/kelas/${s.kelas}')">Kelas ${s.kelas}</a><span>›</span>
+      ${esc(s.nama)}
+    </div>
+    <div class="shead">
+      <div>
+        <h2>${esc(s.nama)}</h2>
+        <p class="sub" style="margin-bottom:0">
+          Kelas <b>${s.kelas}</b> &middot; Kode <code>${esc(s.access_code)}</code>
+          ${wali ? ` &middot; Wali: <b>${esc(wali)}</b>` : ''}
+        </p>
+      </div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap" class="np"><button class="btn bo b-sm" data-nama="${esc(s.nama)}" data-kelas="${s.kelas}" onclick="toggleFav('${sid}', this)">${isFav(sid) ? '★ Favorit' : '☆ Favorit'}</button>
+        <button class="btn bo b-sm" onclick="go('/kelas/${s.kelas}')">← Kembali</button>
+        <button class="btn bp b-sm" onclick="window.print()">🖨 Cetak / PDF</button>
+      </div>
+    </div>
+
+    <div class="periods np">${periodBtns}</div>
+
+    <div class="grid g2">
+      <div class="card" style="text-align:center;padding:1.75rem">
+        <div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;font-weight:700">Nilai Akhir &middot; ${period}</div>
+        <div class="sbig s${kc}" style="margin:.5rem 0">${nilai !== null ? nilai : '—'}</div>
+        <div style="font-size:1rem;font-weight:700">${kat}</div>
+        <div class="prog"><div class="pbar" data-w="${nilai || 0}"></div></div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:.5rem">${a.filter(x => x).length}/${ASPECTS.length} aspek terisi</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <h3 style="justify-content:center">📊 Distribusi Penilaian</h3>
+        <div class="cs"><canvas id="dc"></canvas></div>
+        <div style="display:flex;justify-content:center;gap:1rem;margin-top:.85rem;font-size:.8rem;font-weight:600">
+          <span><span class="badge bL">L</span> ${cnt.L}</span>
+          <span><span class="badge bCL">CL</span> ${cnt.CL}</span>
+          <span><span class="badge bKL">KL</span> ${cnt.KL}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="tabs np">
+        <button class="tab act" onclick="showTab('t1',this)">Aspek Penilaian</button>
+        <button class="tab" onclick="showTab('t2',this)">Riwayat &amp; Tren</button>
+        <button class="tab" onclick="showTab('t3',this)">Absensi</button>
+        <button class="tab" onclick="showTab('t4',this)">Rekomendasi</button>
+        <button class="tab" onclick="showTab('t5',this)">Catatan Guru</button>
+      </div>
+
+      <div id="t1" class="tc-c act">
+        <div class="grid g4">${aspHtml}</div>
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border);font-size:.78rem;color:var(--muted)">
+          <b>Keterangan:</b>
+          <span class="badge bL">L</span> Lancar (90) &nbsp;
+          <span class="badge bCL">CL</span> Cukup Lancar (80) &nbsp;
+          <span class="badge bKL">KL</span> Kurang Lancar (70)
+        </div>
+      </div>
+
+      <div id="t2" class="tc-c">
+        <h3>Perkembangan Nilai</h3>
+        <div class="cw"><canvas id="tc"></canvas></div>
+        <h3 style="margin-top:1.5rem">Riwayat per Periode</h3>
+        <div class="tw"><table>
+          <thead><tr><th>Periode</th><th>Aspek</th><th class="tc">Nilai</th><th>Kategori</th><th class="tc">Tren</th></tr></thead>
+          <tbody>${histRows}</tbody>
+        </table></div>
+      </div>
+
+      <div id="t3" class="tc-c">
+        <h3>Rekap Absensi ${period}</h3>
+        ${attHtml}
+      </div>
+
+      <div id="t4" class="tc-c">${rekHtml}</div>
+
+      <div id="t5" class="tc-c">
+        <div class="tl">${notesHtml}</div>
+      </div>
+    </div>
+  `;
+
+  // Charts
   destroyCharts();
   const isD = document.documentElement.getAttribute('data-theme') === 'dark';
   const cc = isD ? ['#34d399', '#fbbf24', '#f87171'] : ['#059669', '#d97706', '#dc2626'];
   charts.push(new Chart(document.getElementById('dc'), {
     type: 'doughnut',
-    data: { labels: ['L', 'CL', 'KL'], datasets: [{ data: [cnt.L, cnt.CL, cnt.KL], backgroundColor: cc, borderWidth: 0, hoverOffset: 6 }] },
+    data: {
+      labels: ['L', 'CL', 'KL'],
+      datasets: [{ data: [cnt.L, cnt.CL, cnt.KL], backgroundColor: cc, borderWidth: 0, hoverOffset: 6 }]
+    },
     options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { display: false } } }
   }));
+
   const labels = hist.filter(h => h.nilai !== null).map(h => h.period);
   const data = hist.filter(h => h.nilai !== null).map(h => h.nilai);
   if (labels.length) {
     charts.push(new Chart(document.getElementById('tc'), {
       type: 'line',
-      data: { labels, datasets: [{ label: 'Nilai', data, borderColor: '#1e40af', backgroundColor: 'rgba(30,64,175,.1)', fill: true, tension: .35, pointRadius: 6, pointBackgroundColor: '#1e40af', pointBorderColor: '#fff', pointBorderWidth: 2, borderWidth: 2.5 }] },
-      options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 }, x: {} }, plugins: { legend: { display: false } } }
+      data: {
+        labels,
+        datasets: [{
+          label: 'Nilai', data, borderColor: '#1e40af', backgroundColor: 'rgba(30,64,175,.1)',
+          fill: true, tension: .35, pointRadius: 6, pointBackgroundColor: '#1e40af',
+          pointBorderColor: '#fff', pointBorderWidth: 2, borderWidth: 2.5
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true, max: 100 }, x: {} },
+        plugins: { legend: { display: false } }
+      }
     }));
   }
+
+  // progress bars
   setTimeout(() => document.querySelectorAll('.pbar').forEach(b => b.style.width = b.dataset.w + '%'), 100);
 }
+
 function destroyCharts() { charts.forEach(c => c.destroy()); charts = []; }
 
-// ---------- ADMIN ----------
+// ============ RENDER: ADMIN ============
 async function renderAdmin(sub) {
+  if (!authReady) { document.getElementById('app').innerHTML = '<div class="empty">Memeriksa sesi…</div>'; return; }
+  if (!currentUser) return renderLogin();
   const tab = sub[0] || 'nilai';
   const app = document.getElementById('app');
-  if (!isAdminOk()) {
-    app.innerHTML = '<div class="card pinBox"><div class="pic">🔒</div><h2 style="margin-bottom:.25rem">Panel Guru</h2><p class="sub">Masukkan PIN untuk melanjutkan</p><form onsubmit="tryAdminLogin(event)"><input name="pin" type="password" inputmode="numeric" maxlength="8" required autofocus placeholder="••••"><button class="btn bp" type="submit">Masuk →</button></form><div class="alert ainf" style="margin-top:1rem;font-size:.8rem;text-align:left"><b>Info:</b> PIN default <code>1234</code>. Bisa diubah di tab <b>Pengaturan</b>.</div></div>';
-    return;
-  }
   const period = sub[1] || PERIODS[0];
   const students = await getStudents();
-
-  const lastBackup = localStorage.getItem('walimurid_last_backup');
-  const daysSince = lastBackup ? Math.floor((Date.now() - +lastBackup) / 86400000) : 999;
-  if (daysSince >= 7 && students.length > 0) {
-    setTimeout(() => {
-      if (confirm('💾 Sudah ' + (daysSince === 999 ? 'lama' : daysSince + ' hari') + ' tidak backup.\n\nBackup sekarang?')) {
-        backupData().then(() => localStorage.setItem('walimurid_last_backup', Date.now()));
-      }
-    }, 1000);
-  }
   const classes = await getClasses();
   const kelasSet = [...new Set(students.map(s => s.kelas))].sort();
-  const tabs = '<div class="tabs"><button class="tab ' + (tab === 'nilai' ? 'act' : '') + '" onclick="go(\'/admin/nilai\')">📊 Nilai</button><button class="tab ' + (tab === 'siswa' ? 'act' : '') + '" onclick="go(\'/admin/siswa\')">👥 Siswa</button><button class="tab ' + (tab === 'setting' ? 'act' : '') + '" onclick="go(\'/admin/setting\')">⚙️ Pengaturan</button><button class="tab ' + (tab === 'seed' ? 'act' : '') + '" onclick="go(\'/admin/seed\')">🌱 Seed</button></div>';
+
+  const tabs = `
+    <div class="tabs">
+      <button class="tab ${tab === 'nilai' ? 'act' : ''}" onclick="go('/admin/nilai')">📊 Nilai</button>
+      <button class="tab ${tab === 'siswa' ? 'act' : ''}" onclick="go('/admin/siswa')">👥 Siswa</button>
+      <button class="tab ${tab === 'setting' ? 'act' : ''}" onclick="go('/admin/setting')">⚙️ Pengaturan</button>
+      <button class="tab ${tab === 'seed' ? 'act' : ''}" onclick="go('/admin/seed')">🌱 Seed Data</button>
+    </div>`;
+
   let content = '';
 
   if (tab === 'nilai') {
-    const pBtns = PERIODS.map(p => '<div class="per ' + (p === period ? 'act' : '') + '" onclick="go(\'/admin/nilai/' + encodeURIComponent(p) + '\')">' + p + '</div>').join('');
+    const periods = PERIODS.map(p => `<div class="per ${p === period ? 'act' : ''}" onclick="go('/admin/nilai/${encodeURIComponent(p)}')">${p}</div>`).join('');
     const rows = [];
     for (const k of kelasSet) {
       const list = students.filter(s => s.kelas === k);
       const vals = [];
-      for (const s of list) { const n = hitungNilai(await getNilai(s.id, period)); if (n !== null) vals.push(n); }
+      for (const s of list) {
+        const n = hitungNilai(await getNilai(s.id, period));
+        if (n !== null) vals.push(n);
+      }
       const avg = vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : null;
       const [kt, kc] = kategori(avg);
-      rows.push('<tr><td><b>' + k + '</b></td><td>' + list.length + ' siswa</td><td class="tc"><span class="sbig s' + kc + '" style="font-size:1.15rem">' + (avg !== null ? avg : '—') + '</span></td><td>' + kt + '</td><td class="tc"><button class="btn bo b-sm" onclick="go(\'/admin/kelas/' + k + '/' + encodeURIComponent(period) + '\')">Kelola →</button></td></tr>');
+      rows.push(`<tr>
+        <td><b>${k}</b></td>
+        <td>${list.length} siswa</td>
+        <td class="tc"><span class="sbig s${kc}" style="font-size:1.15rem">${avg !== null ? avg : '—'}</span></td>
+        <td>${kt}</td>
+        <td class="tc"><button class="btn bo b-sm" onclick="go('/admin/kelas/${k}/${encodeURIComponent(period)}')">Kelola →</button></td>
+      </tr>`);
     }
-    content = '<div class="periods">' + pBtns + '</div>' + (rows.length ? '<div class="tw"><table><thead><tr><th>Kelas</th><th>Jumlah</th><th class="tc">Rata-rata</th><th>Kategori</th><th class="tc">Aksi</th></tr></thead><tbody>' + rows.join('') + '</tbody></table></div>' : '<div class="empty"><div class="ico">📚</div>Belum ada data. Buka tab <b>Seed</b> untuk isi data awal.</div>');
+    content = `
+      <div class="periods">${periods}</div>
+      <div class="tw"><table>
+        <thead><tr><th>Kelas</th><th>Jumlah</th><th class="tc">Rata-rata</th><th>Kategori</th><th class="tc">Aksi</th></tr></thead>
+        <tbody>${rows.join('')}</tbody>
+      </table></div>
+    `;
   } else if (tab === 'kelas') {
     const kelas = sub[1];
-    const periode = sub[2] ? decodeURIComponent(sub[2]) : PERIODS[0];
+    const periode = sub[2] || PERIODS[0];
     const list = students.filter(s => s.kelas === kelas).sort((a, b) => a.nama.localeCompare(b.nama));
-    const pBtns = PERIODS.map(p => '<div class="per ' + (p === periode ? 'act' : '') + '" onclick="go(\'/admin/kelas/' + kelas + '/' + encodeURIComponent(p) + '\')">' + p + '</div>').join('');
+    const periods = PERIODS.map(p => `<div class="per ${p === periode ? 'act' : ''}" onclick="go('/admin/kelas/${kelas}/${encodeURIComponent(p)}')">${p}</div>`).join('');
     const rows = [];
     for (const s of list) {
       const a = await getNilai(s.id, periode);
       const n = hitungNilai(a);
       const [, kc] = kategori(n);
-      rows.push('<tr><td><code style="font-size:.75rem">' + esc(s.access_code) + '</code></td><td>' + esc(s.nama) + '</td>' + a.map(v => '<td class="tc">' + badge(v) + '</td>').join('') + '<td class="tc"><span class="sbig s' + kc + '" style="font-size:1.1rem">' + (n !== null ? n : '—') + '</span></td><td class="tc"><button class="btn bp b-sm" onclick="go(\'/admin/edit/' + s.id + '/' + encodeURIComponent(periode) + '\')">Edit</button></td></tr>');
+      rows.push(`<tr>
+        <td><code style="font-size:.75rem">${esc(s.access_code)}</code></td>
+        <td>${esc(s.nama)}</td>
+        ${a.map(v => `<td class="tc">${badge(v)}</td>`).join('')}
+        <td class="tc"><span class="sbig s${kc}" style="font-size:1.1rem">${n !== null ? n : '—'}</span></td>
+        <td class="tc"><button class="btn bp b-sm" onclick="go('/admin/edit/${s.id}/${encodeURIComponent(periode)}')">Edit</button></td>
+      </tr>`);
     }
-    content = '<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem"><button class="btn bo b-sm" onclick="go(\'/admin/nilai/' + encodeURIComponent(periode) + '\')">← Kembali</button><button class="btn bs b-sm" onclick="exportCSV(\'' + kelas + '\',\'' + periode + '\')">📥 Export CSV</button></div>' +
-      '<div class="periods">' + pBtns + '</div>' +
-      '<div class="search"><input placeholder="Cari nama..." oninput="filterRows(this.value,\'#tblK tbody tr\')"></div>' +
-      '<div class="tw"><table id="tblK"><thead><tr><th>Kode</th><th>Nama</th>' + ASPECTS.map(a => '<th class="tc">' + a + '</th>').join('') + '<th class="tc">Nilai</th><th class="tc">Aksi</th></tr></thead><tbody>' + rows.join('') + '</tbody></table></div>';
+    content = `
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem">
+        <button class="btn bo b-sm" onclick="go('/admin/nilai/${encodeURIComponent(periode)}')">← Kembali</button>
+        <button class="btn bs b-sm" onclick="exportCSV('${kelas}','${periode}')">📥 Export CSV</button>
+      </div>
+      <div class="periods">${periods}</div>
+      <div class="search"><input placeholder="Cari nama..." oninput="filterRows(this.value,'#tblK tbody tr')"></div>
+      <div class="tw"><table id="tblK">
+        <thead><tr><th>Kode</th><th>Nama</th>${ASPECTS.map(a => `<th class="tc">${a}</th>`).join('')}<th class="tc">Nilai</th><th class="tc">Aksi</th></tr></thead>
+        <tbody>${rows.join('')}</tbody>
+      </table></div>
+    `;
   } else if (tab === 'edit') {
     const sid = sub[1];
-    const periode = sub[2] ? decodeURIComponent(sub[2]) : PERIODS[0];
+    const periode = sub[2] || PERIODS[0];
     const snap = await getDoc(doc(db, 'siswa', sid));
-    if (!snap.exists()) content = '<div class="alert aer">Siswa tidak ditemukan.</div>';
+    if (!snap.exists()) { content = `<div class="alert alert-err">Siswa tidak ditemukan.</div>`; }
     else {
       const s = { id: snap.id, ...snap.data() };
       const a = await getNilai(sid, periode);
@@ -1295,56 +779,254 @@ async function renderAdmin(sub) {
       const notes = await getCatatan(sid, periode);
       const nVal = hitungNilai(a);
       const [kat, kc] = kategori(nVal);
-      const notesHtml = notes.length ? notes.map(n => '<div class="tli"><div class="dt">' + (n.ts ? new Date(n.ts.seconds * 1000).toLocaleString('id-ID') : '-') + '</div><div class="tx">' + esc(n.text) + '</div></div>').join('') : '<div class="empty">Belum ada catatan.</div>';
-      content = '<button class="btn bo b-sm" style="margin-bottom:1rem" onclick="go(\'/admin/kelas/' + s.kelas + '/' + encodeURIComponent(periode) + '\')">← Kembali</button>' +
-        '<div class="grid g2"><div class="card"><h3>✏️ Form Penilaian · ' + periode + '</h3><form onsubmit="saveEdit(event,\'' + sid + '\',\'' + periode + '\')">' +
-        '<div class="grid g4">' + ASPECTS.map((_, i) => '<div class="fg"><label>' + ASPECTS[i] + '</label><select name="a' + i + '">' + ['', 'L', 'CL', 'KL'].map(v => '<option value="' + v + '" ' + (a[i] === v ? 'selected' : '') + '>' + (v || '— kosong —') + '</option>').join('') + '</select></div>').join('') + '</div>' +
-        '<h3 style="margin-top:1rem">📅 Absensi</h3><div class="grid g4">' +
-        '<div class="fg"><label>Hadir</label><input name="hadir" type="number" min="0" value="' + (att.hadir || 0) + '"></div>' +
-        '<div class="fg"><label>Sakit</label><input name="sakit" type="number" min="0" value="' + (att.sakit || 0) + '"></div>' +
-        '<div class="fg"><label>Izin</label><input name="izin" type="number" min="0" value="' + (att.izin || 0) + '"></div>' +
-        '<div class="fg"><label>Alfa</label><input name="alfa" type="number" min="0" value="' + (att.alfa || 0) + '"></div></div>' +
-        '<div class="fg"><label>➕ Catatan Guru (opsional)</label><textarea name="note" rows="3"></textarea></div>' +
-        '<button class="btn bp">💾 Simpan</button></form></div>' +
-        '<div class="card"><h3>Pratinjau</h3><div style="text-align:center;padding:1rem 0"><div class="sbig s' + kc + '" style="font-size:3rem">' + (nVal !== null ? nVal : '—') + '</div><div style="font-size:.95rem;font-weight:600;margin-top:.35rem">' + kat + '</div></div><div style="border-top:1px solid var(--bd);padding-top:1rem;margin-top:1rem"><h3 style="font-size:.9rem">Riwayat Catatan</h3><div class="tl">' + notesHtml + '</div></div></div></div>';
+
+      const notesHtml = notes.length ? notes.map(n => `
+        <div class="tli"><div class="dt">${n.ts ? new Date(n.ts.seconds * 1000).toLocaleString('id-ID') : '-'}</div>
+        <div class="tx">${esc(n.text)}</div></div>`).join('') : '<div class="empty">Belum ada catatan.</div>';
+
+      content = `
+        <button class="btn bo b-sm" style="margin-bottom:1rem" onclick="go('/admin/kelas/${s.kelas}/${encodeURIComponent(periode)}')">← Kembali</button>
+        <div class="grid g2">
+          <div class="card">
+            <h3>✏️ Form Penilaian · ${periode}</h3>
+            <form oninput="livePreview(this)" onsubmit="saveEdit(event,'${sid}','${periode}')">
+              <div class="grid g4">
+                ${ASPECTS.map((_, i) => `
+                  <div class="fg"><label>${ASPECTS[i]}</label>
+                    <select name="a${i}">
+                      ${['', 'L', 'CL', 'KL'].map(v => `<option value="${v}" ${a[i] === v ? 'selected' : ''}>${v || '— kosong —'}</option>`).join('')}
+                    </select>
+                  </div>`).join('')}
+              </div>
+              <h3 style="margin-top:1rem">📅 Absensi</h3>
+              <div class="grid g4">
+                <div class="fg"><label>Hadir</label><input name="hadir" type="number" min="0" value="${att.hadir || 0}"></div>
+                <div class="fg"><label>Sakit</label><input name="sakit" type="number" min="0" value="${att.sakit || 0}"></div>
+                <div class="fg"><label>Izin</label><input name="izin" type="number" min="0" value="${att.izin || 0}"></div>
+                <div class="fg"><label>Alfa</label><input name="alfa" type="number" min="0" value="${att.alfa || 0}"></div>
+              </div>
+              <div class="fg"><label>➕ Catatan Guru (opsional)</label>
+                <textarea name="note" rows="3" placeholder="Catatan tambahan..."></textarea></div>
+              <div style="display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn bp">💾 Simpan</button><button class="btn bs" name="next">💾 Simpan &amp; Berikutnya →</button></div>
+            </form>
+          </div>
+          <div class="card">
+            <h3>Pratinjau</h3>
+            <div style="text-align:center;padding:1rem 0">
+              <div id="pvN" class="sbig s${kc}" style="font-size:3rem">${nVal !== null ? nVal : '—'}</div>
+              <div id="pvK" style="font-size:.95rem;font-weight:600;margin-top:.35rem">${kat}</div>
+            </div>
+            <div style="border-top:1px solid var(--border);padding-top:1rem;margin-top:1rem">
+              <h3 style="font-size:.9rem">Riwayat Catatan</h3>
+              <div class="tl">${notesHtml}</div>
+            </div>
+          </div>
+        </div>
+      `;
     }
   } else if (tab === 'siswa') {
-    const rows = students.sort((a, b) => (a.kelas + a.nama).localeCompare(b.kelas + b.nama)).map(s => '<tr><td><code style="font-size:.75rem">' + esc(s.access_code) + '</code></td><td>' + esc(s.nama) + '</td><td>' + esc(s.kelas) + '</td><td class="tc" style="white-space:nowrap"><button class="btn bo b-sm" onclick="go(\'/admin/edit-siswa/' + s.id + '\')">Edit</button><button class="btn bo b-sm" style="color:var(--er);border-color:var(--er)" onclick="hapusSiswa(\'' + s.id + '\',\'' + esc(s.nama) + '\')">Hapus</button></td></tr>').join('');
-    content = '<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem"><div class="search" style="flex:1;min-width:200px;margin-bottom:0"><input placeholder="Cari nama..." oninput="filterRows(this.value,\'#tblAll tbody tr\')"></div><button class="btn bp b-sm" onclick="go(\'/admin/add-siswa\')">+ Tambah</button></div>' +
-      '<div class="tw"><table id="tblAll"><thead><tr><th>Kode</th><th>Nama</th><th>Kelas</th><th class="tc">Aksi</th></tr></thead><tbody>' + (rows || '<tr><td colspan="4" class="tc empty">Belum ada siswa</td></tr>') + '</tbody></table></div>';
+    const rows = students.sort((a, b) => (a.kelas + a.nama).localeCompare(b.kelas + b.nama)).map(s => `
+      <tr>
+        <td><code style="font-size:.75rem">${esc(s.access_code)}</code></td>
+        <td>${esc(s.nama)}</td>
+        <td>${esc(s.kelas)}</td>
+        <td class="tc" style="white-space:nowrap">
+          <button class="btn bo b-sm" onclick="go('/admin/edit-siswa/${s.id}')">Edit</button>
+          <button class="btn bo b-sm" style="color:var(--err);border-color:var(--err)" data-nama="${esc(s.nama)}" onclick="hapusSiswa('${s.id}', this.dataset.nama)">Hapus</button>
+        </td>
+      </tr>`).join('');
+    content = `
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem">
+        <div class="search" style="flex:1;min-width:200px;margin-bottom:0">
+          <input placeholder="Cari nama..." oninput="filterRows(this.value,'#tblAll tbody tr')">
+        </div>
+        <button class="btn bp b-sm" onclick="go('/admin/add-siswa')">+ Tambah Siswa</button>
+      </div>
+      <div class="tw"><table id="tblAll">
+        <thead><tr><th>Kode</th><th>Nama</th><th>Kelas</th><th class="tc">Aksi</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+    `;
   } else if (tab === 'add-siswa') {
-    content = '<button class="btn bo b-sm" style="margin-bottom:1rem" onclick="go(\'/admin/siswa\')">← Kembali</button><div class="card" style="max-width:640px"><h3>Tambah Siswa</h3><form onsubmit="addSiswa(event)"><div class="fg"><label>Nama Lengkap</label><input name="nama" required></div><div class="grid g2"><div class="fg"><label>Kelas</label><input name="kelas" required placeholder="4B" style="text-transform:uppercase"></div><div class="fg"><label>Kode Akses</label><input name="kode" required placeholder="4B-019" style="text-transform:uppercase"></div></div><div class="errMsg" id="errAdd"></div><button class="btn bp">💾 Simpan</button></form></div>';
+    content = `
+      <button class="btn bo b-sm" style="margin-bottom:1rem" onclick="go('/admin/siswa')">← Kembali</button>
+      <div class="card" style="max-width:640px">
+        <h3>Tambah Siswa</h3>
+        <form onsubmit="addSiswa(event)">
+          <div class="fg"><label>Nama Lengkap</label><input name="nama" required></div>
+          <div class="grid g2">
+            <div class="fg"><label>Kelas</label><input name="kelas" required placeholder="4B" style="text-transform:uppercase"></div>
+            <div class="fg"><label>Kode Akses</label><input name="kode" required placeholder="4B-019" style="text-transform:uppercase"></div>
+          </div>
+          <button class="btn bp">💾 Simpan</button>
+        </form>
+      </div>
+    `;
   } else if (tab === 'edit-siswa') {
     const sid = sub[1];
     const snap = await getDoc(doc(db, 'siswa', sid));
-    if (!snap.exists()) content = '<div class="alert aer">Siswa tidak ditemukan.</div>';
+    if (!snap.exists()) { content = `<div class="alert alert-err">Siswa tidak ditemukan.</div>`; }
     else {
       const s = { id: snap.id, ...snap.data() };
-      content = '<button class="btn bo b-sm" style="margin-bottom:1rem" onclick="go(\'/admin/siswa\')">← Kembali</button><div class="card" style="max-width:640px"><h3>Edit Siswa</h3><form onsubmit="editSiswa(event,\'' + sid + '\')"><div class="fg"><label>Nama</label><input name="nama" required value="' + esc(s.nama) + '"></div><div class="grid g2"><div class="fg"><label>Kelas</label><input name="kelas" required value="' + esc(s.kelas) + '"></div><div class="fg"><label>Kode Akses</label><input name="kode" required value="' + esc(s.access_code) + '"></div></div><button class="btn bp">💾 Simpan</button></form></div>';
+      content = `
+        <button class="btn bo b-sm" style="margin-bottom:1rem" onclick="go('/admin/siswa')">← Kembali</button>
+        <div class="card" style="max-width:640px">
+          <h3>Edit Siswa</h3>
+          <form onsubmit="editSiswa(event,'${sid}')">
+            <div class="fg"><label>Nama Lengkap</label><input name="nama" required value="${esc(s.nama)}"></div>
+            <div class="grid g2">
+              <div class="fg"><label>Kelas</label><input name="kelas" required value="${esc(s.kelas)}"></div>
+              <div class="fg"><label>Kode Akses</label><input name="kode" required value="${esc(s.access_code)}"></div>
+            </div>
+            <button class="btn bp">💾 Simpan</button>
+          </form>
+        </div>
+      `;
     }
   } else if (tab === 'setting') {
     const sc = await getSchool();
-    const waliRows = kelasSet.map(k => '<div class="fg"><label>Wali Kelas ' + k + '</label><input name="wali_' + k + '" value="' + esc(classes[k] || '') + '"></div>').join('');
-    content = '<form onsubmit="saveSetting(event)"><div class="card"><h3>🏫 Informasi Sekolah</h3><div class="grid g2"><div class="fg"><label>Nama Sekolah</label><input name="school_name" value="' + esc(sc.name) + '"></div><div class="fg"><label>NPSN</label><input name="school_npsn" value="' + esc(sc.npsn) + '"></div><div class="fg"><label>Alamat</label><input name="school_address" value="' + esc(sc.address) + '"></div><div class="fg"><label>Logo (emoji)</label><input name="school_logo" value="' + esc(sc.logo) + '"></div><div class="fg"><label>Tahun Ajaran</label><input name="school_year" value="' + esc(sc.year) + '"></div><div class="fg"><label>Kepala Sekolah</label><input name="school_headmaster" value="' + esc(sc.headmaster) + '"></div></div></div>' +
-      '<div class="card"><h3>👥 Wali Kelas</h3><div class="grid g2">' + (waliRows || '<div class="empty">Belum ada kelas.</div>') + '</div></div>' +
-      '<button class="btn bp">💾 Simpan Pengaturan</button></form>' +
-      '<div class="card" style="margin-top:1.5rem"><h3>🔐 Keamanan</h3><p style="color:var(--mt);font-size:.85rem;margin-bottom:.75rem">Ubah PIN panel guru secara berkala.</p><div style="display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn bo b-sm" onclick="changeAdminPin()">🔑 Ubah PIN</button><button class="btn bo b-sm" onclick="adminLogout()">🚪 Keluar</button></div></div>' +
-      '<div class="card" style="margin-top:1.5rem"><h3>💾 Backup & Restore</h3><p style="color:var(--mt);font-size:.85rem;margin-bottom:.75rem">Unduh data lengkap, atau pulihkan dari backup.</p><div style="display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn bs b-sm" onclick="backupData()">⬇️ Download Backup</button><button class="btn bo b-sm" onclick="restoreData()">⬆️ Restore</button></div></div>' +
-      '<div class="card" style="margin-top:1.5rem"><h3>📜 Audit Log (50 terakhir)</h3><p style="color:var(--mt);font-size:.85rem;margin-bottom:.75rem">Riwayat perubahan data.</p><div id="auditList" style="max-height:400px;overflow-y:auto"><button class="btn bo b-sm" onclick="loadAudit()">🔄 Muat Audit Log</button></div></div>' +
-      '<div class="card" style="margin-top:1.5rem"><h3>📥 Import CSV Siswa</h3><p style="color:var(--mt);font-size:.85rem;margin-bottom:.75rem">Format: <code>kode,nama,kelas</code> per baris.</p><button class="btn bp b-sm" onclick="importCSVSiswa()">📁 Pilih File CSV</button></div>';
+    const waliRows = kelasSet.map(k => `
+      <div class="fg"><label>Wali Kelas ${k}</label><input name="wali_${k}" value="${esc(classes[k] || '')}"></div>
+    `).join('');
+    content = `
+      <form onsubmit="saveSetting(event)">
+        <div class="card">
+          <h3>🏫 Informasi Sekolah</h3>
+          <div class="grid g2">
+            <div class="fg"><label>Nama Sekolah</label><input name="school_name" value="${esc(sc.name)}"></div>
+            <div class="fg"><label>NPSN</label><input name="school_npsn" value="${esc(sc.npsn)}"></div>
+            <div class="fg"><label>Alamat</label><input name="school_address" value="${esc(sc.address)}"></div>
+            <div class="fg"><label>Logo (emoji)</label><input name="school_logo" value="${esc(sc.logo)}"></div>
+            <div class="fg"><label>Tahun Ajaran</label><input name="school_year" value="${esc(sc.year)}"></div>
+            <div class="fg"><label>Kepala Sekolah</label><input name="school_headmaster" value="${esc(sc.headmaster)}"></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>👥 Wali Kelas</h3>
+          <div class="grid g2">${waliRows || '<div class="empty">Belum ada kelas.</div>'}</div>
+        </div>
+        <button class="btn bp">💾 Simpan Pengaturan</button>
+      </form>
+    `;
   } else if (tab === 'seed') {
-    content = '<div class="card"><h3>🌱 Seed Data Awal</h3><p style="color:var(--mt);margin-bottom:1rem;font-size:.9rem">Isi database dengan data 4B, 4C, 4D beserta nilai STS 1. Hanya jalankan saat database kosong.</p><div class="alert ainf">⚠️ Akan menambahkan ~68 siswa ke Firestore.</div><button class="btn bp" onclick="doSeed()">🌱 Jalankan Seed</button></div>' +
-      '<div class="card"><h3>🗑️ Reset Semua Data</h3><p style="color:var(--mt);margin-bottom:1rem;font-size:.9rem">Hapus semua siswa, nilai, absensi, catatan.</p><button class="btn bd" onclick="resetData()">Hapus Semua Data</button></div>';
+    content = `
+      <div class="card">
+        <h3>🌱 Seed Data Awal</h3>
+        <p style="color:var(--muted);margin-bottom:1rem;font-size:.9rem">
+          Fitur ini akan mengisi database dengan data kelas 4B, 4C, 4D beserta nilai STS 1.
+          <br><b>Hanya jalankan sekali</b> saat database kosong. Kalau data sudah ada, akan dilewati.
+        </p>
+        <div class="alert alert-info">⚠️ Akan menambahkan ~68 siswa + nilai + absensi ke Firestore.</div>
+        <button class="btn bp" onclick="doSeed()">🌱 Jalankan Seed</button>
+      </div>
+      <div class="card">
+        <h3>🗑️ Reset Semua Data</h3>
+        <p style="color:var(--muted);margin-bottom:1rem;font-size:.9rem">Hapus semua siswa, nilai, absensi, catatan. Pengaturan tetap.</p>
+        <button class="btn bd" onclick="resetData()">Hapus Semua Data Siswa</button>
+      </div>
+    `;
   }
-  const years = await getAvailableYears();
-  const yearOpts = years.map(y => '<option value="' + y + '" ' + (y === getTA() ? 'selected' : '') + '>' + y + '</option>').join('');
-  const isArchived = !!archivedTA;
-  const yearBar = '<div class="yearBar"><label>Tahun Ajaran</label><select id="selTA" onchange="switchTA(this.value)">' + yearOpts + '</select><label>Semester</label><select id="selSem" onchange="switchSem(this.value)"><option ' + (getSem() === 'Ganjil' ? 'selected' : '') + '>Ganjil</option><option ' + (getSem() === 'Genap' ? 'selected' : '') + '>Genap</option></select>' + (isArchived ? '<span class="badgeArch">📦 Melihat Arsip</span>' : '') + '</div>';
-  app.innerHTML = '<div class="shead"><div><h2>Panel Guru</h2><p class="sub" style="margin-bottom:0">Kelola nilai, siswa, dan pengaturan &middot; ' + getTALabel() + '</p></div></div><div class="card">' + yearBar + tabs + content + '</div>';
+
+  app.innerHTML = `
+    <div class="shead">
+      <div>
+        <h2>Panel Guru</h2>
+        <p class="sub" style="margin-bottom:0">Kelola nilai, siswa, dan pengaturan</p>
+      </div>
+    </div>
+    <div style="text-align:right;margin-bottom:.75rem"><button class="btn bo b-sm" onclick="doLogout()">Keluar</button></div>
+    <div class="card">${tabs}${content}</div>
+  `;
 }
 
-// ---------- ACTIONS ----------
+function renderLogin(err = '') {
+  document.getElementById('app').innerHTML = `
+    <div class="shead"><div>
+      <h2>Panel Guru</h2>
+      <p class="sub" style="margin-bottom:0">Masuk untuk mengelola data</p>
+    </div></div>
+    <div class="card" style="max-width:420px">
+      ${err ? `<div class="alert alert-err">${esc(err)}</div>` : ''}
+      <form onsubmit="doLogin(event)">
+        <div class="fg"><label>Email</label><input name="email" type="email" required autocomplete="username"></div>
+        <div class="fg"><label>Password</label><input name="pass" type="password" required autocomplete="current-password"></div>
+        <button class="btn bp">Masuk</button>
+      </form>
+    </div>`;
+}
+
+window.doLogin = async function (ev) {
+  ev.preventDefault();
+  const f = ev.target;
+  try {
+    await signInWithEmailAndPassword(auth, f.email.value.trim(), f.pass.value);
+  } catch (e) {
+    renderLogin('Email atau password salah.');
+  }
+};
+
+window.doLogout = async function () {
+  await signOut(auth);
+  go('/');
+};
+
+// ============ FAVORIT & PENCARIAN BERANDA ============
+let homeStudents = [];
+function getFavs() { try { return JSON.parse(localStorage.getItem('favSiswa') || '[]'); } catch (e) { return []; } }
+function isFav(id) { return getFavs().some(f => f.id === id); }
+function rowSiswa(s, i = 0) {
+  const ini = s.nama.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  return `<div class="srow" onclick="go('/siswa/${s.id}')">
+    <div class="av av${i % 6}">${ini}</div>
+    <div class="sinfo"><div class="sn">${esc(s.nama)}</div><div class="sm">Kelas ${esc(s.kelas)}</div></div>
+    <div class="la">→</div></div>`;
+}
+window.toggleFav = function (sid, el) {
+  let favs = getFavs();
+  if (isFav(sid)) favs = favs.filter(f => f.id !== sid);
+  else favs.push({ id: sid, nama: el.dataset.nama, kelas: el.dataset.kelas });
+  localStorage.setItem('favSiswa', JSON.stringify(favs));
+  el.textContent = isFav(sid) ? '★ Favorit' : '☆ Favorit';
+  toast(isFav(sid) ? '★ Ditambahkan ke favorit' : 'Dihapus dari favorit', 'ok');
+};
+window.homeSearch = async function (q) {
+  q = (q || '').trim().toLowerCase();
+  const box = document.getElementById('hres');
+  const card = document.getElementById('hkelas');
+  if (!box) return;
+  if (card) card.style.display = q ? 'none' : '';
+  if (!q) {
+    const favs = getFavs();
+    box.innerHTML = favs.length ? '<h3 style="margin-bottom:.6rem">★ Favorit Saya</h3>' + favs.map(f => rowSiswa(f)).join('') : '';
+    return;
+  }
+  if (!homeStudents.length) homeStudents = await getStudents();
+  const hits = homeStudents.filter(s => s.nama.toLowerCase().includes(q))
+    .sort((a, b) => a.nama.localeCompare(b.nama)).slice(0, 30);
+  box.innerHTML = hits.length ? hits.map((s, i) => rowSiswa(s, i)).join('')
+    : '<div class="empty"><div class="ico">🔎</div>Nama tidak ditemukan.</div>';
+};
+window.livePreview = function (f) {
+  const n = hitungNilai([f.a0.value, f.a1.value, f.a2.value, f.a3.value]);
+  const [kt, kc] = kategori(n);
+  const pn = document.getElementById('pvN');
+  pn.textContent = n !== null ? n : '—';
+  pn.className = 'sbig s' + kc;
+  document.getElementById('pvK').textContent = kt;
+};
+
+// ============ ACTIONS ============
 window.go = go;
+
+window.toggleTheme = function () {
+  const h = document.documentElement;
+  const next = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  h.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('tbtn').textContent = next === 'dark' ? '☀' : '🌙';
+  destroyCharts();
+  render();
+};
 
 window.showTab = function (id, btn) {
   document.querySelectorAll('.tc-c').forEach(x => x.classList.remove('act'));
@@ -1352,188 +1034,145 @@ window.showTab = function (id, btn) {
   document.getElementById(id).classList.add('act');
   btn.classList.add('act');
 };
+
 window.filterRows = function (q, sel) {
   const s = q.toLowerCase();
-  document.querySelectorAll(sel).forEach(r => { r.style.display = r.textContent.toLowerCase().includes(s) ? '' : 'none'; });
+  document.querySelectorAll(sel).forEach(r => {
+    r.style.display = r.textContent.toLowerCase().includes(s) ? '' : 'none';
+  });
 };
-window.copyText = function (inpId, btnId) {
-  const inp = document.getElementById(inpId);
-  if (!inp) return;
-  inp.select();
-  const done = () => { const b = document.getElementById(btnId); if (!b) return; const o = b.innerHTML; b.innerHTML = '&#10003; Tersalin'; setTimeout(() => b.innerHTML = o, 1500); };
-  if (navigator.clipboard) navigator.clipboard.writeText(inp.value).then(done).catch(() => { document.execCommand('copy'); done(); });
-  else { document.execCommand('copy'); done(); }
-};
-window.tryAdminLogin = function (ev) {
-  ev.preventDefault();
-  const pin = ev.target.pin.value.trim();
-  if (pin === getPin()) { sessionStorage.setItem('walimurid_admin_ok', '1'); toast('✅ Login berhasil', 'ok'); render(); }
-  else toast('PIN salah', 'err');
-};
-window.adminLogout = function () { sessionStorage.removeItem('walimurid_admin_ok'); toast('Berhasil keluar', 'ok'); go('/'); };
-window.changeAdminPin = function () {
-  const cur = prompt('PIN lama:');
-  if (cur !== getPin()) { toast('PIN lama salah', 'err'); return; }
-  const nw = prompt('PIN baru (4-8 digit):');
-  if (!nw || nw.length < 4 || nw.length > 8) { toast('PIN tidak valid', 'err'); return; }
-  setPin(nw);
-  toast('✅ PIN diubah', 'ok');
-};
+
 window.saveEdit = async function (ev, sid, period) {
   ev.preventDefault();
   const f = ev.target;
-  const a = [f.a0.value, f.a1.value, f.a2.value, f.a3.value];
-  await saveNilai(sid, period, a);
-  await saveAbsen(sid, period, { hadir: +f.hadir.value || 0, sakit: +f.sakit.value || 0, izin: +f.izin.value || 0, alfa: +f.alfa.value || 0 });
-  if (f.note.value.trim()) await addCatatan(sid, period, f.note.value.trim());
-  await logAction('edit_nilai', 'Siswa ' + sid + ' periode ' + period);
-  toast('✅ Tersimpan', 'ok');
-  setTimeout(render, 500);
+  const btn = ev.submitter;
+  const goNext = !!btn && btn.name === 'next';
+  const buttons = [...f.querySelectorAll('button')];
+  const labels = buttons.map(b => b.textContent);
+  buttons.forEach(b => { b.disabled = true; });
+  if (btn) btn.textContent = '⏳ Menyimpan…';
+  try {
+    await saveNilai(sid, period, [f.a0.value, f.a1.value, f.a2.value, f.a3.value]);
+    await saveAbsen(sid, period, {
+      hadir: +f.hadir.value || 0, sakit: +f.sakit.value || 0,
+      izin: +f.izin.value || 0, alfa: +f.alfa.value || 0
+    });
+    if (f.note.value.trim()) await addCatatan(sid, period, f.note.value.trim());
+    toast('✅ Tersimpan', 'ok');
+    if (goNext) {
+      const all = await getStudents();
+      const cur = all.find(s => s.id === sid);
+      const list = all.filter(s => cur && s.kelas === cur.kelas).sort((a, b) => a.nama.localeCompare(b.nama));
+      const nx = list[list.findIndex(s => s.id === sid) + 1];
+      if (nx) return go(`/admin/edit/${nx.id}/${encodeURIComponent(period)}`);
+      toast('Ini siswa terakhir di kelas ini', 'info');
+    }
+    setTimeout(render, 500);
+  } catch (e) {
+    toast('Gagal menyimpan: ' + e.message, 'err');
+    buttons.forEach((b, i) => { b.disabled = false; b.textContent = labels[i]; });
+  }
 };
+
 window.addSiswa = async function (ev) {
   ev.preventDefault();
   const f = ev.target;
   const nama = f.nama.value.trim();
   const kelas = f.kelas.value.trim().toUpperCase();
   const kode = f.kode.value.trim().toUpperCase();
-  showError('errAdd', '');
-  if (!nama) { showError('errAdd', '⚠️ Nama wajib diisi'); return; }
-  if (!kelas || !/^[A-Z0-9]+$/.test(kelas)) { showError('errAdd', '⚠️ Kelas hanya huruf/angka (contoh: 4B)'); return; }
-  if (!kode) { showError('errAdd', '⚠️ Kode akses wajib diisi'); return; }
+  if (!nama || !kelas || !kode) return;
   const ref = doc(db, 'siswa', kode);
-  const ex = await getDoc(ref);
-  if (ex.exists()) { showError('errAdd', '⚠️ Kode "' + kode + '" sudah dipakai'); return; }
-  await setDoc(ref, { nama, kelas, access_code: kode, tahun_ajaran: getTA() });
-  await logAction('tambah_siswa', nama + ' (' + kode + ') di kelas ' + kelas);
+  const exists = await getDoc(ref);
+  if (exists.exists()) { toast('Kode sudah dipakai', 'err'); return; }
+  await setDoc(ref, { nama, kelas, access_code: kode });
   toast('✅ Siswa ditambahkan', 'ok');
   go('/admin/siswa');
 };
+
 window.editSiswa = async function (ev, sid) {
   ev.preventDefault();
   const f = ev.target;
-  await updateDoc(doc(db, 'siswa', sid), { nama: f.nama.value.trim(), kelas: f.kelas.value.trim().toUpperCase(), access_code: f.kode.value.trim().toUpperCase() });
+  await updateDoc(doc(db, 'siswa', sid), {
+    nama: f.nama.value.trim(),
+    kelas: f.kelas.value.trim().toUpperCase(),
+    access_code: f.kode.value.trim().toUpperCase()
+  });
   toast('✅ Diperbarui', 'ok');
   go('/admin/siswa');
 };
+
 window.hapusSiswa = async function (sid, nama) {
-  if (!confirm('Hapus siswa "' + nama + '"?')) return;
+  if (!confirm(`Hapus siswa "${nama}"?`)) return;
   await deleteDoc(doc(db, 'siswa', sid));
-  for (const col of ['nilai', 'absensi']) {
-    const snap = await getDocs(collection(db, col));
-    const dels = [];
-    snap.forEach(d => { if (d.id.startsWith(sid + '__')) dels.push(deleteDoc(d.ref)); });
-    await Promise.all(dels);
+  for (const p of PERIODS) {
+    await deleteDoc(doc(db, 'nilai', `${sid}__${p}`));
+    await deleteDoc(doc(db, 'absensi', `${sid}__${p}`));
   }
-  const notes = await getCatatan(sid, null, null);
+  const notes = await getCatatan(sid, null);
   for (const n of notes) await deleteDoc(doc(db, 'catatan', n.id));
   toast('🗑️ Dihapus', 'ok');
   render();
 };
+
 window.saveSetting = async function (ev) {
   ev.preventDefault();
   const f = ev.target;
-  await saveSchool({ name: f.school_name.value.trim(), npsn: f.school_npsn.value.trim(), address: f.school_address.value.trim(), logo: f.school_logo.value.trim(), year: f.school_year.value.trim(), headmaster: f.school_headmaster.value.trim(), tahun_ajaran: f.school_year.value.trim() || school.tahun_ajaran, semester: school.semester || 'Ganjil' }); currentTA = f.school_year.value.trim() || school.tahun_ajaran;
+  const data = {
+    name: f.school_name.value.trim(),
+    npsn: f.school_npsn.value.trim(),
+    address: f.school_address.value.trim(),
+    logo: f.school_logo.value.trim(),
+    year: f.school_year.value.trim(),
+    headmaster: f.school_headmaster.value.trim()
+  };
+  await saveSchool(data);
+  const wali = {};
+  for (const k of Object.keys(DEFAULT_CLASSES)) {
+    const inp = f['wali_' + k];
+    if (inp) wali[k] = inp.value.trim();
+  }
   const students = await getStudents();
-  const kset = [...new Set(students.map(s => s.kelas))];
-  for (const k of kset) { const inp = f['wali_' + k]; if (inp) await setDoc(doc(db, 'kelas', k), { wali: inp.value.trim() }, { merge: true }); }
-  toast('✅ Disimpan', 'ok');
+  const kelasSet = [...new Set(students.map(s => s.kelas))];
+  for (const k of kelasSet) {
+    const inp = f['wali_' + k];
+    if (inp) await setDoc(doc(db, 'kelas', k), { wali: inp.value.trim() }, { merge: true });
+  }
+  toast('✅ Pengaturan disimpan', 'ok');
   school = await getSchool();
   updateBrand();
 };
+
 window.doSeed = async function () {
-  if (!confirm('Jalankan seed?')) return;
-  try { const d = await seedIfEmpty(); toast(d ? '✅ Seed selesai' : '⚠️ Data sudah ada', d ? 'ok' : 'inf'); setTimeout(render, 800); }
-  catch (e) { toast('Error: ' + e.message, 'err'); }
+  if (!confirm('Jalankan seed? Proses ini menambah data siswa ke Firestore.')) return;
+  try {
+    const done = await seedIfEmpty();
+    toast(done ? '✅ Seed selesai' : '⚠️ Data sudah ada', done ? 'ok' : 'info');
+    setTimeout(render, 800);
+  } catch (e) { toast('Error: ' + e.message, 'err'); }
 };
+
 window.resetData = async function () {
-  if (!confirm('⚠️ HAPUS SEMUA DATA SISWA? Tindakan ini TIDAK BISA DIBATALKAN.')) return;
-  const verif = prompt('Ketik "HAPUS" (huruf besar) untuk konfirmasi:');
-  if (verif !== 'HAPUS') { toast('Dibatalkan', 'inf'); return; }
-  await logAction('reset_data', 'Semua data siswa dihapus');
-  for (const col of ['siswa', 'nilai', 'absensi', 'catatan']) {
-    const snap = await getDocs(collection(db, col));
-    const dels = [];
-    snap.forEach(d => dels.push(deleteDoc(d.ref)));
-    await Promise.all(dels);
+  if (!confirm('HAPUS SEMUA DATA SISWA? Tidak bisa dibatalkan.')) return;
+  if (!confirm('Yakin? Ketik OK untuk konfirmasi terakhir.')) return;
+  const students = await getStudents();
+  for (const s of students) {
+    await deleteDoc(doc(db, 'siswa', s.id));
+    for (const p of PERIODS) {
+      await deleteDoc(doc(db, 'nilai', `${s.id}__${p}`));
+      await deleteDoc(doc(db, 'absensi', `${s.id}__${p}`));
+    }
+    const notes = await getCatatan(s.id, null);
+    for (const n of notes) await deleteDoc(doc(db, 'catatan', n.id));
   }
   toast('🗑️ Semua data dihapus', 'ok');
   render();
 };
-window.backupData = async function () {
-  toast('Menyiapkan...', 'inf');
-  try {
-    const data = { version: 1, ts: new Date().toISOString(), collections: {} };
-    for (const c of ['settings', 'kelas', 'siswa', 'nilai', 'absensi', 'catatan', 'audit']) {
-      const snap = await getDocs(collection(db, c));
-      data.collections[c] = {};
-      snap.forEach(d => data.collections[c][d.id] = d.data());
-    }
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'walimurid-backup-' + new Date().toISOString().slice(0, 10) + '.json';
-    a.click();
-    URL.revokeObjectURL(url);
-    localStorage.setItem('walimurid_last_backup', Date.now());
-    toast('✅ Backup ter-download', 'ok');
-  } catch (e) { toast('Gagal: ' + e.message, 'err'); }
-};
-window.restoreData = function () {
-  const inp = document.createElement('input');
-  inp.type = 'file';
-  inp.accept = '.json';
-  inp.onchange = async ev => {
-    const f = ev.target.files[0];
-    if (!f) return;
-    if (!confirm('Restore akan MENIMPA data. Lanjut?')) return;
-    try {
-      const data = JSON.parse(await f.text());
-      if (!data.collections) throw new Error('Format tidak valid');
-      for (const [colN, docs] of Object.entries(data.collections)) {
-        for (const [id, d] of Object.entries(docs)) await setDoc(doc(db, colN, id), d);
-      }
-      toast('✅ Restore selesai', 'ok');
-      setTimeout(render, 800);
-    } catch (e) { toast('Gagal: ' + e.message, 'err'); }
-  };
-  inp.click();
-};
-window.importCSVSiswa = function () {
-  const inp = document.createElement('input');
-  inp.type = 'file';
-  inp.accept = '.csv,.txt';
-  inp.onchange = async ev => {
-    const f = ev.target.files[0];
-    if (!f) return;
-    try {
-      const txt = await f.text();
-      const lines = txt.split(/\r?\n/).filter(l => l.trim());
-      if (lines.length < 1) throw new Error('CSV kosong');
-      let start = 0;
-      if (/nama/i.test(lines[0])) start = 1;
-      let ok = 0, skip = 0;
-      for (let i = start; i < lines.length; i++) {
-        const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
-        if (cols.length < 3) { skip++; continue; }
-        const [kode, nama, kelas] = cols;
-        if (!kode || !nama || !kelas) { skip++; continue; }
-        const ref = doc(db, 'siswa', kode.toUpperCase());
-        const ex = await getDoc(ref);
-        if (ex.exists()) { skip++; continue; }
-        await setDoc(ref, { access_code: kode.toUpperCase(), nama, kelas: kelas.toUpperCase(), tahun_ajaran: getTA() });
-        ok++;
-      }
-      toast('✅ ' + ok + ' ditambah, ' + skip + ' dilewati', 'ok');
-      setTimeout(render, 800);
-    } catch (e) { toast('Gagal: ' + e.message, 'err'); }
-  };
-  inp.click();
-};
+
 window.exportCSV = async function (kelas, period) {
   const all = await getStudents();
   const list = all.filter(s => s.kelas === kelas).sort((a, b) => a.nama.localeCompare(b.nama));
-  const rows = [['Kode', 'Nama', 'Kelas', ...ASPECTS, 'Nilai', 'Kategori', 'Hadir', 'Sakit', 'Izin', 'Alfa']];
+  const header = ['Kode', 'Nama', 'Kelas', ...ASPECTS, 'Nilai', 'Kategori', 'Hadir', 'Sakit', 'Izin', 'Alfa'];
+  const rows = [header];
   for (const s of list) {
     const a = await getNilai(s.id, period);
     const n = hitungNilai(a);
@@ -1541,139 +1180,46 @@ window.exportCSV = async function (kelas, period) {
     const att = await getAbsen(s.id, period);
     rows.push([s.access_code, s.nama, s.kelas, ...a, n ?? '', kt, att.hadir || 0, att.sakit || 0, att.izin || 0, att.alfa || 0]);
   }
-  const csv = '\ufeff' + rows.map(r => r.map(x => '"' + String(x).replace(/"/g, '""') + '"').join(',')).join('\n');
+  const csv = '\ufeff' + rows.map(r => r.map(x => `"${String(x).replace(/"/g, '""')}"`).join(',')).join('\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = 'rekap_' + kelas + '_' + period.replace(/\s/g, '_') + '.csv';
+  a.href = url; a.download = `rekap_${kelas}_${period.replace(/\s/g, '_')}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 };
 
-// ---------- AUDIT ----------
-window.loadAudit = async function () {
-  const box = document.getElementById('auditList');
-  if (!box) return;
-  box.innerHTML = '<div style="padding:1rem;color:var(--mt)">Memuat...</div>';
-  const list = await getAuditLog(50);
-  if (!list.length) {
-    box.innerHTML = '<div class="empty"><div class="ico">📜</div>Belum ada aktivitas.</div>';
-    return;
-  }
-  box.innerHTML = list.map(a => {
-    const dt = a.ts ? new Date(a.ts.seconds * 1000).toLocaleString('id-ID') : '-';
-    return '<div class="auditItem"><div><b>' + esc(a.action) + '</b> &middot; ' + esc(a.detail || '') + '</div><div class="when">' + dt + ' &middot; ' + esc(a.tahun_ajaran || '') + ' ' + esc(a.semester || '') + '</div></div>';
-  }).join('');
-};
-
-// ---------- SWITCH TAHUN ----------
-window.switchTA = function (val) {
-  const cur = school.tahun_ajaran || '2025/2026';
-  if (val === cur) { currentTA = ''; archivedTA = ''; }
-  else { currentTA = val; archivedTA = val; toast('📦 Mode arsip: ' + val, 'inf'); }
-  render();
-};
-window.switchSem = function (val) {
-  currentSem = val;
-  toast('Semester: ' + val, 'ok');
-  render();
-};
-window.addNewTA = async function () {
-  const nw = prompt('Tahun ajaran baru (contoh: 2026/2027):', '');
-  if (!nw || !/^\d{4}\/\d{4}$/.test(nw.trim())) { toast('Format: 2026/2027', 'err'); return; }
-  school.tahun_ajaran = nw.trim();
-  school.semester = 'Ganjil';
-  await saveSchool(school);
-  currentTA = nw.trim();
-  currentSem = 'Ganjil';
-  toast('✅ Tahun ajaran ' + nw + ' aktif', 'ok');
-  render();
-};
-
-// ---------- BOOT ----------
+// ============ BOOT ============
 function updateBrand() {
-  let logo = school.logo || 'M';
-  const bl = document.getElementById('blogo');
-  if (!bl) return;
-  if (logo.startsWith('http') || logo.startsWith('data:')) {
-    bl.innerHTML = '<img src="' + logo + '" alt="logo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">';
-  } else {
-    bl.textContent = logo;
-  }
-  const bn = document.getElementById('bname');
-  const bi = document.getElementById('binfo');
-  const fn = document.getElementById('fname');
-  if (bn) bn.textContent = school.name;
-  if (bi) bi.textContent = 'NPSN ' + school.npsn + ' · T.A. ' + school.year;
-  if (fn) fn.textContent = school.name + ' · ' + school.address;
-  document.title = school.name + ' · Info Walimurid';
+  document.getElementById('blogo').textContent = school.logo || '🏫';
+  document.getElementById('bname').textContent = school.name;
+  document.getElementById('binfo').textContent = `NPSN ${school.npsn} · T.A. ${school.year}`;
+  document.getElementById('fname').textContent = `${school.name} · ${school.address}`;
+  document.title = `${school.name} · Info Walimurid`;
 }
+
 async function boot() {
-  
-  document.documentElement.setAttribute('data-theme', 'light');
-  
-  try { school = await getSchool(); updateBrand(); } catch (e) { console.warn('brand fail', e); }
+  // theme
+  const th = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', th);
+  document.getElementById('tbtn').textContent = th === 'dark' ? '☀' : '🌙';
+
+  try {
+    school = await getSchool();
+    updateBrand();
+  } catch (e) {
+    console.warn('brand fail', e);
+  }
+
   document.getElementById('loading').classList.add('hide');
   document.getElementById('hdr').style.display = '';
   document.getElementById('ftr').style.display = '';
+
   window.addEventListener('hashchange', render);
   await render();
-  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  }
 }
-
-// Global Ripple Effect pada Klik
-document.addEventListener('click', function (e) {
-  const target = e.target.closest('.btn, .gChip, .tab, .gShort, .srow, .gRow, .card, .asp, .gSugItem');
-  if (!target) return;
-  
-  const rect = target.getBoundingClientRect();
-  const circle = document.createElement('span');
-  const diameter = Math.max(rect.width, rect.height);
-  const radius = diameter / 2;
-
-  circle.style.width = circle.style.height = `${diameter}px`;
-  circle.style.left = `${e.clientX - rect.left - radius}px`;
-  circle.style.top = `${e.clientY - rect.top - radius}px`;
-  circle.classList.add('ripple');
-
-  const existingRipple = target.querySelector('.ripple');
-  if (existingRipple) existingRipple.remove();
-
-  target.appendChild(circle);
-});
-
-// 3D Tilt Effect saat Mouse Move
-document.addEventListener('mousemove', function (e) {
-  const card = e.target.closest('.favCard, .asp, .gShort');
-  if (!card) return;
-  const rect = card.getBoundingClientRect();
-  const x = e.clientX - rect.left - rect.width / 2;
-  const y = e.clientY - rect.top - rect.height / 2;
-  card.style.transform = `perspective(600px) rotateX(${-y / 12}deg) rotateY(${x / 12}deg) translateY(-4px)`;
-});
-
-document.addEventListener('mouseout', function (e) {
-  const card = e.target.closest('.favCard, .asp, .gShort');
-  if (card) card.style.transform = '';
-});
 
 boot();
 </script>
-
-<!-- Mobile Bottom Navigation -->
-<nav class="mBottomNav" id="mBottomNav">
-  <div class="mNavItem act" id="mNav-home" onclick="go('/')">
-    <span class="ico">🏠</span>
-    <span>Beranda</span>
-  </div>
-  <div class="mNavItem" id="mNav-admin" onclick="go('/admin')">
-    <span class="ico">👨‍🏫</span>
-    <span>Panel Guru</span>
-  </div>
-  
-</nav>
-
 </body>
 </html>
