@@ -1,4 +1,5 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/usr/bin/env bash
+if [ ! -f .env ]; then echo "❌ File .env tidak ditemukan. Salin dari .env.example"; exit 1; fi
 # Load .env dan generate config.js
 set -a
 source .env

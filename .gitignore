@@ -1,1 +1,13 @@
+# Firebase credentials - JANGAN pernah di-commit
 .env
+config.js
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Dependencies
+node_modules/
