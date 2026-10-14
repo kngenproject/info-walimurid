@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script src="config.js"></script>
 <style>
 :root{--bg:#f6f8fb;--surface:#fff;--surface2:#f1f5f9;--text:#0f172a;--text2:#475569;--muted:#64748b;--border:#e2e8f0;--primary:#1e40af;--primary6:#1d4ed8;--p50:#eff6ff;--ok:#047857;--okbg:#ecfdf5;--warn:#b45309;--warnbg:#fffbeb;--err:#b91c1c;--errbg:#fef2f2;--sh:0 1px 2px rgba(15,23,42,.06),0 1px 3px rgba(15,23,42,.05);--r:14px}
@@ -173,7 +174,7 @@ tbody tr:hover{background:var(--surface2)}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { initializeFirestore, persistentLocalCache, getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, serverTimestamp, writeBatch }
+import { initializeFirestore, persistentLocalCache, getFirestore, collection, doc, getDoc, getDocs, getDocsFromServer, setDoc, addDoc, updateDoc, deleteDoc, query, where, serverTimestamp, writeBatch }
   from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -191,8 +192,9 @@ catch (e) { db = getFirestore(app0); }
 const auth = getAuth(app0);
 
 let currentUser = null, authReady = false;
-onAuthStateChanged(auth, u => {
+onAuthStateChanged(auth, async u => {
   currentUser = u; authReady = true;
+  if (u) await ensureSeeded();
   if (parseRoute()[0] === 'admin') render();
 });
 
@@ -228,21 +230,21 @@ async function getSchool() {
   return { ...DEFAULT_SCHOOL };
 }
 async function getClasses() {
-  const snap = await getDocs(collection(db, 'kelas'));
+  const snap = await freshDocs(collection(db, 'kelas'));
   const out = {};
   snap.forEach(d => { out[d.id] = d.data().wali || ''; });
   return out;
 }
 async function getStudents() {
-  const snap = await getDocs(collection(db, 'siswa'));
+  const snap = await freshDocs(collection(db, 'siswa'));
   const out = [];
   snap.forEach(d => out.push({ id: d.id, ...d.data() }));
   return out;
 }
 async function loadPeriod(period) {
   const [nSnap, aSnap] = await Promise.all([
-    getDocs(query(collection(db, 'nilai'), where('period', '==', period))),
-    getDocs(query(collection(db, 'absensi'), where('period', '==', period)))
+    freshDocs(query(collection(db, 'nilai'), where('period', '==', period))),
+    freshDocs(query(collection(db, 'absensi'), where('period', '==', period)))
   ]);
   const nilai = {}, absen = {};
   nSnap.forEach(d => { const v = d.data(); nilai[v.siswaId] = [v.a0 || '', v.a1 || '', v.a2 || '', v.a3 || '']; });
@@ -292,6 +294,27 @@ async function seedIfEmpty() {
     }
   }
   return true;
+}
+
+
+async function ensureSeeded() {
+  try {
+    const students = await getStudents();
+    if (students.length > 0) return true;
+    if (!currentUser) return false;
+    const done = await seedIfEmpty();
+    if (done) toast('\u2705 Data awal dimuat otomatis', 'ok');
+    return done;
+  } catch (e) {
+    console.warn('ensureSeeded', e);
+    return false;
+  }
+}
+
+
+async function freshDocs(ref) {
+  try { return await getDocsFromServer(ref); }
+  catch (e) { return await getDocs(ref); }
 }
 
 // ============ UTIL ============
@@ -667,10 +690,11 @@ async function viewAdmin(sub) {
   if (!authReady) return { html: '<div class="empty">Memeriksa sesi…</div>' };
   if (!currentUser) return renderLogin();
   const tab = sub[0] || 'nilai';
-  const period = sub[0] === 'nilai' && sub[1] ? sub[1] : PERIODS[0];
+  const period = (sub[0] === 'nilai' || sub[0] === 'import') && sub[1] ? sub[1] : PERIODS[0];
   const tabs = `<div class="tabs" role="tablist">
     <button class="tab ${tab === 'nilai' ? 'act' : ''}" onclick="go('/admin/nilai')">📊 Nilai</button>
     <button class="tab ${tab === 'siswa' ? 'act' : ''}" onclick="go('/admin/siswa')">👥 Siswa</button>
+    <button class="tab ${tab === 'import' ? 'act' : ''}" onclick="go('/admin/import')">📥 Import</button>
     <button class="tab ${tab === 'setting' ? 'act' : ''}" onclick="go('/admin/setting')">⚙️ Pengaturan</button>
     <button class="tab ${tab === 'seed' ? 'act' : ''}" onclick="go('/admin/seed')">🌱 Data Awal</button>
   </div>`;
@@ -811,6 +835,56 @@ async function viewAdmin(sub) {
           </form>
         </div>`;
     }
+  }
+  else if (tab === 'import') {
+    content = `
+      <div class="card">
+        <h3>📥 Import Data Siswa (Master)</h3>
+        <p class="sub" style="margin-bottom:.8rem">CSV dengan kolom: <code>kode, nama, kelas</code>. Kode sama akan ditimpa.</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <button class="btn bo bsm" onclick="dlTemplateSiswa()">📄 Unduh Template</button>
+          <label class="btn bp bsm" style="cursor:pointer"><span class="btn-lbl">📂 Pilih File CSV</span><input type="file" accept=".csv,text/csv" style="display:none" onchange="importSiswa(this)"></label>
+        </div>
+      </div>
+      <div class="card">
+        <h3>📥 Import Nilai & Absensi</h3>
+        <p class="sub" style="margin-bottom:.8rem">CSV per periode. Kolom: <code>kode, nama, kelas, membaca, menulis, berhitung, menghafal, hadir, sakit, izin, alfa</code>.</p>
+        <div class="periods">
+          ${PERIODS.map(p => `<button class="per ${p === period ? 'act' : ''}" onclick="go('/admin/import/${encodeURIComponent(p)}')">${esc(p)}</button>`).join('')}
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.9rem;align-items:center">
+          <select id="xlsKelas" style="max-width:140px" aria-label="Pilih kelas">
+            <option value="">— Pilih kelas —</option>
+            ${[...new Set((await getStudents()).map(s => s.kelas))].sort().map(k => `<option value="${esc(k)}">Kelas ${esc(k)}</option>`).join('')}
+          </select>
+          <button class="btn bs bsm" onclick="dlExcelTemplate('${esc(period)}')">📊 Unduh Template Excel (${esc(period)})</button>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.9rem">
+          <button class="btn bo bsm" onclick="dlTemplateNilai('${esc(period)}')">📄 Unduh Template CSV</button>
+          <label class="btn bp bsm" style="cursor:pointer"><span class="btn-lbl">📂 Import Excel (.xlsx)</span><input type="file" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display:none" onchange="importExcel(this,'${esc(period)}')"></label>
+          <label class="btn bp bsm" style="cursor:pointer;background:var(--muted)"><span class="btn-lbl">📂 Import CSV</span><input type="file" accept=".csv,text/csv" style="display:none" onchange="importNilai(this,'${esc(period)}')"></label>
+        </div>
+        <div class="alert alert-info">
+          <b>Excel (.xlsx)</b> — sudah ada dropdown L/CL/KL & validasi angka. Kolom <code>kode</code>, <code>nama</code>, <code>kelas</code> terkunci (tidak bisa diubah).<br>
+          <b>Nilai valid:</b> <b>L</b> (Lancar=90), <b>CL</b> (Cukup Lancar=80), <b>KL</b> (Kurang Lancar=70), atau kosong.
+        </div>
+      </div>
+      <div class="card">
+        <h3>📋 Model Data (ringkas)</h3>
+        <div class="tw"><table>
+          <thead><tr><th>Koleksi</th><th>ID Dokumen</th><th>Field</th></tr></thead>
+          <tbody>
+            <tr><td><code>siswa</code></td><td><code>{KODE}</code></td><td>nama, kelas, access_code</td></tr>
+            <tr><td><code>nilai</code></td><td><code>{KODE}__{PERIODE}</code></td><td>siswaId, period, a0..a3</td></tr>
+            <tr><td><code>absensi</code></td><td><code>{KODE}__{PERIODE}</code></td><td>siswaId, period, hadir, sakit, izin, alfa</td></tr>
+            <tr><td><code>catatan</code></td><td>auto</td><td>siswaId, period, text, ts</td></tr>
+            <tr><td><code>kelas</code></td><td><code>{KELAS}</code></td><td>wali</td></tr>
+            <tr><td><code>settings</code></td><td><code>main</code></td><td>name, npsn, address, logo, year, headmaster</td></tr>
+          </tbody>
+        </table></div>
+        <p class="sub" style="margin-top:.8rem">Urutan aspek: <code>a0</code>=Membaca, <code>a1</code>=Menulis, <code>a2</code>=Berhitung, <code>a3</code>=Menghafal</p>
+      </div>
+    `;
   }
   else if (tab === 'setting') {
     const [sc, classes, students] = await Promise.all([getSchool(), getClasses(), getStudents()]);
@@ -1012,6 +1086,405 @@ window.exportCSV = async function (kelas, period, btn) {
     a.click();
     URL.revokeObjectURL(url);
   });
+};
+
+
+window.manualSeed = async function (btn) {
+  await run(btn, 'Memproses\u2026', async () => {
+    if (!currentUser) {
+      toast('Login sebagai guru dulu untuk memuat data awal', 'info');
+      setTimeout(() => go('/admin'), 700);
+      return;
+    }
+    const done = await seedIfEmpty();
+    toast(done ? '\u2705 Data awal dimuat' : '\u26a0\ufe0f Data sudah ada', done ? 'ok' : 'info');
+    render();
+  });
+};
+
+
+// ============ CSV IMPORT ============
+function parseCSV(text) {
+  const rows = [];
+  let row = [], cell = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (q) {
+      if (ch === '"' && text[i+1] === '"') { cell += '"'; i++; }
+      else if (ch === '"') q = false;
+      else cell += ch;
+    } else {
+      if (ch === '"') q = true;
+      else if (ch === ',') { row.push(cell); cell = ''; }
+      else if (ch === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+      else if (ch === '\r') { /* skip */ }
+      else cell += ch;
+    }
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  return rows.filter(r => r.some(x => String(x).trim()));
+}
+function csvDownload(filename, rows) {
+  const csv = '\ufeff' + rows.map(r => r.map(x => '"' + String(x).replace(/"/g, '""') + '"').join(',')).join('\n');
+  const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+window.dlTemplateSiswa = function () {
+  csvDownload('template_siswa.csv', [
+    ['kode', 'nama', 'kelas'],
+    ['4B-001', 'ADZKIYA RARAS MAHFUDZA', '4B'],
+    ['4B-002', 'ALMAIRA ZEA ACHMAD', '4B'],
+    ['4C-001', 'ABDUL JALAL SAPUTRA', '4C']
+  ]);
+};
+window.dlTemplateNilai = function (period) {
+  csvDownload('template_nilai_' + period.replace(/\s/g, '_') + '.csv', [
+    ['kode', 'nama', 'kelas', 'membaca', 'menulis', 'berhitung', 'menghafal', 'hadir', 'sakit', 'izin', 'alfa'],
+    ['4B-001', 'ADZKIYA RARAS MAHFUDZA', '4B', 'CL', 'KL', 'L', 'L', '20', '0', '0', '0'],
+    ['4B-002', 'ALMAIRA ZEA ACHMAD', '4B', 'CL', 'CL', 'L', 'L', '19', '1', '0', '0']
+  ]);
+};
+window.importSiswa = async function (input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const lbl = input.previousElementSibling;
+  const orig = lbl ? lbl.textContent : '';
+  try {
+    const rows = parseCSV(await file.text());
+    if (rows.length < 2) { toast('File kosong atau format salah', 'err'); return; }
+    const h = rows[0].map(x => x.trim().toLowerCase());
+    const iK = h.indexOf('kode'), iN = h.indexOf('nama'), iC = h.indexOf('kelas');
+    if (iK < 0 || iN < 0 || iC < 0) { toast('Header harus: kode, nama, kelas', 'err'); return; }
+    const items = [];
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      const kode = String(r[iK] || '').trim().toUpperCase();
+      const nama = String(r[iN] || '').trim().replace(/\s+/g, ' ');
+      const kelas = String(r[iC] || '').trim().toUpperCase();
+      if (!kode || !nama || !kelas) continue;
+      if (!/^[A-Z0-9-]+$/.test(kode)) { toast('Baris ' + (i+1) + ': kode "' + kode + '" tidak valid', 'err'); return; }
+      items.push({ kode, nama, kelas });
+    }
+    if (!items.length) { toast('Tidak ada baris valid', 'err'); return; }
+    if (!confirm('Import ' + items.length + ' siswa? Kode yang sama akan ditimpa.')) return;
+    if (lbl) lbl.textContent = '⏳ Mengimpor…';
+    input.disabled = true;
+    for (let i = 0; i < items.length; i += 400) {
+      const b = writeBatch(db);
+      for (const s of items.slice(i, i + 400)) {
+        b.set(doc(db, 'siswa', s.kode), { nama: s.nama, kelas: s.kelas, access_code: s.kode });
+      }
+      await b.commit();
+    }
+    toast('✅ ' + items.length + ' siswa diimpor', 'ok');
+    input.value = '';
+  } catch (e) {
+    console.error(e);
+    toast('Gagal: ' + friendly(e), 'err');
+  } finally {
+    input.disabled = false;
+    if (lbl) lbl.textContent = orig;
+    render();
+  }
+};
+window.importNilai = async function (input, period) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const lbl = input.previousElementSibling;
+  const orig = lbl ? lbl.textContent : '';
+  try {
+    const rows = parseCSV(await file.text());
+    if (rows.length < 2) { toast('File kosong atau format salah', 'err'); return; }
+    const h = rows[0].map(x => x.trim().toLowerCase());
+    for (const k of ['kode', 'membaca', 'menulis', 'berhitung', 'menghafal']) {
+      if (h.indexOf(k) < 0) { toast('Header "' + k + '" tidak ditemukan', 'err'); return; }
+    }
+    const iK = h.indexOf('kode'), iN = h.indexOf('nama'), iC = h.indexOf('kelas');
+    const iA = ['membaca', 'menulis', 'berhitung', 'menghafal'].map(k => h.indexOf(k));
+    const iH = h.indexOf('hadir'), iS = h.indexOf('sakit'), iI = h.indexOf('izin'), iF = h.indexOf('alfa');
+    const items = [];
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      const kode = String(r[iK] || '').trim().toUpperCase();
+      if (!kode) continue;
+      const a = iA.map(idx => {
+        const v = String(r[idx] || '').trim().toUpperCase();
+        return ['L', 'CL', 'KL'].includes(v) ? v : '';
+      });
+      const att = {
+        hadir: iH >= 0 ? (+r[iH] || 0) : 0,
+        sakit: iS >= 0 ? (+r[iS] || 0) : 0,
+        izin:  iI >= 0 ? (+r[iI] || 0) : 0,
+        alfa:  iF >= 0 ? (+r[iF] || 0) : 0
+      };
+      items.push({
+        kode,
+        nama:  iN >= 0 ? String(r[iN] || '').trim() : '',
+        kelas: iC >= 0 ? String(r[iC] || '').trim().toUpperCase() : '',
+        a, att
+      });
+    }
+    if (!items.length) { toast('Tidak ada baris valid', 'err'); return; }
+    if (!confirm('Import ' + items.length + ' baris untuk periode ' + period + '?')) return;
+    if (lbl) lbl.textContent = '⏳ Mengimpor…';
+    input.disabled = true;
+    for (let i = 0; i < items.length; i += 200) {
+      const b = writeBatch(db);
+      for (const it of items.slice(i, i + 200)) {
+        b.set(doc(db, 'nilai', it.kode + '__' + period), {
+          siswaId: it.kode, period,
+          a0: it.a[0], a1: it.a[1], a2: it.a[2], a3: it.a[3]
+        });
+        if (it.att.hadir || it.att.sakit || it.att.izin || it.att.alfa) {
+          b.set(doc(db, 'absensi', it.kode + '__' + period), {
+            siswaId: it.kode, period, ...it.att
+          });
+        }
+      }
+      await b.commit();
+    }
+    toast('✅ Nilai ' + items.length + ' siswa diimpor untuk ' + period, 'ok');
+    input.value = '';
+  } catch (e) {
+    console.error(e);
+    toast('Gagal: ' + friendly(e), 'err');
+  } finally {
+    input.disabled = false;
+    if (lbl) lbl.textContent = orig;
+    render();
+  }
+};
+
+
+// ============ EXCEL IMPORT/EXPORT (ExcelJS) ============
+window.dlExcelTemplate = async function (period) {
+  const sel = document.getElementById('xlsKelas');
+  const kelas = sel && sel.value;
+  if (!kelas) { toast('Pilih kelas dulu', 'err'); return; }
+  if (!window.ExcelJS) { toast('Library Excel belum termuat, coba refresh', 'err'); return; }
+
+  const students = await getStudents();
+  const list = students.filter(s => s.kelas === kelas).sort((a, b) => a.nama.localeCompare(b.nama));
+  if (!list.length) { toast('Tidak ada siswa di kelas ' + kelas, 'err'); return; }
+
+  const existing = await loadPeriod(period);
+  const wb = new ExcelJS.Workbook();
+  wb.creator = 'Info Walimurid';
+  wb.created = new Date();
+  const ws = wb.addWorksheet('Nilai ' + period.replace(/\s/g, ''), {
+    views: [{ state: 'frozen', ySplit: 1 }]
+  });
+
+  ws.columns = [
+    { header: 'kode',     key: 'kode',     width: 12 },
+    { header: 'nama',     key: 'nama',     width: 38 },
+    { header: 'kelas',    key: 'kelas',    width: 8  },
+    { header: 'membaca',  key: 'membaca',  width: 11 },
+    { header: 'menulis',  key: 'menulis',  width: 11 },
+    { header: 'berhitung',key: 'berhitung',width: 11 },
+    { header: 'menghafal',key: 'menghafal',width: 11 },
+    { header: 'hadir',    key: 'hadir',    width: 8  },
+    { header: 'sakit',    key: 'sakit',    width: 8  },
+    { header: 'izin',     key: 'izin',     width: 8  },
+    { header: 'alfa',     key: 'alfa',     width: 8  }
+  ];
+
+  const hRow = ws.getRow(1);
+  hRow.height = 22;
+  hRow.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 11 };
+  hRow.alignment = { vertical: 'middle', horizontal: 'center' };
+  hRow.eachCell(c => {
+    c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E40AF' } };
+    c.border = {
+      top: { style: 'thin', color: { argb: 'FF1E40AF' } },
+      left: { style: 'thin', color: { argb: 'FF1E40AF' } },
+      bottom: { style: 'thin', color: { argb: 'FF1E40AF' } },
+      right: { style: 'thin', color: { argb: 'FF1E40AF' } }
+    };
+  });
+
+  const LOCK_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } };
+  list.forEach((s) => {
+    const a = existing.nilai[s.id] || ['', '', '', ''];
+    const at = existing.absen[s.id] || { hadir: 0, sakit: 0, izin: 0, alfa: 0 };
+    const row = ws.addRow({
+      kode: s.access_code,
+      nama: s.nama,
+      kelas: s.kelas,
+      membaca: a[0],
+      menulis: a[1],
+      berhitung: a[2],
+      menghafal: a[3],
+      hadir: at.hadir || 0,
+      sakit: at.sakit || 0,
+      izin: at.izin || 0,
+      alfa: at.alfa || 0
+    });
+
+    ['kode', 'nama', 'kelas'].forEach(k => {
+      const cell = row.getCell(k);
+      cell.fill = LOCK_FILL;
+      cell.font = { color: { argb: 'FF64748B' } };
+      cell.protection = { locked: true };
+    });
+
+    row.eachCell(c => {
+      c.border = {
+        top: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+        left: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+        bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+        right: { style: 'thin', color: { argb: 'FFE2E8F0' } }
+      };
+      c.alignment = { vertical: 'middle' };
+    });
+  });
+
+  const maxRow = list.length + 1;
+
+  const aspectCols = [4, 5, 6, 7];
+  for (let r = 2; r <= maxRow; r++) {
+    aspectCols.forEach(col => {
+      const cell = ws.getCell(r, col);
+      cell.dataValidation = {
+        type: 'list',
+        allowBlank: true,
+        formulae: ['"L,CL,KL"'],
+        showErrorMessage: true,
+        errorStyle: 'stop',
+        errorTitle: 'Nilai tidak valid',
+        error: 'Pilih salah satu: L, CL, atau KL (atau kosongkan).'
+      };
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    });
+
+    [8, 9, 10, 11].forEach(col => {
+      const cell = ws.getCell(r, col);
+      cell.dataValidation = {
+        type: 'whole',
+        operator: 'between',
+        allowBlank: true,
+        formulae: [0, 30],
+        showErrorMessage: true,
+        errorStyle: 'stop',
+        errorTitle: 'Angka tidak valid',
+        error: 'Isi angka antara 0 sampai 30.'
+      };
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    });
+  }
+
+  const noteRow = maxRow + 2;
+  ws.getCell('A' + noteRow).value = 'PETUNJUK:';
+  ws.getCell('A' + noteRow).font = { bold: true, color: { argb: 'FF1E40AF' } };
+  ws.getCell('A' + (noteRow + 1)).value = '• Kolom membaca/menulis/berhitung/menghafal — pilih L / CL / KL dari dropdown.';
+  ws.getCell('A' + (noteRow + 2)).value = '• Kolom hadir/sakit/izin/alfa — isi angka (jumlah hari).';
+  ws.getCell('A' + (noteRow + 3)).value = '• JANGAN ubah kolom kode / nama / kelas.';
+  ws.getCell('A' + (noteRow + 4)).value = '• Setelah selesai: simpan sebagai .xlsx lalu upload lewat tab Import.';
+
+  ws.autoFilter = { from: 'A1', to: 'K1' };
+
+  const buffer = await wb.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `nilai_${kelas}_${period.replace(/\s/g, '')}.xlsx`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('📊 Template Excel terunduh', 'ok');
+};
+
+async function parseXLSX(file) {
+  const buf = await file.arrayBuffer();
+  const wb = new ExcelJS.Workbook();
+  await wb.xlsx.load(buf);
+  const ws = wb.worksheets[0];
+  const rows = [];
+  ws.eachRow({ includeEmpty: false }, (row) => {
+    const values = row.values;
+    rows.push(values.slice(1).map(v => {
+      if (v === null || v === undefined) return '';
+      if (typeof v === 'object' && v.text) return String(v.text);
+      if (typeof v === 'object' && v.result !== undefined) return String(v.result);
+      return String(v);
+    }));
+  });
+  return rows;
+}
+
+window.importExcel = async function (input, period) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const lbl = input.previousElementSibling;
+  const orig = lbl ? lbl.textContent : '';
+  try {
+    if (!window.ExcelJS) { toast('Library Excel belum termuat, refresh', 'err'); return; }
+    if (lbl) lbl.textContent = '⏳ Membaca…';
+    input.disabled = true;
+
+    const rows = await parseXLSX(file);
+    if (rows.length < 2) { toast('File kosong', 'err'); return; }
+
+    const h = rows[0].map(x => String(x).trim().toLowerCase());
+    for (const k of ['kode', 'membaca', 'menulis', 'berhitung', 'menghafal']) {
+      if (h.indexOf(k) < 0) { toast('Header "' + k + '" tidak ditemukan', 'err'); return; }
+    }
+    const iK = h.indexOf('kode');
+    const iN = h.indexOf('nama');
+    const iC = h.indexOf('kelas');
+    const iA = ['membaca', 'menulis', 'berhitung', 'menghafal'].map(k => h.indexOf(k));
+    const iH = h.indexOf('hadir'), iS = h.indexOf('sakit'), iI = h.indexOf('izin'), iF = h.indexOf('alfa');
+
+    const items = [];
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      const kode = String(r[iK] || '').trim().toUpperCase();
+      if (!kode) continue;
+      if (/^petunjuk/i.test(kode) || kode.startsWith('•')) continue;
+      if (!/^[A-Z0-9-]+$/.test(kode)) continue;
+
+      const a = iA.map(idx => {
+        const v = String(r[idx] || '').trim().toUpperCase();
+        return ['L', 'CL', 'KL'].includes(v) ? v : '';
+      });
+      const att = {
+        hadir: iH >= 0 ? Math.max(0, +r[iH] || 0) : 0,
+        sakit: iS >= 0 ? Math.max(0, +r[iS] || 0) : 0,
+        izin:  iI >= 0 ? Math.max(0, +r[iI] || 0) : 0,
+        alfa:  iF >= 0 ? Math.max(0, +r[iF] || 0) : 0
+      };
+      items.push({ kode, nama: iN >= 0 ? String(r[iN] || '').trim() : '', kelas: iC >= 0 ? String(r[iC] || '').trim().toUpperCase() : '', a, att });
+    }
+
+    if (!items.length) { toast('Tidak ada baris valid', 'err'); return; }
+    if (!confirm(`Import ${items.length} siswa untuk ${period}?`)) return;
+
+    if (lbl) lbl.textContent = `⏳ Import ${items.length}…`;
+    for (let i = 0; i < items.length; i += 200) {
+      const b = writeBatch(db);
+      for (const it of items.slice(i, i + 200)) {
+        b.set(doc(db, 'nilai', `${it.kode}__${period}`), {
+          siswaId: it.kode, period,
+          a0: it.a[0], a1: it.a[1], a2: it.a[2], a3: it.a[3]
+        });
+        b.set(doc(db, 'absensi', `${it.kode}__${period}`), {
+          siswaId: it.kode, period, ...it.att
+        });
+      }
+      await b.commit();
+    }
+    toast(`✅ ${items.length} nilai diimpor`, 'ok');
+    input.value = '';
+  } catch (e) {
+    console.error(e);
+    toast('Gagal: ' + friendly(e), 'err');
+  } finally {
+    input.disabled = false;
+    if (lbl) lbl.textContent = orig;
+    render();
+  }
 };
 
 // ============ TEMA & BOOT ============

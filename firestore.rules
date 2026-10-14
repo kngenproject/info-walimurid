@@ -6,18 +6,12 @@ service cloud.firestore {
     match /kelas/{id}    { allow read: if true; allow write: if staff(); }
     match /settings/{id} { allow read: if true; allow write: if staff(); }
 
-    // Daftar nama dan laporan publik (dasar pencarian nama di beranda)
     match /siswa/{sid} {
       allow get, list: if true;
       allow write: if staff();
-      match /catatan/{id} {
-        allow get, list: if true;
-        allow write: if staff();
-      }
     }
     match /nilai/{id}   { allow get, list: if true; allow write: if staff(); }
     match /absensi/{id} { allow get, list: if true; allow write: if staff(); }
-    match /akses/{code} { allow read, write: if staff(); }
-    match /catatan/{id} { allow read, write: if staff(); }
+    match /catatan/{id} { allow get, list: if true; allow write: if staff(); }
   }
 }
