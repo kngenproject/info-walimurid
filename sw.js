@@ -1,46 +1,46 @@
-const CACHE_NAME = 'walimurid-online-v1';
-const STATIC_ASSETS = [
-  './manifest.json',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
-  'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js'
+const CACHE = 'walimurid-v2';
+const PRECACHE = [
+  './', './index.html', './config.js', './manifest.json',
+  'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js',
+  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'
 ];
 
-// Install: Cache hanya aset statis luar (font & library)
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS);
-    }).then(() => self.skipWaiting())
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(c => Promise.allSettled(PRECACHE.map(u => c.add(u))))
+      .then(() => self.skipWaiting())
   );
 });
 
-// Activate: Bersihkan cache lama
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
-      );
-    }).then(() => self.clients.claim())
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
   );
 });
 
-// Fetch: NETWORK ONLY untuk HTML/Data agar selalu mutakhir
-self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
+self.addEventListener('fetch', e => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  if (url.hostname.includes('firestore') || url.hostname.includes('firebase')) return;
 
-  const url = new URL(event.request.url);
-
-  // Jika permintaan halaman HTML atau data Firestore, langsung ambil dari jaringan (Network Only)
-  if (event.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.origin.includes('firestore.googleapis.com')) {
-    event.respondWith(fetch(event.request));
+  // Halaman: jaringan dulu, cadangan cache agar aplikasi tetap bisa dibuka offline
+  if (req.mode === 'navigate') {
+    e.respondWith(
+      fetch(req).then(r => { const copy = r.clone(); caches.open(CACHE).then(c => c.put('./index.html', copy)); return r; })
+        .catch(() => caches.match('./index.html'))
+    );
     return;
   }
 
-  // Aset statis lainnya (Font/Chart.js) menggunakan Network First dengan Cache Fallback
-  event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
+  // Aset lain: jaringan dulu, cadangan cache
+  e.respondWith(
+    fetch(req).then(r => {
+      if (r.ok) { const copy = r.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
+      return r;
+    }).catch(() => caches.match(req))
   );
 });
