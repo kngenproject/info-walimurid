@@ -1,6 +1,5 @@
 # Firebase credentials
 .env
-config.js
 
 # OS / editor
 .DS_Store
