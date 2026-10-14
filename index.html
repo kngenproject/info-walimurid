@@ -3,173 +3,832 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#1e40af">
+<meta name="theme-color" content="#0078D4">
 <link rel="manifest" href="manifest.json">
 <title>Info Walimurid</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script src="config.js"></script>
 <style>
-:root{--bg:#f6f8fb;--surface:#fff;--surface2:#f1f5f9;--text:#0f172a;--text2:#475569;--muted:#64748b;--border:#e2e8f0;--primary:#1e40af;--primary6:#1d4ed8;--p50:#eff6ff;--ok:#047857;--okbg:#ecfdf5;--warn:#b45309;--warnbg:#fffbeb;--err:#b91c1c;--errbg:#fef2f2;--sh:0 1px 2px rgba(15,23,42,.06),0 1px 3px rgba(15,23,42,.05);--r:14px}
-[data-theme="dark"]{--bg:#0b1220;--surface:#131c2e;--surface2:#1a2438;--text:#e2e8f0;--text2:#cbd5e1;--muted:#94a3b8;--border:#26324a;--primary:#60a5fa;--primary6:#3b82f6;--p50:#1e293b;--ok:#34d399;--okbg:#064e3b;--warn:#fbbf24;--warnbg:#78350f;--err:#f87171;--errbg:#7f1d1d}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
-a{color:inherit}
-button,input,select,textarea{font-family:inherit}
-:focus-visible{outline:3px solid rgba(59,130,246,.45);outline-offset:2px}
-.header{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
-.hinner{max-width:1100px;margin:0 auto;padding:.7rem 1rem;display:flex;justify-content:space-between;align-items:center;gap:.75rem}
-.brand{display:flex;align-items:center;gap:.7rem;text-decoration:none;color:inherit;cursor:pointer;min-width:0}
-.blogo{width:40px;height:40px;background:linear-gradient(135deg,var(--primary),#3b82f6);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
-.brand h1{font-size:.95rem;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.brand p{font-size:.72rem;color:var(--muted);white-space:nowrap}
-.nav{display:flex;gap:.3rem;align-items:center}
-.nav a{color:var(--text2);text-decoration:none;padding:.5rem .75rem;border-radius:9px;font-size:.85rem;font-weight:600;cursor:pointer;min-height:40px;display:inline-flex;align-items:center}
-.nav a:hover{background:var(--surface2)}
-.nav a.act{background:var(--p50);color:var(--primary)}
-.tbtn{width:40px;height:40px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:9px;cursor:pointer;font-size:1rem}
-.container{max-width:1100px;margin:0 auto;padding:1.25rem 1rem 4rem}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;box-shadow:var(--sh);margin-bottom:1rem}
-.hero{background:linear-gradient(135deg,#1e40af,#2563eb);color:#fff;border-radius:var(--r);padding:1.4rem 1.4rem;margin-bottom:1rem}
-.hero h2{font-size:1.3rem;font-weight:800;letter-spacing:-.3px}
-.hero p{opacity:.9;font-size:.9rem;margin-top:.25rem}
-[data-theme="dark"] .hero{background:linear-gradient(135deg,#1e3a8a,#1d4ed8)}
-h2.pt{font-size:1.25rem;font-weight:800;letter-spacing:-.3px}
-h3{font-size:.95rem;font-weight:700;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
-.sub{color:var(--muted);font-size:.85rem}
-.shead{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;min-height:40px;padding:.55rem 1rem;border-radius:10px;font-size:.85rem;font-weight:600;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:background .15s,border-color .15s,opacity .15s;white-space:nowrap}
-.btn:disabled{opacity:.6;cursor:wait}
-.bp{background:var(--primary);color:#fff}.bp:hover{background:var(--primary6)}
-.bo{background:var(--surface);color:var(--text);border-color:var(--border)}.bo:hover{border-color:var(--primary);color:var(--primary)}
-.bs{background:var(--ok);color:#fff}
-.bd{background:var(--err);color:#fff}
-.bsm{min-height:34px;padding:.35rem .75rem;font-size:.8rem}
-input,select,textarea{width:100%;min-height:42px;padding:.55rem .8rem;border:1px solid var(--border);border-radius:10px;font-size:.9rem;background:var(--surface);color:var(--text)}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(30,64,175,.12)}
-label{display:block;margin-bottom:.35rem;font-size:.8rem;font-weight:600;color:var(--text2)}
-.fg{margin-bottom:.9rem}
-.search{position:relative;margin-bottom:.9rem}
-.search input{padding-left:2.5rem}
-.search::before{content:'🔍';position:absolute;left:.9rem;top:50%;transform:translateY(-50%);font-size:.85rem;opacity:.55;pointer-events:none}
-.chips{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.9rem}
-.chip{min-height:34px;padding:.3rem .8rem;border-radius:99px;border:1px solid var(--border);background:var(--surface);color:var(--text2);font-size:.8rem;font-weight:600;cursor:pointer}
-.chip.act{background:var(--primary);border-color:var(--primary);color:#fff}
-.alert{padding:.75rem 1rem;border-radius:10px;margin-bottom:1rem;font-size:.85rem;border-left:3px solid;font-weight:500}
-.alert-ok{background:var(--okbg);color:var(--ok);border-color:var(--ok)}
-.alert-err{background:var(--errbg);color:var(--err);border-color:var(--err)}
-.alert-info{background:var(--p50);color:var(--primary);border-color:var(--primary)}
-.badge{display:inline-flex;align-items:center;justify-content:center;padding:.25rem .6rem;border-radius:7px;font-size:.75rem;font-weight:700;min-width:38px}
-.bL{background:var(--okbg);color:var(--ok)}.bCL{background:var(--warnbg);color:var(--warn)}.bKL{background:var(--errbg);color:var(--err)}.bE{background:var(--surface2);color:var(--muted)}
-.grid{display:grid;gap:.9rem}
-.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-.g4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
-.listrow{display:flex;align-items:center;gap:.9rem;padding:.9rem;border-radius:12px;text-decoration:none;color:var(--text);border:1px solid transparent}
-.listrow:hover{background:var(--p50);border-color:var(--border)}
-.lbadge{width:50px;height:50px;background:linear-gradient(135deg,var(--primary),#3b82f6);color:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:800;flex-shrink:0}
-.li{flex:1;min-width:0}
-.lt{font-size:.98rem;font-weight:700}
-.lm{font-size:.8rem;color:var(--muted);margin-top:.1rem}
-.kbadge{min-width:54px;padding:.35rem .5rem;border-radius:10px;text-align:center;font-weight:800;font-size:1.1rem;background:var(--surface2)}
-.srow{display:flex;align-items:center;gap:.8rem;padding:.7rem .85rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text);margin-bottom:.4rem}
-.srow:hover{border-color:var(--primary);background:var(--p50)}
-.av{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.78rem;flex-shrink:0}
-.av0{background:linear-gradient(135deg,#3b82f6,#2563eb)}.av1{background:linear-gradient(135deg,#10b981,#059669)}.av2{background:linear-gradient(135deg,#f59e0b,#d97706)}.av3{background:linear-gradient(135deg,#8b5cf6,#7c3aed)}.av4{background:linear-gradient(135deg,#ec4899,#db2777)}.av5{background:linear-gradient(135deg,#06b6d4,#0891b2)}
-.sinfo{flex:1;min-width:0}
-.sn{font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sm{font-size:.76rem;color:var(--muted);margin-top:.1rem}
-.ssc{font-size:1.2rem;font-weight:800;min-width:44px;text-align:right}
-.tw{overflow-x:auto;border-radius:12px;border:1px solid var(--border)}
-table{width:100%;border-collapse:collapse;font-size:.85rem}
-th,td{padding:.65rem .8rem;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
-th{background:var(--surface2);font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.4px;color:var(--text2)}
+/* ============================================================
+   FLUENT DESIGN — Info Walimurid
+   Based on design.md (Estilo Fluent AI)
+   ============================================================ */
+
+:root{
+  /* Colors — Light */
+  --primary:#0078D4;
+  --primary-dark:#005A9E;
+  --primary-light:#DEECF9;
+  --secondary:#FFFFFF;
+  --tertiary:#2F2F2F;
+  --neutral:#F2F2F2;
+  --neutral-2:#E1E1E1;
+  --neutral-3:#C8C8C8;
+  --surface:#FFFFFF;
+  --surface-2:#FAFAFA;
+  --surface-3:#F5F5F5;
+  --text:#1F1F1F;
+  --text-2:#4A4A4A;
+  --text-3:#767676;
+  --border:#E1E1E1;
+  --border-2:#C8C8C8;
+
+  /* Semantic */
+  --success:#107C10;
+  --success-bg:#DFF6DD;
+  --warn:#FF8C00;
+  --warn-bg:#FFF4CE;
+  --error:#C42B1C;
+  --error-bg:#FDE7E9;
+  --info:#0078D4;
+  --info-bg:#DEECF9;
+  --accent:#5C2D91;
+  --accent-bg:#EFE7F7;
+
+  /* Radius */
+  --r-sm:4px;
+  --r-md:8px;
+  --r-lg:12px;
+
+  /* Shadow */
+  --sh-sm:0 1px 2px rgba(0,0,0,0.04);
+  --sh-md:0 2px 12px rgba(0,0,0,0.06);
+  --sh-lg:0 8px 24px rgba(0,0,0,0.08);
+
+  /* Motion */
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --dur-fast:150ms;
+  --dur:200ms;
+  --dur-slow:420ms;
+
+  /* Spacing */
+  --sp-1:0.25rem;--sp-2:0.5rem;--sp-3:0.75rem;--sp-4:1rem;
+  --sp-5:1.25rem;--sp-6:1.5rem;--sp-8:2rem;--sp-12:3rem;--sp-16:4rem;
+
+  /* Layout */
+  --maxw:1280px;
+  --pad:1.5rem;
+
+  /* z-index */
+  --z-base:0;--z-sticky:100;--z-overlay:200;--z-modal:300;--z-toast:500;
+}
+
+[data-theme="dark"]{
+  --primary:#4CA0E0;
+  --primary-dark:#3A87C7;
+  --primary-light:#1A3A5C;
+  --secondary:#1F1F1F;
+  --tertiary:#F2F2F2;
+  --neutral:#2B2B2B;
+  --neutral-2:#3A3A3A;
+  --neutral-3:#4A4A4A;
+  --surface:#1A1A1A;
+  --surface-2:#232323;
+  --surface-3:#2B2B2B;
+  --text:#F2F2F2;
+  --text-2:#C8C8C8;
+  --text-3:#8C8C8C;
+  --border:#3A3A3A;
+  --border-2:#4A4A4A;
+
+  --success:#4CC24C;
+  --success-bg:#0E3A0E;
+  --warn:#FFA940;
+  --warn-bg:#3D2900;
+  --error:#F1707B;
+  --error-bg:#3D1418;
+  --info:#4CA0E0;
+  --info-bg:#0A2844;
+  --accent:#B794D9;
+  --accent-bg:#2A1A3D;
+
+  --sh-sm:0 1px 2px rgba(0,0,0,0.3);
+  --sh-md:0 2px 12px rgba(0,0,0,0.4);
+  --sh-lg:0 8px 24px rgba(0,0,0,0.5);
+}
+
+/* Reset */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:'Segoe UI','Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  background:var(--surface-2);
+  color:var(--text);
+  font-size:1rem;
+  line-height:1.6;
+  min-height:100dvh;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+img,svg{max-width:100%;display:block}
+
+:focus-visible{
+  outline:2px solid var(--primary);
+  outline-offset:2px;
+  border-radius:var(--r-sm);
+}
+
+/* Typography */
+h1,h2,h3,h4{font-weight:600;line-height:1.25;letter-spacing:-0.01em;color:var(--text)}
+h1{font-size:2.5rem;font-weight:700;letter-spacing:-0.02em}
+h2{font-size:1.5rem;font-weight:600;letter-spacing:-0.01em}
+h3{font-size:1.125rem;font-weight:600}
+h4{font-size:0.95rem;font-weight:600;color:var(--text-2)}
+.mono{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;font-size:0.875rem}
+
+/* Layout primitives */
+.container{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
+.stack>*+*{margin-top:var(--sp-4)}
+.row{display:flex;align-items:center;gap:var(--sp-3)}
+.row-between{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-4);flex-wrap:wrap}
+.grid{display:grid;gap:var(--sp-4)}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.grid-4{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+
+/* ============ HEADER ============ */
+.header{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;
+  z-index:var(--z-sticky);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+[data-theme="light"] .header{background:rgba(255,255,255,0.85)}
+[data-theme="dark"] .header{background:rgba(26,26,26,0.85)}
+
+.header-inner{
+  max-width:var(--maxw);
+  margin:0 auto;
+  padding:0.75rem var(--pad);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:var(--sp-4);
+}
+
+.brand{display:flex;align-items:center;gap:0.75rem;text-decoration:none;color:inherit;cursor:pointer;min-width:0}
+.brand:hover{text-decoration:none}
+.brand-logo{
+  width:36px;height:36px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  border-radius:var(--r-md);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;flex-shrink:0;
+  box-shadow:var(--sh-sm);
+}
+.brand-logo svg{width:20px;height:20px;stroke:#fff}
+.brand-text{min-width:0}
+.brand-text h1{font-size:0.95rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.brand-text p{font-size:0.75rem;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.nav{display:flex;gap:0.25rem;align-items:center}
+.nav a,.nav button{
+  color:var(--text-2);
+  text-decoration:none;
+  padding:0.5rem 0.875rem;
+  border-radius:var(--r-sm);
+  font-size:0.875rem;
+  font-weight:500;
+  cursor:pointer;
+  border:none;
+  background:transparent;
+  min-height:36px;
+  display:inline-flex;align-items:center;gap:0.4rem;
+  transition:background var(--dur) var(--ease),color var(--dur) var(--ease);
+}
+.nav a:hover,.nav button:hover{background:var(--neutral);color:var(--text);text-decoration:none}
+.nav a.active{background:var(--primary-light);color:var(--primary);font-weight:600}
+
+.icon-btn{
+  width:36px;height:36px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:var(--r-sm);
+  cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  color:var(--text-2);
+  transition:all var(--dur) var(--ease);
+}
+.icon-btn:hover{background:var(--neutral);color:var(--text);border-color:var(--border-2)}
+.icon-btn svg{width:18px;height:18px}
+
+/* ============ MAIN ============ */
+.main{min-height:calc(100dvh - 200px);padding:var(--sp-6) 0 var(--sp-16)}
+
+/* ============ CARDS ============ */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  padding:var(--sp-5);
+  box-shadow:var(--sh-sm);
+  transition:box-shadow var(--dur) var(--ease),transform var(--dur) var(--ease);
+}
+.card:hover{box-shadow:var(--sh-md)}
+
+/* ============ BUTTONS ============ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;
+  min-height:36px;
+  padding:0.5rem 1rem;
+  border-radius:var(--r-sm);
+  font-size:0.875rem;
+  font-weight:500;
+  text-decoration:none;
+  border:1.5px solid transparent;
+  cursor:pointer;
+  transition:all var(--dur) var(--ease);
+  white-space:nowrap;
+  user-select:none;
+}
+.btn:hover{text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+.btn-primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-primary:hover{background:var(--primary-dark);border-color:var(--primary-dark);box-shadow:var(--sh-md)}
+
+.btn-secondary{background:transparent;color:var(--primary);border-color:var(--border-2)}
+.btn-secondary:hover{background:var(--primary-light);border-color:var(--primary)}
+
+.btn-ghost{background:transparent;color:var(--text-2);border-color:transparent}
+.btn-ghost:hover{background:var(--neutral);color:var(--text)}
+
+.btn-success{background:var(--success);color:#fff;border-color:var(--success)}
+.btn-success:hover{opacity:0.9}
+
+.btn-danger{background:var(--error);color:#fff;border-color:var(--error)}
+.btn-danger:hover{opacity:0.9}
+
+.btn-sm{min-height:30px;padding:0.35rem 0.75rem;font-size:0.8125rem}
+.btn-lg{min-height:44px;padding:0.65rem 1.25rem;font-size:0.9375rem}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ============ INPUTS ============ */
+.field{margin-bottom:var(--sp-4)}
+.field label{
+  display:block;margin-bottom:0.4rem;
+  font-size:0.8125rem;font-weight:500;color:var(--text-2);
+}
+.input,.select,.textarea{
+  width:100%;
+  min-height:38px;
+  padding:0.5rem 0.75rem;
+  border:1px solid var(--border-2);
+  border-radius:var(--r-sm);
+  font-size:0.9375rem;
+  background:var(--surface);
+  color:var(--text);
+  transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease);
+}
+.input:focus,.select:focus,.textarea:focus{
+  outline:none;
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px var(--primary-light);
+}
+.input::placeholder{color:var(--text-3)}
+.textarea{min-height:80px;resize:vertical;font-family:inherit}
+
+.input-search{position:relative}
+.input-search input{padding-left:2.5rem}
+.input-search svg{
+  position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);
+  width:18px;height:18px;stroke:var(--text-3);fill:none;stroke-width:2;pointer-events:none;
+}
+
+/* ============ ALERTS ============ */
+.alert{
+  padding:0.75rem 1rem;
+  border-radius:var(--r-sm);
+  font-size:0.875rem;
+  border-left:3px solid;
+  margin-bottom:var(--sp-4);
+  display:flex;align-items:flex-start;gap:0.5rem;
+}
+.alert svg{width:18px;height:18px;flex-shrink:0;margin-top:1px}
+.alert-info{background:var(--info-bg);color:var(--info);border-color:var(--info)}
+.alert-success{background:var(--success-bg);color:var(--success);border-color:var(--success)}
+.alert-warn{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.alert-error{background:var(--error-bg);color:var(--error);border-color:var(--error)}
+
+/* ============ BADGE ============ */
+.badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:32px;
+  padding:0.2rem 0.5rem;
+  border-radius:var(--r-sm);
+  font-size:0.75rem;font-weight:600;
+  letter-spacing:0.02em;
+}
+.badge-l{background:var(--success-bg);color:var(--success)}
+.badge-cl{background:var(--warn-bg);color:var(--warn)}
+.badge-kl{background:var(--error-bg);color:var(--error)}
+.badge-empty{background:var(--neutral);color:var(--text-3)}
+
+/* ============ HERO ============ */
+.hero{
+  background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%);
+  color:#fff;
+  border-radius:var(--r-lg);
+  padding:clamp(1.5rem,4vw,2.5rem);
+  margin-bottom:var(--sp-6);
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-50%;right:-20%;
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(255,255,255,0.15),transparent 70%);
+  pointer-events:none;
+}
+.hero-inner{
+  display:grid;grid-template-columns:1fr;gap:var(--sp-6);
+  position:relative;z-index:1;
+}
+@media(min-width:768px){.hero-inner{grid-template-columns:1.5fr 1fr}}
+.hero h1{color:#fff;font-size:clamp(1.5rem,4vw,2.25rem);margin-bottom:0.5rem}
+.hero p{opacity:0.92;font-size:1rem;line-height:1.5}
+.hero-actions{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:var(--sp-5)}
+.hero-actions .btn{background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.3);backdrop-filter:blur(8px)}
+.hero-actions .btn:hover{background:rgba(255,255,255,0.25)}
+.hero-actions .btn-primary{background:#fff;color:var(--primary);border-color:#fff}
+.hero-actions .btn-primary:hover{background:var(--neutral)}
+
+.hero-stats{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-3);
+  align-self:center;
+}
+.hero-stat{
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:var(--r-md);
+  padding:0.875rem 1rem;
+}
+.hero-stat .v{font-size:1.5rem;font-weight:700;line-height:1;color:#fff}
+.hero-stat .l{font-size:0.75rem;opacity:0.85;margin-top:0.25rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:500}
+
+/* ============ LIST KELAS ============ */
+.list-row{
+  display:flex;align-items:center;gap:var(--sp-4);
+  padding:var(--sp-4);
+  border-radius:var(--r-md);
+  text-decoration:none;color:var(--text);
+  border:1px solid transparent;
+  transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease),transform var(--dur) var(--ease);
+  cursor:pointer;
+}
+.list-row:hover{
+  background:var(--surface-2);
+  border-color:var(--border);
+  text-decoration:none;
+  transform:translateX(2px);
+}
+.list-badge{
+  width:44px;height:44px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;
+  border-radius:var(--r-md);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.9rem;font-weight:700;
+  flex-shrink:0;
+  box-shadow:var(--sh-sm);
+}
+.list-body{flex:1;min-width:0}
+.list-title{font-size:0.9375rem;font-weight:600;line-height:1.3}
+.list-meta{font-size:0.8125rem;color:var(--text-3);margin-top:0.15rem;line-height:1.4}
+.list-meta b{color:var(--error);font-weight:600}
+.list-score{
+  min-width:48px;padding:0.35rem 0.5rem;
+  border-radius:var(--r-sm);
+  text-align:center;
+  font-weight:700;font-size:1.125rem;
+  background:var(--neutral);
+  color:var(--text-2);
+}
+.list-score.s-ok{background:var(--success-bg);color:var(--success)}
+.list-score.s-cu{background:var(--warn-bg);color:var(--warn)}
+.list-score.s-pe{background:var(--error-bg);color:var(--error)}
+
+/* ============ STUDENT ROW ============ */
+.student-row{
+  display:flex;align-items:center;gap:var(--sp-3);
+  padding:0.75rem 1rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  text-decoration:none;color:var(--text);
+  margin-bottom:0.5rem;
+  transition:all var(--dur) var(--ease);
+}
+.student-row:hover{
+  border-color:var(--primary);
+  background:var(--primary-light);
+  text-decoration:none;
+  transform:translateX(2px);
+}
+.avatar{
+  width:36px;height:36px;
+  border-radius:var(--r-md);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:600;color:#fff;font-size:0.75rem;
+  flex-shrink:0;
+  letter-spacing:0.02em;
+}
+.avatar-0{background:linear-gradient(135deg,#0078D4,#005A9E)}
+.avatar-1{background:linear-gradient(135deg,#107C10,#0A5A0A)}
+.avatar-2{background:linear-gradient(135deg,#FF8C00,#C56A00)}
+.avatar-3{background:linear-gradient(135deg,#5C2D91,#42206A)}
+.avatar-4{background:linear-gradient(135deg,#C42B1C,#8E1E13)}
+.avatar-5{background:linear-gradient(135deg,#008080,#005A5A)}
+.student-info{flex:1;min-width:0}
+.student-name{font-weight:500;font-size:0.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.student-meta{font-size:0.75rem;color:var(--text-3);margin-top:0.1rem}
+.student-score{font-size:1.125rem;font-weight:700;min-width:40px;text-align:right}
+.student-score.s-ok{color:var(--success)}
+.student-score.s-cu{color:var(--warn)}
+.student-score.s-pe{color:var(--error)}
+.student-score.s-em{color:var(--text-3)}
+
+/* ============ CHIPS ============ */
+.chips{display:flex;gap:0.375rem;flex-wrap:wrap;margin-bottom:var(--sp-4)}
+.chip{
+  min-height:30px;padding:0.3rem 0.75rem;
+  border-radius:99px;
+  border:1px solid var(--border-2);
+  background:var(--surface);
+  color:var(--text-2);
+  font-size:0.8125rem;font-weight:500;
+  cursor:pointer;
+  transition:all var(--dur) var(--ease);
+}
+.chip:hover{border-color:var(--primary);color:var(--primary)}
+.chip.active{background:var(--primary);border-color:var(--primary);color:#fff}
+
+/* ============ TABS ============ */
+.tabs{
+  display:flex;gap:0.125rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:var(--sp-4);
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  padding:0.65rem 0.875rem;
+  border:none;background:none;cursor:pointer;
+  font-size:0.875rem;font-weight:500;
+  color:var(--text-3);
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+  white-space:nowrap;
+  min-height:42px;
+  transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease);
+  display:inline-flex;align-items:center;gap:0.4rem;
+}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+.tab svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.tab-content{display:none}
+.tab-content.active{display:block;animation:fadeIn var(--dur-slow) var(--ease)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ============ PERIODS ============ */
+.periods{
+  display:inline-flex;gap:0.25rem;
+  padding:0.25rem;
+  background:var(--neutral);
+  border-radius:var(--r-md);
+  margin-bottom:var(--sp-4);
+  max-width:100%;
+  overflow-x:auto;
+}
+.period{
+  padding:0.4rem 0.875rem;
+  border-radius:var(--r-sm);
+  font-size:0.8125rem;font-weight:500;
+  color:var(--text-2);
+  cursor:pointer;
+  min-height:32px;
+  display:inline-flex;align-items:center;
+  text-decoration:none;
+  transition:all var(--dur) var(--ease);
+  white-space:nowrap;
+}
+.period:hover{color:var(--text);text-decoration:none}
+.period.active{background:var(--surface);color:var(--primary);font-weight:600;box-shadow:var(--sh-sm)}
+
+/* ============ TABLE ============ */
+.table-wrap{
+  overflow-x:auto;
+  border-radius:var(--r-md);
+  border:1px solid var(--border);
+  background:var(--surface);
+}
+table{width:100%;border-collapse:collapse;font-size:0.875rem}
+th,td{padding:0.65rem 0.875rem;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+th{
+  background:var(--surface-3);
+  font-weight:600;
+  font-size:0.75rem;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  color:var(--text-2);
+}
 tbody tr:last-child td{border-bottom:none}
-tbody tr:hover{background:var(--surface2)}
+tbody tr{transition:background var(--dur) var(--ease)}
+tbody tr:hover{background:var(--surface-2)}
 .tc{text-align:center}
-.asp{padding:1rem .8rem;border:1px solid var(--border);border-radius:12px;background:var(--surface);text-align:center;position:relative;overflow:hidden}
-.asp::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--border)}
-.asp[data-v="L"]::before{background:var(--ok)}.asp[data-v="CL"]::before{background:var(--warn)}.asp[data-v="KL"]::before{background:var(--err)}
-.al{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:.5rem}
-.ad{font-size:.75rem;color:var(--text2);margin-top:.4rem}
-.sbig{font-size:3rem;font-weight:800;line-height:1;letter-spacing:-1.5px}
-.sOk{color:var(--ok)}.sCu{color:var(--warn)}.sPe{color:var(--err)}.sEm{color:var(--muted)}
-.prog{height:8px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-top:.8rem}
-.pbar{height:100%;background:linear-gradient(90deg,var(--primary),#3b82f6);border-radius:99px;width:0;transition:width .9s}
-.tabs{display:flex;gap:.2rem;border-bottom:1px solid var(--border);margin-bottom:1rem;overflow-x:auto}
-.tab{padding:.65rem .9rem;border:none;background:none;cursor:pointer;font-size:.84rem;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;min-height:42px}
-.tab.act{color:var(--primary);border-bottom-color:var(--primary)}
-.tc-c{display:none}.tc-c.act{display:block}
-.tl{position:relative;padding-left:1.4rem}
-.tl::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:var(--border)}
-.tli{position:relative;padding-bottom:.9rem}
-.tli::before{content:'';position:absolute;left:-1.4rem;top:6px;width:10px;height:10px;border-radius:50%;background:var(--primary);border:2px solid var(--surface)}
-.tli .dt{font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase}
-.attgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:.7rem}
-.atti{padding:.8rem .5rem;border-radius:12px;text-align:center}
-.atti.h{background:var(--okbg);color:var(--ok)}.atti.s{background:var(--warnbg);color:var(--warn)}.atti.i{background:var(--p50);color:var(--primary)}.atti.a{background:var(--errbg);color:var(--err)}
-.atti .n{font-size:1.4rem;font-weight:800;line-height:1}
-.atti .l{font-size:.72rem;font-weight:600;margin-top:.2rem}
-.cs{position:relative;height:190px;max-width:190px;margin:0 auto}
-.cw{position:relative;height:230px}
-.periods{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:1rem;padding:.3rem;background:var(--surface2);border-radius:12px;width:fit-content;max-width:100%}
-.per{padding:.45rem .9rem;border-radius:9px;font-size:.82rem;font-weight:600;color:var(--text2);cursor:pointer;min-height:36px;display:inline-flex;align-items:center}
-.per.act{background:var(--surface);color:var(--primary);box-shadow:var(--sh)}
-.rec{padding:1rem 1.1rem;border-radius:12px;background:var(--p50);border-left:3px solid var(--primary);font-size:.88rem;line-height:1.65}
-.rec ul{margin:.5rem 0 0 1.2rem}.rec li{margin-bottom:.25rem}
-.crumb{font-size:.8rem;color:var(--muted);margin-bottom:.7rem;font-weight:500;display:flex;flex-wrap:wrap;gap:.3rem}
+
+/* ============ ASPECT CARD ============ */
+.aspect{
+  padding:1rem 0.875rem;
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  background:var(--surface);
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  transition:all var(--dur) var(--ease);
+}
+.aspect:hover{box-shadow:var(--sh-md);transform:translateY(-2px)}
+.aspect::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--border)}
+.aspect[data-v="L"]::before{background:var(--success)}
+.aspect[data-v="CL"]::before{background:var(--warn)}
+.aspect[data-v="KL"]::before{background:var(--error)}
+.aspect-label{
+  font-size:0.6875rem;color:var(--text-3);
+  text-transform:uppercase;letter-spacing:0.06em;font-weight:600;
+  margin-bottom:0.5rem;
+}
+.aspect-desc{font-size:0.75rem;color:var(--text-2);margin-top:0.4rem}
+.aspect-score{font-size:0.6875rem;color:var(--text-3);margin-top:0.25rem}
+
+/* ============ BIG SCORE ============ */
+.big-score{font-size:3rem;font-weight:700;line-height:1;letter-spacing:-0.03em}
+.s-ok{color:var(--success)}
+.s-cu{color:var(--warn)}
+.s-pe{color:var(--error)}
+.s-em{color:var(--text-3)}
+
+/* ============ PROGRESS ============ */
+.progress{
+  height:6px;
+  background:var(--neutral);
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:var(--sp-4);
+}
+.progress-bar{
+  height:100%;
+  background:linear-gradient(90deg,var(--primary),var(--accent));
+  border-radius:99px;
+  width:0;
+  transition:width 900ms var(--ease);
+}
+
+/* ============ ATTENDANCE GRID ============ */
+.att-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-bottom:var(--sp-4)}
+.att-item{padding:0.875rem 0.5rem;border-radius:var(--r-md);text-align:center;transition:transform var(--dur) var(--ease)}
+.att-item:hover{transform:translateY(-2px)}
+.att-item.h{background:var(--success-bg);color:var(--success)}
+.att-item.s{background:var(--warn-bg);color:var(--warn)}
+.att-item.i{background:var(--info-bg);color:var(--info)}
+.att-item.a{background:var(--error-bg);color:var(--error)}
+.att-item .n{font-size:1.375rem;font-weight:700;line-height:1}
+.att-item .l{font-size:0.6875rem;font-weight:500;margin-top:0.3rem;text-transform:uppercase;letter-spacing:0.04em}
+
+/* ============ TIMELINE ============ */
+.timeline{position:relative;padding-left:1.5rem}
+.timeline::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:var(--border)}
+.tl-item{position:relative;padding-bottom:var(--sp-4)}
+.tl-item::before{
+  content:'';position:absolute;left:-1.5rem;top:6px;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--primary);
+  border:2px solid var(--surface);
+  box-shadow:0 0 0 2px var(--border);
+}
+.tl-date{font-size:0.6875rem;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:0.04em}
+.tl-text{margin-top:0.25rem;font-size:0.875rem;color:var(--text)}
+
+/* ============ RECOMMENDATION ============ */
+.recommendation{
+  padding:1rem 1.125rem;
+  border-radius:var(--r-md);
+  background:var(--info-bg);
+  border-left:3px solid var(--info);
+  font-size:0.875rem;
+  line-height:1.6;
+  color:var(--text);
+}
+.recommendation ul{margin:0.5rem 0 0 1.25rem}
+.recommendation li{margin-bottom:0.25rem}
+
+/* ============ BREADCRUMB ============ */
+.breadcrumb{
+  display:flex;flex-wrap:wrap;gap:0.35rem;
+  font-size:0.8125rem;
+  color:var(--text-3);
+  margin-bottom:var(--sp-4);
+  align-items:center;
+}
+.breadcrumb a{color:var(--primary);text-decoration:none}
+.breadcrumb a:hover{text-decoration:underline}
+.breadcrumb span{color:var(--text-3)}
+
+/* ============ EMPTY STATE ============ */
+.empty{
+  padding:3rem 1.5rem;
+  text-align:center;
+  color:var(--text-3);
+}
+.empty-icon{
+  width:48px;height:48px;
+  margin:0 auto var(--sp-4);
+  stroke:var(--text-3);fill:none;stroke-width:1.5;
+  opacity:0.5;
+}
+.empty-title{font-size:0.9375rem;font-weight:600;color:var(--text-2);margin-bottom:0.25rem}
+.empty-text{font-size:0.875rem;margin-bottom:var(--sp-4)}
+
+/* ============ SKELETON ============ */
+.skeleton{
+  background:linear-gradient(90deg,var(--surface-3),var(--neutral),var(--surface-3));
+  background-size:200% 100%;
+  border-radius:var(--r-md);
+  animation:shimmer 1.5s infinite;
+  height:64px;
+  margin-bottom:0.75rem;
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ============ TOAST ============ */
+.toasts{
+  position:fixed;top:1rem;right:1rem;left:1rem;
+  z-index:var(--z-toast);
+  display:flex;flex-direction:column;align-items:flex-end;
+  gap:0.5rem;pointer-events:none;
+}
+.toasts .alert{
+  pointer-events:auto;
+  max-width:380px;
+  margin:0;
+  box-shadow:var(--sh-lg);
+  animation:slideIn 300ms var(--ease);
+}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* ============ FOOTER ============ */
+.footer{
+  text-align:center;
+  padding:var(--sp-8) var(--pad);
+  color:var(--text-3);
+  font-size:0.8125rem;
+  border-top:1px solid var(--border);
+  background:var(--surface);
+  margin-top:var(--sp-8);
+}
+.footer-sub{margin-top:0.35rem;font-size:0.75rem;opacity:0.8}
+
+/* ============ LOADING OVERLAY ============ */
+#loading-overlay{
+  position:fixed;inset:0;
+  background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center;
+  gap:0.75rem;
+  font-size:0.9375rem;
+  color:var(--text-3);
+  z-index:9999;
+  padding:1rem;text-align:center;
+  transition:opacity 300ms var(--ease);
+}
+#loading-overlay.hidden{opacity:0;pointer-events:none}
+.spinner{
+  width:28px;height:28px;
+  border:3px solid var(--border);
+  border-top-color:var(--primary);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+  flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ============ CRUMB ============ */
+.crumb{
+  font-size:0.8125rem;
+  color:var(--text-3);
+  margin-bottom:var(--sp-4);
+  display:flex;flex-wrap:wrap;gap:0.35rem;
+  align-items:center;
+}
 .crumb a{color:var(--primary);text-decoration:none}
 .crumb a:hover{text-decoration:underline}
-.empty{padding:2.2rem 1rem;text-align:center;color:var(--muted);font-size:.9rem}
-.empty .ico{font-size:2.2rem;margin-bottom:.4rem;opacity:.6}
-.sk{background:linear-gradient(90deg,var(--surface2),var(--border),var(--surface2));background-size:200% 100%;border-radius:10px;animation:shimmer 1.2s infinite;height:64px;margin-bottom:.6rem}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.footer{text-align:center;padding:1.5rem 1rem;color:var(--muted);font-size:.78rem;border-top:1px solid var(--border);background:var(--surface);margin-top:1rem}
-#loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:.6rem;font-size:.95rem;color:var(--muted);z-index:9999;text-align:center;padding:1rem}
-#loading.hide{display:none}
-.spinner{width:30px;height:30px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0}
-@keyframes spin{to{transform:rotate(360deg)}}
-.toasts{position:fixed;top:1rem;right:1rem;left:1rem;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;pointer-events:none}
-.toasts .alert{pointer-events:auto;max-width:360px;margin:0;box-shadow:0 10px 20px rgba(0,0,0,.12)}
-.kbadge.sOk,.kbadge.sCu,.kbadge.sPe{background:transparent}
-.kbadge.sOk{color:var(--ok);background:var(--okbg)}.kbadge.sCu{color:var(--warn);background:var(--warnbg)}.kbadge.sPe{color:var(--err);background:var(--errbg)}
-@media(max-width:640px){
-  .container{padding:.9rem .7rem 3rem}
-  .card{padding:1rem}
-  .sbig{font-size:2.5rem}
-  .attgrid{grid-template-columns:repeat(2,1fr)}
-  .brand p{display:none}
-  .nav a{padding:.45rem .55rem;font-size:.8rem}
-  .hero h2{font-size:1.1rem}
+
+/* ============ PAGE HEADER ============ */
+.page-header{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:var(--sp-4);flex-wrap:wrap;
+  margin-bottom:var(--sp-6);
 }
-@media print{.header,.footer,.btn,.tbtn,.tabs,.periods,.crumb,.np,.search,.chips{display:none!important}.card{box-shadow:none;border:1px solid #ddd}.tc-c{display:block!important}body{background:#fff}}
+.page-title{font-size:1.5rem;font-weight:600;letter-spacing:-0.01em}
+.page-sub{font-size:0.875rem;color:var(--text-3);margin-top:0.25rem}
+
+/* ============ SECTION ============ */
+.section{margin-bottom:var(--sp-8)}
+.section-title{
+  font-size:0.9375rem;font-weight:600;
+  margin-bottom:var(--sp-4);
+  display:flex;align-items:center;gap:0.5rem;
+  color:var(--text);
+}
+.section-title svg{width:18px;height:18px;stroke:var(--primary);fill:none;stroke-width:2}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:640px){
+  :root{--pad:1rem}
+  .main{padding:var(--sp-4) 0 var(--sp-12)}
+  .big-score{font-size:2.5rem}
+  .att-grid{grid-template-columns:repeat(2,1fr)}
+  .brand-text p{display:none}
+  .nav a,.nav button{padding:0.4rem 0.6rem;font-size:0.8125rem}
+  .hero-stat .v{font-size:1.25rem}
+  .hero h1{font-size:1.4rem}
+  .page-title{font-size:1.25rem}
+}
+
+/* ============ PRINT ============ */
+@media print{
+  .header,.footer,.btn,.icon-btn,.tabs,.periods,.crumb,.no-print,.input-search,.chips{display:none!important}
+  .card{box-shadow:none;border:1px solid #ddd}
+  .tab-content{display:block!important}
+  body{background:#fff;color:#000}
+  .main{padding:0}
+}
+
+/* ============ UTILITY ============ */
+.mb-0{margin-bottom:0}
+.mb-2{margin-bottom:var(--sp-2)}
+.mb-4{margin-bottom:var(--sp-4)}
+.mb-6{margin-bottom:var(--sp-6)}
+.mt-4{margin-top:var(--sp-4)}
+.mt-6{margin-top:var(--sp-6)}
+.text-muted{color:var(--text-3)}
+.text-center{text-align:center}
+.w-full{width:100%}
+.flex-wrap{flex-wrap:wrap}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
 
-<div id="loading"><div class="spinner"></div><span>Memuat…</span></div>
+<!-- Loading Overlay -->
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <span>Memuat…</span>
+</div>
 
-<header class="header" id="hdr" style="display:none">
-  <div class="hinner">
+<!-- Header -->
+<header class="header" id="app-header" style="display:none">
+  <div class="header-inner">
     <a class="brand" href="#/" aria-label="Beranda">
-      <div class="blogo" id="blogo">🏫</div>
-      <div style="min-width:0"><h1 id="bname">Memuat…</h1><p id="binfo"></p></div>
+      <div class="brand-logo" id="brand-logo">
+        <svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M15 9h.01M9 13h.01M15 13h.01M9 17h.01M15 17h.01"/></svg>
+      </div>
+      <div class="brand-text">
+        <h1 id="brand-name">Memuat…</h1>
+        <p id="brand-info"></p>
+      </div>
     </a>
     <nav class="nav" aria-label="Navigasi utama">
       <a href="#/" id="nav-home">Beranda</a>
       <a href="#/admin" id="nav-admin">Panel Guru</a>
-      <button class="tbtn" onclick="toggleTheme()" id="tbtn" aria-label="Ganti tema">🌙</button>
+      <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" aria-label="Ganti tema">
+        <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
     </nav>
   </div>
 </header>
 
-<main class="container" id="app"></main>
+<!-- Main -->
+<main class="main">
+  <div class="container" id="app"></div>
+</main>
+
+<!-- Toast container -->
 <div class="toasts" id="toasts" aria-live="polite"></div>
 
-<footer class="footer" id="ftr" style="display:none">
-  <div id="fname"></div>
-  <div style="margin-top:.3rem">Sistem Informasi Perkembangan Siswa</div>
+<!-- Footer -->
+<footer class="footer" id="app-footer" style="display:none">
+  <div id="footer-name"></div>
+  <div class="footer-sub">Sistem Informasi Perkembangan Siswa</div>
 </footer>
 
 <script type="module">
@@ -179,10 +838,10 @@ import { initializeFirestore, persistentLocalCache, getFirestore, collection, do
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// ============ FIREBASE ============
+// ============ FIREBASE INIT ============
 const cfg = window.FIREBASE_CONFIG;
 if (!cfg || !cfg.apiKey || String(cfg.apiKey).startsWith('ISI') || !cfg.projectId) {
-  document.getElementById('loading').innerHTML = '<span>⚠️ Konfigurasi Firebase belum diisi (config.js)</span>';
+  document.getElementById('loading-overlay').innerHTML = '<span style="color:#C42B1C">Konfigurasi Firebase belum diisi (config.js)</span>';
   throw new Error('Firebase config belum valid');
 }
 const app0 = initializeApp(cfg);
@@ -200,7 +859,7 @@ onAuthStateChanged(auth, async u => {
 
 // ============ KONFIGURASI ============
 const DEFAULT_SCHOOL = {
-  name: 'MIT Al Falah', address: '', npsn: '', logo: '🏫', year: '2025/2026', headmaster: ''
+  name: 'MIT Al Falah', address: '', npsn: '', logo: '', year: '2025/2026', headmaster: ''
 };
 const ASPECTS = ['Membaca', 'Menulis', 'Berhitung', 'Menghafal'];
 const ASPECT_SCORES = { L: 90, CL: 80, KL: 70 };
@@ -221,7 +880,42 @@ let charts = [];
 let homeCache = { students: [], nilai: {} };
 let kelasView = null;
 
-// ============ DATA ============
+// ============ ICONS (inline SVG) ============
+const ICON = {
+  search: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>',
+  book: '<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+  users: '<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  chart: '<svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>',
+  calendar: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  note: '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+  check: '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+  alert: '<svg viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  info: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+  printer: '<svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>',
+  share: '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
+  star: '<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+  starFill: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+  edit: '<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+  trash: '<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  plus: '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+  download: '<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+  upload: '<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+  settings: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+  logout: '<svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>',
+  save: '<svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>',
+  next: '<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
+  back: '<svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
+  home: '<svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+  'file-text': '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+  'file-spreadsheet': '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8M8 17h8M8 9h1"/></svg>'
+};
+
+// ============ DATA LAYER ============
+async function freshDocs(ref) {
+  try { return await getDocsFromServer(ref); }
+  catch (e) { return await getDocs(ref); }
+}
+
 async function getSchool() {
   try {
     const snap = await getDoc(doc(db, 'settings', 'main'));
@@ -229,59 +923,82 @@ async function getSchool() {
   } catch (e) { console.warn('getSchool', e); }
   return { ...DEFAULT_SCHOOL };
 }
+
 async function getClasses() {
   const snap = await freshDocs(collection(db, 'kelas'));
   const out = {};
   snap.forEach(d => { out[d.id] = d.data().wali || ''; });
   return out;
 }
+
 async function getStudents() {
   const snap = await freshDocs(collection(db, 'siswa'));
   const out = [];
   snap.forEach(d => out.push({ id: d.id, ...d.data() }));
   return out;
 }
+
 async function loadPeriod(period) {
   const [nSnap, aSnap] = await Promise.all([
     freshDocs(query(collection(db, 'nilai'), where('period', '==', period))),
     freshDocs(query(collection(db, 'absensi'), where('period', '==', period)))
   ]);
   const nilai = {}, absen = {};
-  nSnap.forEach(d => { const v = d.data(); nilai[v.siswaId] = [v.a0 || '', v.a1 || '', v.a2 || '', v.a3 || '']; });
+  nSnap.forEach(d => {
+    const v = d.data();
+    nilai[v.siswaId] = [v.a0 || '', v.a1 || '', v.a2 || '', v.a3 || ''];
+  });
   aSnap.forEach(d => { absen[d.data().siswaId] = d.data(); });
   return { nilai, absen };
 }
+
 async function getNilai(sid, period) {
   const snap = await getDoc(doc(db, 'nilai', `${sid}__${period}`));
   if (!snap.exists()) return [...EMPTY];
   const d = snap.data();
   return [d.a0 || '', d.a1 || '', d.a2 || '', d.a3 || ''];
 }
+
 async function saveNilai(sid, period, arr) {
-  await setDoc(doc(db, 'nilai', `${sid}__${period}`), { siswaId: sid, period, a0: arr[0], a1: arr[1], a2: arr[2], a3: arr[3] });
+  await setDoc(doc(db, 'nilai', `${sid}__${period}`), {
+    siswaId: sid, period,
+    a0: arr[0], a1: arr[1], a2: arr[2], a3: arr[3]
+  });
 }
+
 async function getAbsen(sid, period) {
   const snap = await getDoc(doc(db, 'absensi', `${sid}__${period}`));
   return snap.exists() ? snap.data() : { hadir: 0, sakit: 0, izin: 0, alfa: 0 };
 }
+
 async function saveAbsen(sid, period, data) {
   await setDoc(doc(db, 'absensi', `${sid}__${period}`), { siswaId: sid, period, ...data });
 }
+
 async function getCatatan(sid, period) {
   const snap = await getDocs(query(collection(db, 'catatan'), where('siswaId', '==', sid)));
   const out = [];
-  snap.forEach(d => { const v = d.data(); if (!period || v.period === period) out.push({ id: d.id, ...v }); });
+  snap.forEach(d => {
+    const v = d.data();
+    if (!period || v.period === period) out.push({ id: d.id, ...v });
+  });
   out.sort((a, b) => (b.ts?.seconds || 0) - (a.ts?.seconds || 0));
   return out;
 }
+
 async function addCatatan(sid, period, text) {
-  await addDoc(collection(db, 'catatan'), { siswaId: sid, period, text, ts: serverTimestamp() });
+  await addDoc(collection(db, 'catatan'), {
+    siswaId: sid, period, text, ts: serverTimestamp()
+  });
 }
+
 async function seedIfEmpty() {
   const students = await getStudents();
   if (students.length > 0) return false;
   const b = writeBatch(db);
-  for (const [kelas, wali] of Object.entries(DEFAULT_CLASSES)) b.set(doc(db, 'kelas', kelas), { wali });
+  for (const [kelas, wali] of Object.entries(DEFAULT_CLASSES)) {
+    b.set(doc(db, 'kelas', kelas), { wali });
+  }
   b.set(doc(db, 'settings', 'main'), DEFAULT_SCHOOL);
   await b.commit();
   for (const [kelas, arr] of Object.entries(SEED)) {
@@ -296,14 +1013,13 @@ async function seedIfEmpty() {
   return true;
 }
 
-
 async function ensureSeeded() {
   try {
     const students = await getStudents();
     if (students.length > 0) return true;
     if (!currentUser) return false;
     const done = await seedIfEmpty();
-    if (done) toast('\u2705 Data awal dimuat otomatis', 'ok');
+    if (done) toast('Data awal dimuat otomatis', 'success');
     return done;
   } catch (e) {
     console.warn('ensureSeeded', e);
@@ -311,100 +1027,153 @@ async function ensureSeeded() {
   }
 }
 
+// ============ UTILITY ============
+const $ = id => document.getElementById(id);
 
-async function freshDocs(ref) {
-  try { return await getDocsFromServer(ref); }
-  catch (e) { return await getDocs(ref); }
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
 }
 
-// ============ UTIL ============
-const $ = id => document.getElementById(id);
-function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 function hitungNilai(a) {
   const v = a.filter(x => x);
   if (!v.length) return null;
   return Math.round(v.reduce((s, x) => s + (ASPECT_SCORES[x] || 0), 0) / v.length);
 }
+
 function kategori(n) {
-  if (n === null || n === undefined) return { label: 'Belum dinilai', k: 'Em' };
-  if (n >= 85) return { label: 'Baik', k: 'Ok' };
-  if (n >= 75) return { label: 'Cukup', k: 'Cu' };
-  return { label: 'Perlu pendampingan', k: 'Pe' };
+  if (n === null || n === undefined) return { label: 'Belum dinilai', k: 'em' };
+  if (n >= 85) return { label: 'Baik', k: 'ok' };
+  if (n >= 75) return { label: 'Cukup', k: 'cu' };
+  return { label: 'Perlu pendampingan', k: 'pe' };
 }
+
 function classStat(list, nilai) {
   const vals = list.map(s => hitungNilai(nilai[s.id] || EMPTY)).filter(v => v !== null);
   const avg = vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : null;
   return { n: list.length, filled: vals.length, avg, perlu: vals.filter(v => v < 75).length };
 }
+
 function badge(v) {
-  const cls = v === 'L' ? 'bL' : v === 'CL' ? 'bCL' : v === 'KL' ? 'bKL' : 'bE';
+  const cls = v === 'L' ? 'badge-l' : v === 'CL' ? 'badge-cl' : v === 'KL' ? 'badge-kl' : 'badge-empty';
   return `<span class="badge ${cls}">${v || '—'}</span>`;
 }
-function initials(nama) { return nama.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase(); }
-function fmtDate(ts) { return ts?.seconds ? new Date(ts.seconds * 1000).toLocaleString('id-ID') : '-'; }
+
+function initials(nama) {
+  return nama.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+}
+
+function fmtDate(ts) {
+  return ts?.seconds ? new Date(ts.seconds * 1000).toLocaleString('id-ID', {
+    day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+  }) : '-';
+}
+
 function friendly(e) {
-  if (e?.code === 'permission-denied') return 'Akses ditolak. Silakan login ulang sebagai guru.';
-  if (e?.code === 'unavailable' || !navigator.onLine) return 'Tidak ada koneksi. Data akan disimpan saat online kembali.';
+  if (e?.code === 'permission-denied') return 'Akses ditolak. Login ulang sebagai guru.';
+  if (e?.code === 'unavailable' || !navigator.onLine) return 'Tidak ada koneksi. Data akan disimpan saat online.';
   if (e?.code === 'auth/invalid-credential') return 'Email atau password salah.';
   return e?.message || 'Terjadi kesalahan.';
 }
-function toast(msg, type = 'ok') {
+
+function toast(msg, type = 'success') {
   const d = document.createElement('div');
+  const ico = type === 'success' ? ICON.check : type === 'error' ? ICON.alert : type === 'warn' ? ICON.alert : ICON.info;
   d.className = `alert alert-${type}`;
-  d.textContent = msg;
-  $('toasts').appendChild(d);
-  setTimeout(() => d.remove(), 3200);
+  d.innerHTML = ico + '<span>' + esc(msg) + '</span>';
+  const box = $('toasts');
+  if (box) {
+    box.appendChild(d);
+    setTimeout(() => d.remove(), 3500);
+  }
 }
+
 async function run(btn, busyHtml, fn) {
   const orig = btn ? btn.innerHTML : '';
   if (btn) { btn.disabled = true; btn.innerHTML = busyHtml; }
   try { return await fn(); }
-  catch (e) { console.error(e); toast('Gagal: ' + friendly(e), 'err'); }
+  catch (e) { console.error(e); toast('Gagal: ' + friendly(e), 'error'); }
   finally { if (btn && btn.isConnected) { btn.disabled = false; btn.innerHTML = orig; } }
 }
+
+function skeleton(n = 3) {
+  let s = '';
+  for (let i = 0; i < n; i++) s += '<div class="skeleton"></div>';
+  return s;
+}
+
+function emptyState(iconName, title, text, actionHtml = '') {
+  const ico = ICON[iconName] || ICON.info;
+  return `<div class="empty">
+    <div class="empty-icon" style="display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;width:56px;height:56px;background:var(--surface-3);border-radius:50%">${ico}</div>
+    <div class="empty-title">${esc(title)}</div>
+    <div class="empty-text">${esc(text)}</div>
+    ${actionHtml}
+  </div>`;
+}
+
 function rowSiswa(s, nilai, i = 0) {
-  const kt = kategori(hitungNilai(nilai?.[s.id] || EMPTY));
-  return `<a class="srow" href="#/siswa/${encodeURIComponent(s.id)}">
-    <div class="av av${i % 6}">${esc(initials(s.nama))}</div>
-    <div class="sinfo"><div class="sn">${esc(s.nama)}</div><div class="sm">Kelas ${esc(s.kelas)} · ${kt.label}</div></div>
-    <div class="ssc s${kt.k}">${hitungNilai(nilai?.[s.id] || EMPTY) ?? '—'}</div>
+  const n = hitungNilai(nilai?.[s.id] || EMPTY);
+  const kt = kategori(n);
+  return `<a class="student-row" href="#/siswa/${encodeURIComponent(s.id)}">
+    <div class="avatar avatar-${i % 6}">${esc(initials(s.nama))}</div>
+    <div class="student-info">
+      <div class="student-name">${esc(s.nama)}</div>
+      <div class="student-meta">Kelas ${esc(s.kelas)} · ${kt.label}</div>
+    </div>
+    <div class="student-score s-${kt.k}">${n ?? '—'}</div>
   </a>`;
 }
 
 // ============ FAVORIT ============
-function getFavs() { try { return JSON.parse(localStorage.getItem('favSiswa') || '[]'); } catch (e) { return []; } }
+function getFavs() {
+  try { return JSON.parse(localStorage.getItem('favSiswa') || '[]'); }
+  catch (e) { return []; }
+}
 function isFav(id) { return getFavs().some(f => f.id === id); }
+
 window.toggleFav = function (sid, el) {
   let favs = getFavs();
   if (isFav(sid)) favs = favs.filter(f => f.id !== sid);
   else favs.push({ id: sid, nama: el.dataset.nama, kelas: el.dataset.kelas });
   localStorage.setItem('favSiswa', JSON.stringify(favs));
-  el.textContent = isFav(sid) ? '★ Favorit' : '☆ Favorit';
-  el.setAttribute('aria-pressed', isFav(sid));
-  toast(isFav(sid) ? '★ Ditambahkan ke favorit' : 'Dihapus dari favorit', 'ok');
+  const fav = isFav(sid);
+  el.innerHTML = (fav ? ICON.starFill : ICON.star) + '<span>' + (fav ? 'Favorit' : 'Favorit') + '</span>';
+  el.setAttribute('aria-pressed', fav);
+  toast(fav ? 'Ditambahkan ke favorit' : 'Dihapus dari favorit', 'success');
 };
 
 // ============ ROUTER ============
 function go(path) { location.hash = '#' + path; }
+
 function parseRoute() {
   const hash = (location.hash || '#/').slice(1);
-  return hash.split('/').filter(Boolean).map(p => { try { return decodeURIComponent(p); } catch (e) { return p; } });
+  return hash.split('/').filter(Boolean).map(p => {
+    try { return decodeURIComponent(p); } catch (e) { return p; }
+  });
 }
-function destroyCharts() { charts.forEach(c => c.destroy()); charts = []; }
+
+function destroyCharts() {
+  charts.forEach(c => c.destroy());
+  charts = [];
+}
+
 function updateNav() {
   const cur = parseRoute()[0] || 'home';
-  $('nav-home').classList.toggle('act', cur === 'home');
-  $('nav-admin').classList.toggle('act', cur === 'admin');
+  const home = $('nav-home'), admin = $('nav-admin');
+  if (home) home.classList.toggle('active', cur === 'home');
+  if (admin) admin.classList.toggle('active', cur === 'admin');
 }
-function skeleton() {
-  return `<div class="sk"></div><div class="sk"></div><div class="sk" style="height:120px"></div>`;
-}
+
 async function render() {
   const my = ++renderSeq;
   destroyCharts();
   updateNav();
   const parts = parseRoute();
-  $('app').innerHTML = skeleton();
+  const app = $('app');
+  if (!app) return;
+  app.innerHTML = skeleton(3);
   let view;
   try {
     if (parts.length === 0) view = await viewHome();
@@ -414,10 +1183,10 @@ async function render() {
     else view = await viewHome();
   } catch (e) {
     console.error(e);
-    view = { html: `<div class="card"><div class="empty"><div class="ico">⚠️</div>${esc(friendly(e))}<br><button class="btn bo bsm" style="margin-top:.8rem" onclick="render()">Coba lagi</button></div></div>` };
+    view = { html: `<div class="card">${emptyState('alert', 'Terjadi kesalahan', friendly(e), '<button class="btn btn-secondary" onclick="render()">Coba lagi</button>')}</div>` };
   }
   if (my !== renderSeq) return;
-  $('app').innerHTML = view.html;
+  app.innerHTML = view.html;
   if (view.after) view.after();
 }
 window.render = render;
@@ -428,43 +1197,88 @@ async function viewHome() {
   const [students, classes, p] = await Promise.all([getStudents(), getClasses(), loadPeriod(PERIODS[0])]);
   homeCache = { students, nilai: p.nilai };
   const kelasList = [...new Set(students.map(s => s.kelas))].sort();
+
+  const totalSiswa = students.length;
+  const totalKelas = kelasList.length;
+  const totalGuru = new Set(Object.values(classes).filter(Boolean)).size;
+  const sudahDinilai = kelasList.reduce((sum, k) => {
+    const list = students.filter(s => s.kelas === k);
+    return sum + list.filter(s => hitungNilai(p.nilai[s.id] || EMPTY) !== null).length;
+  }, 0);
+  const pctDinilai = totalSiswa ? Math.round(sudahDinilai / totalSiswa * 100) : 0;
+
   const cards = kelasList.map(k => {
     const list = students.filter(s => s.kelas === k);
     const st = classStat(list, p.nilai);
     const kt = kategori(st.avg);
-    return `<a class="listrow" href="#/kelas/${encodeURIComponent(k)}">
-      <div class="lbadge">${esc(k)}</div>
-      <div class="li">
-        <div class="lt">Kelas ${esc(k)}</div>
-        <div class="lm">${st.n} siswa${classes[k] ? ' · Wali: ' + esc(classes[k]) : ''} · ${st.filled}/${st.n} sudah dinilai${st.perlu ? ` · <b style="color:var(--err)">${st.perlu} perlu pendampingan</b>` : ''}</div>
+    return `<a class="list-row" href="#/kelas/${encodeURIComponent(k)}">
+      <div class="list-badge">${esc(k)}</div>
+      <div class="list-body">
+        <div class="list-title">Kelas ${esc(k)}</div>
+        <div class="list-meta">
+          ${st.n} siswa${classes[k] ? ' · Wali: ' + esc(classes[k]) : ''} · ${st.filled}/${st.n} sudah dinilai${st.perlu ? ` · <b>${st.perlu} perlu pendampingan</b>` : ''}
+        </div>
       </div>
-      <div class="kbadge s${kt.k}" title="Rata-rata ${kt.label}">${st.avg ?? '—'}</div>
+      <div class="list-score s-${kt.k}" title="Rata-rata ${kt.label}">${st.avg ?? '—'}</div>
     </a>`;
   }).join('');
 
   return {
     html: `
     <div class="hero">
-      <h2>Selamat Datang, Bapak/Ibu Walimurid</h2>
-      <p>Cari nama anak Anda atau pilih kelas untuk melihat laporan perkembangan belajar.</p>
+      <div class="hero-inner">
+        <div>
+          <h1>Pantau Perkembangan Belajar Ananda</h1>
+          <p>Cari nama anak Anda atau pilih kelas untuk melihat laporan nilai, absensi, dan catatan guru.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#search-focus">${ICON.search} Cari Nama Anak</a>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="v">${totalSiswa}</div><div class="l">Total Siswa</div></div>
+          <div class="hero-stat"><div class="v">${totalKelas}</div><div class="l">Kelas</div></div>
+          <div class="hero-stat"><div class="v">${totalGuru}</div><div class="l">Wali Kelas</div></div>
+          <div class="hero-stat"><div class="v">${pctDinilai}%</div><div class="l">Sudah Dinilai</div></div>
+        </div>
+      </div>
     </div>
-    <div class="search"><input id="qHome" type="search" placeholder="Cari nama anak…" aria-label="Cari nama anak" oninput="homeSearch(this.value)"></div>
+
+    <div class="card">
+      <div class="section-title">${ICON.search} Cari Nama Anak</div>
+      <div class="input-search">
+        ${ICON.search}
+        <input id="qHome" class="input" type="search" placeholder="Ketik nama anak…" aria-label="Cari nama anak" autocomplete="off">
+      </div>
+    </div>
+
     <div id="hres"></div>
-    <div class="card" id="hkelas" style="padding:.6rem">
-      ${cards || '<div class="empty"><div class="ico">📚</div>Belum ada data kelas.</div>'}
+
+    <div class="card" id="hkelas">
+      <div class="section-title">${ICON.book} Daftar Kelas</div>
+      ${cards || emptyState('book', 'Belum ada data kelas', 'Data siswa belum diisi. Guru dapat memuat data awal dari Panel Guru.', '<button class="btn btn-primary" onclick="manualSeed(this)">' + ICON.plus + ' Muat Data Awal</button>')}
     </div>
-    <div class="card" style="background:var(--p50);border-color:transparent">
-      <h3>💡 Cara Membaca Laporan</h3>
-      <div class="grid g4" style="font-size:.85rem">
-        <div><b>1.</b> Pilih kelas atau cari nama anak</div>
-        <div><b>2.</b> Buka profil anak</div>
-        <div><b>3.</b> Lihat nilai, absensi &amp; catatan guru</div>
-        <div><b>★</b> Tandai favorit untuk akses cepat</div>
+
+    <div class="card" style="background:var(--info-bg);border-color:transparent">
+      <div class="section-title" style="color:var(--info)">${ICON.info} Cara Membaca Laporan</div>
+      <div class="grid grid-4" style="font-size:0.875rem;color:var(--text-2)">
+        <div><b style="color:var(--text)">1.</b> Pilih kelas atau cari nama</div>
+        <div><b style="color:var(--text)">2.</b> Buka profil siswa</div>
+        <div><b style="color:var(--text)">3.</b> Lihat nilai, absensi & catatan</div>
+        <div><b style="color:var(--text)">★</b> Tandai favorit untuk akses cepat</div>
       </div>
     </div>`,
-    after: () => homeSearch('')
+    after: () => {
+      const inp = $('qHome');
+      if (inp) {
+        inp.addEventListener('input', e => homeSearch(e.target.value));
+        homeSearch('');
+      }
+      const hero = document.querySelector('.hero-actions a');
+      if (hero) hero.addEventListener('click', e => { e.preventDefault(); const i = $('qHome'); if (i) i.focus(); });
+    }
   };
 }
+
 window.homeSearch = function (q) {
   q = (q || '').trim().toLowerCase();
   const box = $('hres'), card = $('hkelas');
@@ -473,74 +1287,117 @@ window.homeSearch = function (q) {
   if (!q) {
     const favs = getFavs();
     box.innerHTML = favs.length
-      ? '<h3 style="margin-bottom:.6rem">★ Favorit Saya</h3>' + favs.map((f, i) => rowSiswa(f, homeCache.nilai, i)).join('') + '<div style="height:.8rem"></div>'
+      ? `<div class="card"><div class="section-title">${ICON.starFill} Favorit Saya</div>${favs.map((f, i) => rowSiswa(f, homeCache.nilai, i)).join('')}</div>`
       : '';
     return;
   }
-  const hits = homeCache.students.filter(s => s.nama.toLowerCase().includes(q))
-    .sort((a, b) => a.nama.localeCompare(b.nama)).slice(0, 30);
+  const hits = homeCache.students
+    .filter(s => s.nama.toLowerCase().includes(q))
+    .sort((a, b) => a.nama.localeCompare(b.nama))
+    .slice(0, 30);
   box.innerHTML = hits.length
-    ? hits.map((s, i) => rowSiswa(s, homeCache.nilai, i)).join('')
-    : '<div class="empty"><div class="ico">🔎</div>Nama tidak ditemukan. Periksa ejaan atau pilih kelas.</div>';
+    ? `<div class="card"><div class="section-title">${ICON.users} Hasil Pencarian (${hits.length})</div>${hits.map((s, i) => rowSiswa(s, homeCache.nilai, i)).join('')}</div>`
+    : `<div class="card">${emptyState('search', 'Nama tidak ditemukan', 'Periksa ejaan nama atau pilih kelas di bawah.')}</div>`;
 };
 
 // ============ VIEW: KELAS ============
 async function viewKelas(kelas) {
   const [all, classes, p] = await Promise.all([getStudents(), getClasses(), loadPeriod(PERIODS[0])]);
   const list = all.filter(s => s.kelas === kelas).sort((a, b) => a.nama.localeCompare(b.nama));
-  if (!list.length) return { html: `<div class="card"><div class="empty"><div class="ico">🔍</div>Kelas tidak ditemukan.</div></div><a class="btn bo" href="#/">← Kembali</a>` };
+  if (!list.length) {
+    return { html: `<div class="card">${emptyState('search', 'Kelas tidak ditemukan', 'Kelas ' + kelas + ' tidak ada dalam database.')}<div style="text-align:center;margin-top:1rem"><a class="btn btn-secondary" href="#/">${ICON.back} Kembali</a></div></div>` };
+  }
   kelasView = { kelas, list, nilai: p.nilai, wali: classes[kelas] || '', filter: 'Semua', q: '' };
   return {
     html: `
     <div class="crumb"><a href="#/">Beranda</a><span>›</span><span>Kelas ${esc(kelas)}</span></div>
-    <div class="shead">
-      <div><h2 class="pt">Kelas ${esc(kelas)}</h2>
-        <p class="sub">${list.length} siswa${kelasView.wali ? ' · Wali: <b>' + esc(kelasView.wali) + '</b>' : ''}</p></div>
+    <div class="page-header">
+      <div>
+        <div class="page-title">Kelas ${esc(kelas)}</div>
+        <div class="page-sub">${list.length} siswa${kelasView.wali ? ' · Wali: ' + esc(kelasView.wali) : ''}</div>
+      </div>
     </div>
     <div class="card">
-      <div class="search"><input id="qKelas" type="search" placeholder="Cari nama anak…" aria-label="Cari nama anak" oninput="kelasSearch(this.value)"></div>
+      <div class="input-search mb-4">
+        ${ICON.search}
+        <input id="qKelas" class="input" type="search" placeholder="Cari nama anak…" aria-label="Cari nama anak" autocomplete="off">
+      </div>
       <div class="chips" id="kChips"></div>
       <div id="kList"></div>
     </div>`,
-    after: paintKelas
+    after: () => {
+      const inp = $('qKelas');
+      if (inp) inp.addEventListener('input', e => kelasSearch(e.target.value));
+      paintKelas();
+    }
   };
 }
+
 const FILTERS = ['Semua', 'Baik', 'Cukup', 'Perlu pendampingan', 'Belum dinilai'];
+
 function paintKelas() {
   if (!kelasView || !$('kList')) return;
   const { list, nilai, filter, q } = kelasView;
   $('kChips').innerHTML = FILTERS.map(f => {
-    const n = f === 'Semua' ? list.length : list.filter(s => kategori(hitungNilai(nilai[s.id] || EMPTY)).label === f).length;
-    return `<button class="chip ${f === filter ? 'act' : ''}" onclick="setKelasFilter('${f}')">${f} (${n})</button>`;
+    const n = f === 'Semua'
+      ? list.length
+      : list.filter(s => kategori(hitungNilai(nilai[s.id] || EMPTY)).label === f).length;
+    return `<button type="button" class="chip ${f === filter ? 'active' : ''}" data-filter="${esc(f)}">${f} (${n})</button>`;
   }).join('');
+  $('kChips').querySelectorAll('.chip').forEach(btn => {
+    btn.addEventListener('click', () => setKelasFilter(btn.dataset.filter));
+  });
   const rows = list.filter(s => {
     const kt = kategori(hitungNilai(nilai[s.id] || EMPTY)).label;
     return (filter === 'Semua' || kt === filter) && s.nama.toLowerCase().includes(q);
   });
   $('kList').innerHTML = rows.length
     ? rows.map((s, i) => rowSiswa(s, nilai, i)).join('')
-    : '<div class="empty"><div class="ico">🔎</div>Tidak ada siswa yang cocok.</div>';
+    : emptyState('search', 'Tidak ada siswa', 'Tidak ada siswa yang cocok dengan filter atau pencarian.');
 }
+
 window.setKelasFilter = f => { kelasView.filter = f; paintKelas(); };
 window.kelasSearch = q => { kelasView.q = (q || '').trim().toLowerCase(); paintKelas(); };
 
 // ============ VIEW: SISWA ============
 async function viewSiswa(sid, period) {
   const snap = await getDoc(doc(db, 'siswa', sid));
-  if (!snap.exists()) return { html: `<div class="card"><div class="empty"><div class="ico">🔍</div>Siswa tidak ditemukan.</div></div><a class="btn bo" href="#/">← Kembali</a>` };
+  if (!snap.exists()) {
+    return { html: `<div class="card">${emptyState('search', 'Siswa tidak ditemukan', 'Data siswa dengan kode ' + sid + ' tidak ada.')}<div style="text-align:center;margin-top:1rem"><a class="btn btn-secondary" href="#/">${ICON.back} Kembali</a></div></div>` };
+  }
   const s = { id: snap.id, ...snap.data() };
   const classes = await getClasses();
   const wali = classes[s.kelas] || '';
-  const [a, att, notes] = await Promise.all([getNilai(sid, period), getAbsen(sid, period), getCatatan(sid, period)]);
-  const hist = await Promise.all(PERIODS.map(async p => ({ period: p, aspects: await getNilai(sid, p), nilai: hitungNilai(await getNilai(sid, p)) })));
+
+  const [a, att, notes] = await Promise.all([
+    getNilai(sid, period),
+    getAbsen(sid, period),
+    getCatatan(sid, period)
+  ]);
+  const hist = await Promise.all(PERIODS.map(async p => {
+    const aspects = await getNilai(sid, p);
+    return { period: p, aspects, nilai: hitungNilai(aspects) };
+  }));
+
   const nilai = hitungNilai(a);
   const kt = kategori(nilai);
-  const cnt = { L: a.filter(x => x === 'L').length, CL: a.filter(x => x === 'CL').length, KL: a.filter(x => x === 'KL').length };
-  const rekItems = a.map((v, i) => v === 'KL' ? `Perlu pendampingan intensif pada <b>${ASPECTS[i]}</b>.`
-    : v === 'CL' ? `Perlu penguatan rutin pada <b>${ASPECTS[i]}</b>.` : null).filter(Boolean);
-  const rekText = !a.some(x => x) ? 'Guru belum menginput nilai. Silakan hubungi wali kelas.'
-    : !rekItems.length ? 'Ananda menunjukkan penguasaan baik di semua aspek. Berikan pengayaan dan apresiasi.'
-    : 'Beberapa aspek masih perlu perhatian khusus:';
+  const cnt = {
+    L: a.filter(x => x === 'L').length,
+    CL: a.filter(x => x === 'CL').length,
+    KL: a.filter(x => x === 'KL').length
+  };
+
+  const rekItems = a.map((v, i) =>
+    v === 'KL' ? `Perlu pendampingan intensif pada <b>${ASPECTS[i]}</b>.`
+    : v === 'CL' ? `Perlu penguatan rutin pada <b>${ASPECTS[i]}</b>.`
+    : null
+  ).filter(Boolean);
+  const rekText = !a.some(x => x)
+    ? 'Guru belum menginput nilai. Silakan hubungi wali kelas.'
+    : !rekItems.length
+      ? 'Ananda menunjukkan penguasaan baik di semua aspek. Berikan pengayaan dan apresiasi.'
+      : 'Beberapa aspek masih perlu perhatian khusus:';
+
   const totalHari = (att.hadir || 0) + (att.sakit || 0) + (att.izin || 0) + (att.alfa || 0);
   const pct = totalHari ? Math.round((att.hadir || 0) / totalHari * 100) : 0;
   const fav = isFav(sid);
@@ -548,390 +1405,604 @@ async function viewSiswa(sid, period) {
 
   let prev = null;
   const histRows = hist.map(h => {
-    let tr = '<span style="color:var(--muted)">—</span>';
+    let tr = '<span class="text-muted">—</span>';
     if (h.nilai !== null && prev !== null) {
-      if (h.nilai > prev) tr = `<span style="color:var(--ok);font-weight:700">▲ +${h.nilai - prev}</span>`;
-      else if (h.nilai < prev) tr = `<span style="color:var(--err);font-weight:700">▼ ${h.nilai - prev}</span>`;
-      else tr = '<span style="color:var(--muted)">=</span>';
+      if (h.nilai > prev) tr = `<span style="color:var(--success);font-weight:600">+${h.nilai - prev}</span>`;
+      else if (h.nilai < prev) tr = `<span style="color:var(--error);font-weight:600">${h.nilai - prev}</span>`;
+      else tr = '<span class="text-muted">=</span>';
     }
     if (h.nilai !== null) prev = h.nilai;
     const hk = kategori(h.nilai);
-    return `<tr><td><b>${esc(h.period)}</b></td><td>${h.aspects.map(badge).join(' ')}</td>
-      <td class="tc"><span class="sbig s${hk.k}" style="font-size:1.1rem">${h.nilai ?? '—'}</span></td>
-      <td>${hk.label}</td><td class="tc">${tr}</td></tr>`;
+    return `<tr>
+      <td><b>${esc(h.period)}</b></td>
+      <td>${h.aspects.map(badge).join(' ')}</td>
+      <td class="tc"><span class="big-score s-${hk.k}" style="font-size:1.125rem">${h.nilai ?? '—'}</span></td>
+      <td>${hk.label}</td>
+      <td class="tc">${tr}</td>
+    </tr>`;
   }).join('');
+
   const hasTrend = hist.filter(h => h.nilai !== null).length > 0;
 
   return {
     html: `
-    <div class="crumb"><a href="#/">Beranda</a><span>›</span><a href="#/kelas/${encodeURIComponent(s.kelas)}">Kelas ${esc(s.kelas)}</a><span>›</span><span>${esc(s.nama)}</span></div>
-    <div class="shead">
+    <div class="crumb">
+      <a href="#/">Beranda</a><span>›</span>
+      <a href="#/kelas/${encodeURIComponent(s.kelas)}">Kelas ${esc(s.kelas)}</a><span>›</span>
+      <span>${esc(s.nama)}</span>
+    </div>
+
+    <div class="page-header">
       <div>
-        <h2 class="pt">${esc(s.nama)}</h2>
-        <p class="sub">Kelas <b>${esc(s.kelas)}</b>${wali ? ' · Wali: <b>' + esc(wali) + '</b>' : ''}</p>
+        <div class="page-title">${esc(s.nama)}</div>
+        <div class="page-sub">Kelas <b>${esc(s.kelas)}</b>${wali ? ' · Wali: <b>' + esc(wali) + '</b>' : ''}</div>
       </div>
-      <div class="np" style="display:flex;gap:.4rem;flex-wrap:wrap">
-        <button class="btn bo bsm" data-nama="${esc(s.nama)}" data-kelas="${esc(s.kelas)}" aria-pressed="${fav}" onclick="toggleFav('${esc(sid)}', this)">${fav ? '★ Favorit' : '☆ Favorit'}</button>
-        <a class="btn bo bsm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(shareText)}">Bagikan</a>
-        <button class="btn bp bsm" onclick="window.print()">🖨 Cetak</button>
+      <div class="row no-print flex-wrap" style="gap:0.375rem">
+        <button type="button" class="btn btn-secondary btn-sm" data-nama="${esc(s.nama)}" data-kelas="${esc(s.kelas)}" aria-pressed="${fav}" id="btnFav">
+          ${fav ? ICON.starFill : ICON.star}<span>${fav ? 'Favorit' : 'Favorit'}</span>
+        </button>
+        <a class="btn btn-secondary btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(shareText)}">${ICON.share} Bagikan</a>
+        <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">${ICON.printer} Cetak</button>
       </div>
     </div>
 
-    <div class="periods np" role="tablist">
-      ${PERIODS.map(p => `<a class="per ${p === period ? 'act' : ''}" href="#/siswa/${encodeURIComponent(sid)}/${encodeURIComponent(p)}">${esc(p)}</a>`).join('')}
+    <div class="periods no-print">
+      ${PERIODS.map(p => `<a class="period ${p === period ? 'active' : ''}" href="#/siswa/${encodeURIComponent(sid)}/${encodeURIComponent(p)}">${esc(p)}</a>`).join('')}
     </div>
 
-    <div class="grid g2">
-      <div class="card" style="text-align:center;padding:1.5rem">
-        <div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.1px;font-weight:700">Nilai Akhir · ${esc(period)}</div>
-        <div class="sbig s${kt.k}" style="margin:.6rem 0">${nilai ?? '—'}</div>
-        <div style="font-size:1rem;font-weight:700">${kt.label}</div>
-        <div class="prog"><div class="pbar" data-w="${nilai || 0}"></div></div>
-        <div style="font-size:.74rem;color:var(--muted);margin-top:.5rem">${a.filter(x => x).length}/${ASPECTS.length} aspek sudah dinilai</div>
+    <div class="grid grid-2">
+      <div class="card text-center" style="padding:1.75rem">
+        <div style="font-size:0.6875rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;font-weight:600">Nilai Akhir · ${esc(period)}</div>
+        <div class="big-score s-${kt.k}" style="margin:0.75rem 0">${nilai ?? '—'}</div>
+        <div style="font-size:1rem;font-weight:600">${kt.label}</div>
+        <div class="progress"><div class="progress-bar" data-w="${nilai || 0}"></div></div>
+        <div style="font-size:0.75rem;color:var(--text-3);margin-top:0.5rem">${a.filter(x => x).length}/${ASPECTS.length} aspek sudah dinilai</div>
       </div>
-      <div class="card" style="text-align:center">
-        <h3 style="justify-content:center">📊 Distribusi Penilaian</h3>
-        <div class="cs"><canvas id="dc" role="img" aria-label="Distribusi penilaian"></canvas></div>
-        <div style="display:flex;justify-content:center;gap:1rem;margin-top:.8rem;font-size:.8rem;font-weight:600;flex-wrap:wrap">
-          <span><span class="badge bL">L</span> ${cnt.L}</span>
-          <span><span class="badge bCL">CL</span> ${cnt.CL}</span>
-          <span><span class="badge bKL">KL</span> ${cnt.KL}</span>
+      <div class="card text-center">
+        <div class="section-title" style="justify-content:center">${ICON.chart} Distribusi Penilaian</div>
+        <div style="position:relative;height:180px;max-width:180px;margin:0 auto"><canvas id="dc" role="img" aria-label="Distribusi penilaian"></canvas></div>
+        <div style="display:flex;justify-content:center;gap:1rem;margin-top:1rem;font-size:0.8125rem;font-weight:500;flex-wrap:wrap">
+          <span><span class="badge badge-l">L</span> ${cnt.L}</span>
+          <span><span class="badge badge-cl">CL</span> ${cnt.CL}</span>
+          <span><span class="badge badge-kl">KL</span> ${cnt.KL}</span>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <div class="tabs np" role="tablist">
-        <button class="tab act" onclick="showTab('t1',this)">Aspek</button>
-        <button class="tab" onclick="showTab('t2',this)">Riwayat &amp; Tren</button>
-        <button class="tab" onclick="showTab('t3',this)">Absensi</button>
-        <button class="tab" onclick="showTab('t4',this)">Rekomendasi</button>
-        <button class="tab" onclick="showTab('t5',this)">Catatan Guru</button>
+      <div class="tabs no-print" role="tablist">
+        <button type="button" class="tab active" data-tab="t1">${ICON.book} Aspek</button>
+        <button type="button" class="tab" data-tab="t2">${ICON.chart} Riwayat & Tren</button>
+        <button type="button" class="tab" data-tab="t3">${ICON.calendar} Absensi</button>
+        <button type="button" class="tab" data-tab="t4">${ICON.info} Rekomendasi</button>
+        <button type="button" class="tab" data-tab="t5">${ICON.note} Catatan Guru</button>
       </div>
-      <div id="t1" class="tc-c act"><div class="grid g4">
-        ${a.map((v, i) => `<div class="asp" data-v="${v}"><div class="al">${ASPECTS[i]}</div>
-          <span class="badge ${v === 'L' ? 'bL' : v === 'CL' ? 'bCL' : v === 'KL' ? 'bKL' : 'bE'}" style="font-size:.95rem;padding:.35rem .8rem">${v || '—'}</span>
-          <div class="ad">${ASPECT_LABELS[v]}</div>
-          <div style="font-size:.7rem;color:var(--muted);margin-top:.3rem">Skor ${ASPECT_SCORES[v] || '—'}</div></div>`).join('')}
-      </div>
-      <div style="margin-top:1rem;padding-top:.9rem;border-top:1px solid var(--border);font-size:.78rem;color:var(--muted)">
-        <b>Keterangan:</b> <span class="badge bL">L</span> Lancar (90) &nbsp; <span class="badge bCL">CL</span> Cukup Lancar (80) &nbsp; <span class="badge bKL">KL</span> Kurang Lancar (70)
-      </div></div>
-      <div id="t2" class="tc-c">
-        ${hasTrend ? '<h3>Perkembangan Nilai</h3><div class="cw"><canvas id="tc" role="img" aria-label="Grafik perkembangan nilai"></canvas></div>' : ''}
-        <h3 style="margin-top:1.2rem">Riwayat per Periode</h3>
-        <div class="tw"><table><thead><tr><th>Periode</th><th>Aspek</th><th class="tc">Nilai</th><th>Kategori</th><th class="tc">Tren</th></tr></thead><tbody>${histRows}</tbody></table></div>
-      </div>
-      <div id="t3" class="tc-c">
-        <h3>Rekap Absensi ${esc(period)}</h3>
-        <div class="attgrid">
-          <div class="atti h"><div class="n">${att.hadir || 0}</div><div class="l">Hadir</div></div>
-          <div class="atti s"><div class="n">${att.sakit || 0}</div><div class="l">Sakit</div></div>
-          <div class="atti i"><div class="n">${att.izin || 0}</div><div class="l">Izin</div></div>
-          <div class="atti a"><div class="n">${att.alfa || 0}</div><div class="l">Alfa</div></div>
+
+      <div id="t1" class="tab-content active">
+        <div class="grid grid-4">
+          ${a.map((v, i) => {
+            const cls = v === 'L' ? 'badge-l' : v === 'CL' ? 'badge-cl' : v === 'KL' ? 'badge-kl' : 'badge-empty';
+            return `<div class="aspect" data-v="${v}">
+              <div class="aspect-label">${ASPECTS[i]}</div>
+              <span class="badge ${cls}" style="font-size:0.9375rem;padding:0.35rem 0.75rem">${v || '—'}</span>
+              <div class="aspect-desc">${ASPECT_LABELS[v]}</div>
+              <div class="aspect-score">Skor ${ASPECT_SCORES[v] || '—'}</div>
+            </div>`;
+          }).join('')}
         </div>
-        <div style="text-align:center;font-size:.85rem;color:var(--muted)">Total <b>${totalHari}</b> hari · Kehadiran <b>${pct}%</b></div>
+        <div style="margin-top:1rem;padding-top:0.875rem;border-top:1px solid var(--border);font-size:0.75rem;color:var(--text-3)">
+          <b>Keterangan:</b>
+          <span class="badge badge-l">L</span> Lancar (90) &nbsp;
+          <span class="badge badge-cl">CL</span> Cukup Lancar (80) &nbsp;
+          <span class="badge badge-kl">KL</span> Kurang Lancar (70)
+        </div>
       </div>
-      <div id="t4" class="tc-c"><div class="rec">${rekText}${rekItems.length ? `<ul>${rekItems.map(x => `<li>${x}</li>`).join('')}</ul>` : ''}</div></div>
-      <div id="t5" class="tc-c"><div class="tl">${notes.length ? notes.map(n => `<div class="tli"><div class="dt">${fmtDate(n.ts)} · ${esc(n.period || '')}</div><div>${esc(n.text)}</div></div>`).join('') : '<div class="empty"><div class="ico">📝</div>Belum ada catatan dari guru.</div>'}</div></div>
+
+      <div id="t2" class="tab-content">
+        ${hasTrend ? `<div class="section-title">${ICON.chart} Perkembangan Nilai</div><div style="position:relative;height:220px"><canvas id="tc" role="img" aria-label="Grafik perkembangan nilai"></canvas></div>` : ''}
+        <div class="section-title" style="margin-top:1.25rem">${ICON.fileText || ICON['file-text']} Riwayat per Periode</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Periode</th><th>Aspek</th><th class="tc">Nilai</th><th>Kategori</th><th class="tc">Tren</th></tr></thead>
+            <tbody>${histRows}</tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="t3" class="tab-content">
+        <div class="section-title">${ICON.calendar} Rekap Absensi ${esc(period)}</div>
+        <div class="att-grid">
+          <div class="att-item h"><div class="n">${att.hadir || 0}</div><div class="l">Hadir</div></div>
+          <div class="att-item s"><div class="n">${att.sakit || 0}</div><div class="l">Sakit</div></div>
+          <div class="att-item i"><div class="n">${att.izin || 0}</div><div class="l">Izin</div></div>
+          <div class="att-item a"><div class="n">${att.alfa || 0}</div><div class="l">Alfa</div></div>
+        </div>
+        <div class="text-center text-muted" style="font-size:0.875rem">Total <b>${totalHari}</b> hari · Kehadiran <b>${pct}%</b></div>
+      </div>
+
+      <div id="t4" class="tab-content">
+        <div class="recommendation">${rekText}${rekItems.length ? `<ul>${rekItems.map(x => `<li>${x}</li>`).join('')}</ul>` : ''}</div>
+      </div>
+
+      <div id="t5" class="tab-content">
+        <div class="timeline">
+          ${notes.length
+            ? notes.map(n => `<div class="tl-item"><div class="tl-date">${fmtDate(n.ts)} · ${esc(n.period || '')}</div><div class="tl-text">${esc(n.text)}</div></div>`).join('')
+            : `<div class="empty">${emptyState('note', 'Belum ada catatan', 'Catatan dari guru akan muncul di sini.')}</div>`}
+        </div>
+      </div>
     </div>`,
+
     after: () => {
+      // Tab switching
+      document.querySelectorAll('.tab').forEach(t => {
+        t.addEventListener('click', () => {
+          document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+          document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+          const el = $(t.dataset.tab);
+          if (el) el.classList.add('active');
+          t.classList.add('active');
+        });
+      });
+
+      // Favorit
+      const favBtn = $('btnFav');
+      if (favBtn) {
+        favBtn.addEventListener('click', () => window.toggleFav(sid, favBtn));
+      }
+
+      // Progress bar
+      setTimeout(() => {
+        document.querySelectorAll('.progress-bar').forEach(b => {
+          b.style.width = b.dataset.w + '%';
+        });
+      }, 80);
+
+      // Charts
       const isD = document.documentElement.getAttribute('data-theme') === 'dark';
-      const cc = isD ? ['#34d399', '#fbbf24', '#f87171'] : ['#059669', '#d97706', '#dc2626'];
-      if ($('dc') && window.Chart) charts.push(new Chart($('dc'), {
-        type: 'doughnut',
-        data: { labels: ['L', 'CL', 'KL'], datasets: [{ data: [cnt.L, cnt.CL, cnt.KL], backgroundColor: cc, borderWidth: 0, hoverOffset: 6 }] },
-        options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { display: false } } }
-      }));
+      const cc = isD ? ['#4CC24C', '#FFA940', '#F1707B'] : ['#107C10', '#FF8C00', '#C42B1C'];
+
+      if ($('dc') && window.Chart) {
+        charts.push(new Chart($('dc'), {
+          type: 'doughnut',
+          data: {
+            labels: ['L', 'CL', 'KL'],
+            datasets: [{
+              data: [cnt.L, cnt.CL, cnt.KL],
+              backgroundColor: cc,
+              borderWidth: 0,
+              hoverOffset: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: { legend: { display: false } }
+          }
+        }));
+      }
+
       const labels = hist.filter(h => h.nilai !== null).map(h => h.period);
       const data = hist.filter(h => h.nilai !== null).map(h => h.nilai);
-      if (labels.length && $('tc') && window.Chart) charts.push(new Chart($('tc'), {
-        type: 'line',
-        data: { labels, datasets: [{ label: 'Nilai', data, borderColor: '#1e40af', backgroundColor: 'rgba(30,64,175,.1)', fill: true, tension: .35, pointRadius: 5, pointBackgroundColor: '#1e40af', borderWidth: 2.5 }] },
-        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
-      }));
-      setTimeout(() => document.querySelectorAll('.pbar').forEach(b => b.style.width = b.dataset.w + '%'), 80);
+      if (labels.length && $('tc') && window.Chart) {
+        const lineColor = isD ? '#4CA0E0' : '#0078D4';
+        charts.push(new Chart($('tc'), {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [{
+              label: 'Nilai',
+              data,
+              borderColor: lineColor,
+              backgroundColor: isD ? 'rgba(76,160,224,0.15)' : 'rgba(0,120,212,0.12)',
+              fill: true,
+              tension: 0.35,
+              pointRadius: 5,
+              pointBackgroundColor: lineColor,
+              pointBorderColor: isD ? '#1A1A1A' : '#FFFFFF',
+              pointBorderWidth: 2,
+              borderWidth: 2.5
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { beginAtZero: true, max: 100, grid: { color: isD ? '#3A3A3A' : '#E1E1E1' }, ticks: { color: isD ? '#8C8C8C' : '#767676' } },
+              x: { grid: { display: false }, ticks: { color: isD ? '#8C8C8C' : '#767676' } }
+            },
+            plugins: { legend: { display: false } }
+          }
+        }));
+      }
     }
   };
 }
-window.showTab = function (id, btn) {
-  document.querySelectorAll('.tc-c').forEach(x => x.classList.remove('act'));
-  document.querySelectorAll('.tab').forEach(x => x.classList.remove('act'));
-  $(id).classList.add('act');
-  btn.classList.add('act');
-};
 
 // ============ ADMIN ============
 function renderLogin(err = '') {
   return {
     html: `
-    <div class="shead"><div><h2 class="pt">Panel Guru</h2><p class="sub">Masuk untuk mengelola data</p></div></div>
-    <div class="card" style="max-width:420px">
-      ${err ? `<div class="alert alert-err">${esc(err)}</div>` : ''}
+    <div class="page-header">
+      <div>
+        <div class="page-title">Panel Guru</div>
+        <div class="page-sub">Masuk untuk mengelola data siswa & nilai</div>
+      </div>
+    </div>
+    <div class="card" style="max-width:420px;margin:0 auto">
+      ${err ? `<div class="alert alert-error">${ICON.alert}<span>${esc(err)}</span></div>` : ''}
       <form onsubmit="doLogin(event)">
-        <div class="fg"><label for="em">Email</label><input id="em" name="email" type="email" required autocomplete="username"></div>
-        <div class="fg"><label for="pw">Password</label><input id="pw" name="pass" type="password" required autocomplete="current-password"></div>
-        <button class="btn bp" style="width:100%">Masuk</button>
+        <div class="field">
+          <label for="em">Email</label>
+          <input id="em" name="email" class="input" type="email" required autocomplete="username" placeholder="guru@sekolah.id">
+        </div>
+        <div class="field">
+          <label for="pw">Password</label>
+          <input id="pw" name="pass" class="input" type="password" required autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary w-full" type="submit">${ICON.logout} Masuk</button>
       </form>
     </div>`
   };
 }
+
 window.doLogin = async function (ev) {
   ev.preventDefault();
   const f = ev.target;
-  await run(f.querySelector('button'), 'Masuk…', async () => {
-    try { await signInWithEmailAndPassword(auth, f.email.value.trim(), f.pass.value); }
-    catch (e) { $('app').innerHTML = renderLogin('Email atau password salah.').html; }
+  const btn = f.querySelector('button');
+  await run(btn, 'Masuk…', async () => {
+    try {
+      await signInWithEmailAndPassword(auth, f.email.value.trim(), f.pass.value);
+    } catch (e) {
+      $('app').innerHTML = renderLogin('Email atau password salah.').html;
+    }
   });
 };
+
 window.doLogout = async function () { await signOut(auth); go('/'); };
 
 async function viewAdmin(sub) {
-  if (!authReady) return { html: '<div class="empty">Memeriksa sesi…</div>' };
+  if (!authReady) return { html: `<div class="card">${skeleton(2)}</div>` };
   if (!currentUser) return renderLogin();
+
   const tab = sub[0] || 'nilai';
   const period = (sub[0] === 'nilai' || sub[0] === 'import') && sub[1] ? sub[1] : PERIODS[0];
-  const tabs = `<div class="tabs" role="tablist">
-    <button class="tab ${tab === 'nilai' ? 'act' : ''}" onclick="go('/admin/nilai')">📊 Nilai</button>
-    <button class="tab ${tab === 'siswa' ? 'act' : ''}" onclick="go('/admin/siswa')">👥 Siswa</button>
-    <button class="tab ${tab === 'import' ? 'act' : ''}" onclick="go('/admin/import')">📥 Import</button>
-    <button class="tab ${tab === 'setting' ? 'act' : ''}" onclick="go('/admin/setting')">⚙️ Pengaturan</button>
-    <button class="tab ${tab === 'seed' ? 'act' : ''}" onclick="go('/admin/seed')">🌱 Data Awal</button>
-  </div>`;
-  let content = '';
-  let after = null;
 
+  const tabs = `<div class="tabs" role="tablist">
+    <button type="button" class="tab ${tab === 'nilai' ? 'active' : ''}" onclick="go('/admin/nilai')">${ICON.chart} Nilai</button>
+    <button type="button" class="tab ${tab === 'siswa' ? 'active' : ''}" onclick="go('/admin/siswa')">${ICON.users} Siswa</button>
+    <button type="button" class="tab ${tab === 'import' ? 'active' : ''}" onclick="go('/admin/import')">${ICON.upload} Import</button>
+    <button type="button" class="tab ${tab === 'setting' ? 'active' : ''}" onclick="go('/admin/setting')">${ICON.settings} Pengaturan</button>
+    <button type="button" class="tab ${tab === 'seed' ? 'active' : ''}" onclick="go('/admin/seed')">${ICON.plus} Data Awal</button>
+  </div>`;
+
+  let content = '';
+
+  // ---------- TAB NILAI ----------
   if (tab === 'nilai') {
     const [students, p] = await Promise.all([getStudents(), loadPeriod(period)]);
     const kelasSet = [...new Set(students.map(s => s.kelas))].sort();
-    const periods = PERIODS.map(x => `<a class="per ${x === period ? 'act' : ''}" href="#/admin/nilai/${encodeURIComponent(x)}">${esc(x)}</a>`).join('');
+    const periods = PERIODS.map(x => `<a class="period ${x === period ? 'active' : ''}" href="#/admin/nilai/${encodeURIComponent(x)}">${esc(x)}</a>`).join('');
     const rows = kelasSet.map(k => {
       const list = students.filter(s => s.kelas === k);
       const st = classStat(list, p.nilai);
       const kt = kategori(st.avg);
       return `<tr>
-        <td><b>${esc(k)}</b></td><td>${st.n} siswa</td>
+        <td><b>${esc(k)}</b></td>
+        <td>${st.n} siswa</td>
         <td>${st.filled}/${st.n} dinilai</td>
-        <td class="tc"><span class="sbig s${kt.k}" style="font-size:1.1rem">${st.avg ?? '—'}</span></td>
-        <td>${kt.label}${st.perlu ? ` · <b style="color:var(--err)">${st.perlu} perlu</b>` : ''}</td>
-        <td class="tc"><a class="btn bo bsm" href="#/admin/kelas/${encodeURIComponent(k)}/${encodeURIComponent(period)}">Kelola →</a></td></tr>`;
+        <td class="tc"><span class="big-score s-${kt.k}" style="font-size:1.125rem">${st.avg ?? '—'}</span></td>
+        <td>${kt.label}${st.perlu ? ` · <b style="color:var(--error)">${st.perlu} perlu</b>` : ''}</td>
+        <td class="tc"><a class="btn btn-secondary btn-sm" href="#/admin/kelas/${encodeURIComponent(k)}/${encodeURIComponent(period)}">Kelola ${ICON.next}</a></td>
+      </tr>`;
     }).join('');
-    content = `<div class="periods">${periods}</div>
-      <div class="tw"><table><thead><tr><th>Kelas</th><th>Jumlah</th><th>Terisi</th><th class="tc">Rata-rata</th><th>Kategori</th><th class="tc">Aksi</th></tr></thead>
-      <tbody>${rows || '<tr><td colspan="6" class="empty">Belum ada data siswa. Buka tab Data Awal.</td></tr>'}</tbody></table></div>`;
+    content = `
+      <div class="periods">${periods}</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Kelas</th><th>Jumlah</th><th>Terisi</th><th class="tc">Rata-rata</th><th>Kategori</th><th class="tc">Aksi</th></tr></thead>
+          <tbody>${rows || `<tr><td colspan="6">${emptyState('book', 'Belum ada data', 'Buka tab Data Awal untuk mengisi contoh data.')}</td></tr>`}</tbody>
+        </table>
+      </div>`;
   }
+
+  // ---------- TAB KELAS (kelola nilai per kelas) ----------
   else if (tab === 'kelas') {
     const kelas = sub[1], periode = sub[2] || PERIODS[0];
     const [all, p] = await Promise.all([getStudents(), loadPeriod(periode)]);
     const list = all.filter(s => s.kelas === kelas).sort((a, b) => a.nama.localeCompare(b.nama));
-    const periods = PERIODS.map(x => `<a class="per ${x === periode ? 'act' : ''}" href="#/admin/kelas/${encodeURIComponent(kelas)}/${encodeURIComponent(x)}">${esc(x)}</a>`).join('');
+    const periods = PERIODS.map(x => `<a class="period ${x === periode ? 'active' : ''}" href="#/admin/kelas/${encodeURIComponent(kelas)}/${encodeURIComponent(x)}">${esc(x)}</a>`).join('');
     const rows = list.map(s => {
       const a = p.nilai[s.id] || EMPTY;
       const n = hitungNilai(a);
       const kt = kategori(n);
-      return `<tr><td><code style="font-size:.75rem">${esc(s.access_code)}</code></td><td>${esc(s.nama)}</td>
+      return `<tr>
+        <td><code class="mono" style="font-size:0.75rem">${esc(s.access_code)}</code></td>
+        <td>${esc(s.nama)}</td>
         ${a.map(v => `<td class="tc">${badge(v)}</td>`).join('')}
-        <td class="tc"><span class="sbig s${kt.k}" style="font-size:1rem">${n ?? '—'}</span></td>
-        <td class="tc"><a class="btn bp bsm" href="#/admin/edit/${encodeURIComponent(s.id)}/${encodeURIComponent(periode)}">Edit</a></td></tr>`;
+        <td class="tc"><span class="big-score s-${kt.k}" style="font-size:1rem">${n ?? '—'}</span></td>
+        <td class="tc"><a class="btn btn-primary btn-sm" href="#/admin/edit/${encodeURIComponent(s.id)}/${encodeURIComponent(periode)}">${ICON.edit} Edit</a></td>
+      </tr>`;
     }).join('');
     content = `
-      <div class="np" style="display:flex;justify-content:space-between;gap:.6rem;flex-wrap:wrap;margin-bottom:.9rem">
-        <a class="btn bo bsm" href="#/admin/nilai/${encodeURIComponent(periode)}">← Kembali</a>
-        <button class="btn bs bsm" onclick="exportCSV('${esc(kelas)}','${esc(periode)}', this)">📥 Export CSV</button>
+      <div class="row-between mb-4">
+        <a class="btn btn-secondary btn-sm" href="#/admin/nilai/${encodeURIComponent(periode)}">${ICON.back} Kembali</a>
+        <button type="button" class="btn btn-success btn-sm" onclick="exportCSV('${esc(kelas)}','${esc(periode)}', this)">${ICON.download} Export CSV</button>
       </div>
       <div class="periods">${periods}</div>
-      <div class="search"><input type="search" placeholder="Cari nama…" aria-label="Cari nama" oninput="filterRows(this.value,'#tblK tbody tr')"></div>
-      <div class="tw"><table id="tblK"><thead><tr><th>Kode</th><th>Nama</th>${ASPECTS.map(x => `<th class="tc">${x}</th>`).join('')}<th class="tc">Nilai</th><th class="tc">Aksi</th></tr></thead>
-      <tbody>${rows || '<tr><td colspan="8" class="empty">Belum ada siswa di kelas ini.</td></tr>'}</tbody></table></div>`;
+      <div class="input-search mb-4">
+        ${ICON.search}
+        <input class="input" type="search" placeholder="Cari nama…" aria-label="Cari nama" oninput="filterRows(this.value,'#tblK tbody tr')">
+      </div>
+      <div class="table-wrap">
+        <table id="tblK">
+          <thead><tr><th>Kode</th><th>Nama</th>${ASPECTS.map(x => `<th class="tc">${x}</th>`).join('')}<th class="tc">Nilai</th><th class="tc">Aksi</th></tr></thead>
+          <tbody>${rows || `<tr><td colspan="8">${emptyState('users', 'Belum ada siswa', 'Kelas ini belum memiliki siswa.')}</td></tr>`}</tbody>
+        </table>
+      </div>`;
   }
+
+  // ---------- TAB EDIT (per siswa) ----------
   else if (tab === 'edit') {
     const sid = sub[1], periode = sub[2] || PERIODS[0];
     const snap = await getDoc(doc(db, 'siswa', sid));
-    if (!snap.exists()) content = `<div class="alert alert-err">Siswa tidak ditemukan.</div>`;
-    else {
+    if (!snap.exists()) {
+      content = `<div class="alert alert-error">${ICON.alert}<span>Siswa tidak ditemukan.</span></div>`;
+    } else {
       const s = { id: snap.id, ...snap.data() };
       const [a, att, notes] = await Promise.all([getNilai(sid, periode), getAbsen(sid, periode), getCatatan(sid, periode)]);
       const nVal = hitungNilai(a), kt = kategori(nVal);
       content = `
-        <a class="btn bo bsm" style="margin-bottom:1rem" href="#/admin/kelas/${encodeURIComponent(s.kelas)}/${encodeURIComponent(periode)}">← Kembali ke ${esc(s.kelas)}</a>
-        <div class="grid g2">
+        <a class="btn btn-secondary btn-sm mb-4" href="#/admin/kelas/${encodeURIComponent(s.kelas)}/${encodeURIComponent(periode)}">${ICON.back} Kembali ke ${esc(s.kelas)}</a>
+        <div class="grid grid-2">
           <div class="card">
-            <h3>✏️ ${esc(s.nama)} · ${esc(periode)}</h3>
+            <div class="section-title">${ICON.edit} ${esc(s.nama)} · ${esc(periode)}</div>
             <form oninput="livePreview(this)" onsubmit="saveEdit(event,'${esc(sid)}','${esc(periode)}')">
-              <div class="grid g2">
-                ${ASPECTS.map((x, i) => `<div class="fg"><label for="a${i}">${x}</label>
-                  <select id="a${i}" name="a${i}">${['', 'L', 'CL', 'KL'].map(v => `<option value="${v}" ${a[i] === v ? 'selected' : ''}>${v || '— kosong —'}</option>`).join('')}</select></div>`).join('')}
+              <div class="grid grid-2">
+                ${ASPECTS.map((x, i) => `<div class="field">
+                  <label for="a${i}">${x}</label>
+                  <select id="a${i}" name="a${i}" class="select">
+                    ${['', 'L', 'CL', 'KL'].map(v => `<option value="${v}" ${a[i] === v ? 'selected' : ''}>${v || '— kosong —'}</option>`).join('')}
+                  </select>
+                </div>`).join('')}
               </div>
-              <h3 style="margin-top:.6rem">📅 Absensi</h3>
-              <div class="grid g2">
-                ${[['hadir', 'Hadir'], ['sakit', 'Sakit'], ['izin', 'Izin'], ['alfa', 'Alfa']].map(([k, l]) => `<div class="fg"><label for="${k}">${l}</label><input id="${k}" name="${k}" type="number" inputmode="numeric" min="0" value="${att[k] || 0}"></div>`).join('')}
+              <div class="section-title" style="margin-top:0.75rem">${ICON.calendar} Absensi</div>
+              <div class="grid grid-2">
+                ${[['hadir', 'Hadir'], ['sakit', 'Sakit'], ['izin', 'Izin'], ['alfa', 'Alfa']].map(([k, l]) =>
+                  `<div class="field"><label for="${k}">${l}</label><input id="${k}" name="${k}" class="input" type="number" inputmode="numeric" min="0" value="${att[k] || 0}"></div>`
+                ).join('')}
               </div>
-              <div class="fg"><label for="note">Catatan guru (opsional)</label><textarea id="note" name="note" rows="3" placeholder="Tulis catatan untuk wali murid…"></textarea></div>
-              <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-                <button class="btn bp" type="submit">💾 Simpan</button>
-                <button class="btn bs" name="next" value="1" type="submit">💾 Simpan &amp; Berikutnya →</button>
+              <div class="field">
+                <label for="note">Catatan guru (opsional)</label>
+                <textarea id="note" name="note" class="textarea" rows="3" placeholder="Tulis catatan untuk wali murid…"></textarea>
+              </div>
+              <div class="row flex-wrap">
+                <button class="btn btn-primary" type="submit">${ICON.save} Simpan</button>
+                <button class="btn btn-success" name="next" value="1" type="submit">${ICON.save} Simpan & Berikutnya ${ICON.next}</button>
               </div>
             </form>
           </div>
           <div class="card">
-            <h3>Pratinjau</h3>
-            <div style="text-align:center;padding:.8rem 0">
-              <div id="pvN" class="sbig s${kt.k}" style="font-size:3.2rem">${nVal ?? '—'}</div>
-              <div id="pvK" style="font-size:.95rem;font-weight:600;margin-top:.4rem">${kt.label}</div>
+            <div class="section-title">Pratinjau</div>
+            <div class="text-center" style="padding:0.75rem 0">
+              <div id="pvN" class="big-score s-${kt.k}">${nVal ?? '—'}</div>
+              <div id="pvK" style="font-size:0.9375rem;font-weight:600;margin-top:0.5rem">${kt.label}</div>
             </div>
-            <div style="border-top:1px solid var(--border);padding-top:.9rem;margin-top:.8rem">
-              <h3 style="font-size:.88rem">Riwayat catatan</h3>
-              <div class="tl">${notes.length ? notes.map(n => `<div class="tli"><div class="dt">${fmtDate(n.ts)}</div><div>${esc(n.text)}</div></div>`).join('') : '<div class="empty" style="padding:.8rem">Belum ada catatan.</div>'}</div>
+            <div style="border-top:1px solid var(--border);padding-top:0.875rem;margin-top:0.75rem">
+              <div class="section-title" style="font-size:0.875rem">${ICON.note} Riwayat catatan</div>
+              <div class="timeline">
+                ${notes.length
+                  ? notes.map(n => `<div class="tl-item"><div class="tl-date">${fmtDate(n.ts)}</div><div class="tl-text">${esc(n.text)}</div></div>`).join('')
+                  : '<div class="empty" style="padding:1rem;font-size:0.8125rem;color:var(--text-3)">Belum ada catatan.</div>'}
+              </div>
             </div>
           </div>
         </div>`;
     }
   }
+
+  // ---------- TAB SISWA (list semua) ----------
   else if (tab === 'siswa') {
     const students = (await getStudents()).sort((a, b) => (a.kelas + a.nama).localeCompare(b.kelas + b.nama));
-    const rows = students.map(s => `<tr><td><code style="font-size:.75rem">${esc(s.access_code)}</code></td><td>${esc(s.nama)}</td><td>${esc(s.kelas)}</td>
-      <td class="tc" style="white-space:nowrap"><a class="btn bo bsm" href="#/admin/edit-siswa/${encodeURIComponent(s.id)}">Edit</a>
-      <button class="btn bo bsm" style="color:var(--err)" data-nama="${esc(s.nama)}" onclick="hapusSiswa('${esc(s.id)}', this.dataset.nama, this)">Hapus</button></td></tr>`).join('');
+    const rows = students.map(s => `<tr>
+      <td><code class="mono" style="font-size:0.75rem">${esc(s.access_code)}</code></td>
+      <td>${esc(s.nama)}</td>
+      <td>${esc(s.kelas)}</td>
+      <td class="tc" style="white-space:nowrap">
+        <a class="btn btn-secondary btn-sm" href="#/admin/edit-siswa/${encodeURIComponent(s.id)}">${ICON.edit} Edit</a>
+        <button type="button" class="btn btn-secondary btn-sm" style="color:var(--error)" data-nama="${esc(s.nama)}" onclick="hapusSiswa('${esc(s.id)}', this.dataset.nama, this)">${ICON.trash} Hapus</button>
+      </td>
+    </tr>`).join('');
     content = `
-      <div class="np" style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:.9rem">
-        <div class="search" style="flex:1;min-width:200px;margin:0"><input type="search" placeholder="Cari nama…" aria-label="Cari nama" oninput="filterRows(this.value,'#tblAll tbody tr')"></div>
-        <a class="btn bp bsm" href="#/admin/add-siswa">+ Tambah Siswa</a>
+      <div class="row-between mb-4">
+        <div class="input-search" style="flex:1;min-width:200px;margin:0">
+          ${ICON.search}
+          <input class="input" type="search" placeholder="Cari nama…" aria-label="Cari nama" oninput="filterRows(this.value,'#tblAll tbody tr')">
+        </div>
+        <a class="btn btn-primary btn-sm" href="#/admin/add-siswa">${ICON.plus} Tambah Siswa</a>
       </div>
-      <div class="tw"><table id="tblAll"><thead><tr><th>Kode</th><th>Nama</th><th>Kelas</th><th class="tc">Aksi</th></tr></thead>
-      <tbody>${rows || '<tr><td colspan="4" class="empty">Belum ada siswa.</td></tr>'}</tbody></table></div>`;
+      <div class="table-wrap">
+        <table id="tblAll">
+          <thead><tr><th>Kode</th><th>Nama</th><th>Kelas</th><th class="tc">Aksi</th></tr></thead>
+          <tbody>${rows || `<tr><td colspan="4">${emptyState('users', 'Belum ada siswa', 'Tambahkan siswa satu per satu atau lewat import CSV.')}</td></tr>`}</tbody>
+        </table>
+      </div>`;
   }
+
+  // ---------- TAB ADD SISWA ----------
   else if (tab === 'add-siswa') {
     content = `
-      <a class="btn bo bsm" style="margin-bottom:1rem" href="#/admin/siswa">← Kembali</a>
-      <div class="card" style="max-width:640px"><h3>Tambah Siswa</h3>
+      <a class="btn btn-secondary btn-sm mb-4" href="#/admin/siswa">${ICON.back} Kembali</a>
+      <div class="card" style="max-width:640px">
+        <div class="section-title">${ICON.plus} Tambah Siswa</div>
         <form onsubmit="addSiswa(event)">
-          <div class="fg"><label for="nn">Nama lengkap</label><input id="nn" name="nama" required maxlength="80"></div>
-          <div class="grid g2">
-            <div class="fg"><label for="nk">Kelas</label><input id="nk" name="kelas" required placeholder="4B" maxlength="10" style="text-transform:uppercase"></div>
-            <div class="fg"><label for="nc">Kode akses (unik)</label><input id="nc" name="kode" required placeholder="4B-019" maxlength="20" style="text-transform:uppercase" pattern="[A-Za-z0-9-]+"></div>
+          <div class="field"><label for="nn">Nama lengkap</label><input id="nn" name="nama" class="input" required maxlength="80" placeholder="Nama sesuai akta"></div>
+          <div class="grid grid-2">
+            <div class="field"><label for="nk">Kelas</label><input id="nk" name="kelas" class="input" required placeholder="4B" maxlength="10" style="text-transform:uppercase"></div>
+            <div class="field"><label for="nc">Kode akses (unik)</label><input id="nc" name="kode" class="input" required placeholder="4B-019" maxlength="20" style="text-transform:uppercase" pattern="[A-Za-z0-9-]+"></div>
           </div>
-          <p class="sub" style="margin-bottom:.9rem">Kode hanya boleh huruf, angka, dan tanda minus. Kode tidak dapat diubah setelah disimpan.</p>
-          <button class="btn bp" type="submit">💾 Simpan</button>
+          <p class="text-muted" style="font-size:0.8125rem;margin-bottom:0.875rem">Kode hanya huruf, angka, dan tanda minus. Kode tidak dapat diubah setelah disimpan.</p>
+          <button class="btn btn-primary" type="submit">${ICON.save} Simpan</button>
         </form>
       </div>`;
   }
+
+  // ---------- TAB EDIT SISWA ----------
   else if (tab === 'edit-siswa') {
     const sid = sub[1];
     const snap = await getDoc(doc(db, 'siswa', sid));
-    if (!snap.exists()) content = `<div class="alert alert-err">Siswa tidak ditemukan.</div>`;
-    else {
+    if (!snap.exists()) {
+      content = `<div class="alert alert-error">${ICON.alert}<span>Siswa tidak ditemukan.</span></div>`;
+    } else {
       const s = { id: snap.id, ...snap.data() };
       content = `
-        <a class="btn bo bsm" style="margin-bottom:1rem" href="#/admin/siswa">← Kembali</a>
-        <div class="card" style="max-width:640px"><h3>Edit Siswa</h3>
+        <a class="btn btn-secondary btn-sm mb-4" href="#/admin/siswa">${ICON.back} Kembali</a>
+        <div class="card" style="max-width:640px">
+          <div class="section-title">${ICON.edit} Edit Siswa</div>
           <form onsubmit="editSiswa(event,'${esc(sid)}')">
-            <div class="fg"><label for="en">Nama lengkap</label><input id="en" name="nama" required maxlength="80" value="${esc(s.nama)}"></div>
-            <div class="grid g2">
-              <div class="fg"><label for="ek">Kelas</label><input id="ek" name="kelas" required maxlength="10" value="${esc(s.kelas)}" style="text-transform:uppercase"></div>
-              <div class="fg"><label for="ec">Kode akses</label><input id="ec" value="${esc(s.access_code)}" readonly style="opacity:.7"></div>
+            <div class="field"><label for="en">Nama lengkap</label><input id="en" name="nama" class="input" required maxlength="80" value="${esc(s.nama)}"></div>
+            <div class="grid grid-2">
+              <div class="field"><label for="ek">Kelas</label><input id="ek" name="kelas" class="input" required maxlength="10" value="${esc(s.kelas)}" style="text-transform:uppercase"></div>
+              <div class="field"><label for="ec">Kode akses</label><input id="ec" class="input" value="${esc(s.access_code)}" readonly style="opacity:0.7"></div>
             </div>
-            <p class="sub" style="margin-bottom:.9rem">Kode akses tidak dapat diubah karena menjadi ID data siswa.</p>
-            <button class="btn bp" type="submit">💾 Simpan</button>
+            <p class="text-muted" style="font-size:0.8125rem;margin-bottom:0.875rem">Kode akses tidak dapat diubah karena menjadi ID data siswa.</p>
+            <button class="btn btn-primary" type="submit">${ICON.save} Simpan</button>
           </form>
         </div>`;
     }
   }
+
+  // ---------- TAB IMPORT ----------
   else if (tab === 'import') {
+    const kelasList = [...new Set((await getStudents()).map(s => s.kelas))].sort();
     content = `
       <div class="card">
-        <h3>📥 Import Data Siswa (Master)</h3>
-        <p class="sub" style="margin-bottom:.8rem">CSV dengan kolom: <code>kode, nama, kelas</code>. Kode sama akan ditimpa.</p>
-        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-          <button class="btn bo bsm" onclick="dlTemplateSiswa()">📄 Unduh Template</button>
-          <label class="btn bp bsm" style="cursor:pointer"><span class="btn-lbl">📂 Pilih File CSV</span><input type="file" accept=".csv,text/csv" style="display:none" onchange="importSiswa(this)"></label>
+        <div class="section-title">${ICON.upload} Import Data Siswa</div>
+        <p class="text-muted mb-4" style="font-size:0.875rem">CSV dengan kolom: <code class="mono">kode, nama, kelas</code>. Kode sama akan ditimpa.</p>
+        <div class="row flex-wrap">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="dlTemplateSiswa()">${ICON.download} Unduh Template CSV</button>
+          <label class="btn btn-primary btn-sm" style="cursor:pointer">
+            <span class="btn-label">${ICON.upload} Pilih File CSV</span>
+            <input type="file" accept=".csv,text/csv" style="display:none" onchange="importSiswa(this)">
+          </label>
         </div>
       </div>
+
       <div class="card">
-        <h3>📥 Import Nilai & Absensi</h3>
-        <p class="sub" style="margin-bottom:.8rem">CSV per periode. Kolom: <code>kode, nama, kelas, membaca, menulis, berhitung, menghafal, hadir, sakit, izin, alfa</code>.</p>
+        <div class="section-title">${ICON.upload} Import Nilai & Absensi</div>
+        <p class="text-muted mb-4" style="font-size:0.875rem">CSV per periode. Kolom: <code class="mono">kode, nama, kelas, membaca, menulis, berhitung, menghafal, hadir, sakit, izin, alfa</code>.</p>
         <div class="periods">
-          ${PERIODS.map(p => `<button class="per ${p === period ? 'act' : ''}" onclick="go('/admin/import/${encodeURIComponent(p)}')">${esc(p)}</button>`).join('')}
+          ${PERIODS.map(p => `<button type="button" class="period ${p === period ? 'active' : ''}" onclick="go('/admin/import/${encodeURIComponent(p)}')">${esc(p)}</button>`).join('')}
         </div>
-        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.9rem;align-items:center">
-          <select id="xlsKelas" style="max-width:140px" aria-label="Pilih kelas">
+        <div class="row flex-wrap mb-4" style="align-items:center">
+          <select id="xlsKelas" class="select" style="max-width:160px" aria-label="Pilih kelas">
             <option value="">— Pilih kelas —</option>
-            ${[...new Set((await getStudents()).map(s => s.kelas))].sort().map(k => `<option value="${esc(k)}">Kelas ${esc(k)}</option>`).join('')}
+            ${kelasList.map(k => `<option value="${esc(k)}">Kelas ${esc(k)}</option>`).join('')}
           </select>
-          <button class="btn bs bsm" onclick="dlExcelTemplate('${esc(period)}')">📊 Unduh Template Excel (${esc(period)})</button>
+          <button type="button" class="btn btn-success btn-sm" onclick="dlExcelTemplate('${esc(period)}')">${ICON.download} Template Excel (${esc(period)})</button>
         </div>
-        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.9rem">
-          <button class="btn bo bsm" onclick="dlTemplateNilai('${esc(period)}')">📄 Unduh Template CSV</button>
-          <label class="btn bp bsm" style="cursor:pointer"><span class="btn-lbl">📂 Import Excel (.xlsx)</span><input type="file" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display:none" onchange="importExcel(this,'${esc(period)}')"></label>
-          <label class="btn bp bsm" style="cursor:pointer;background:var(--muted)"><span class="btn-lbl">📂 Import CSV</span><input type="file" accept=".csv,text/csv" style="display:none" onchange="importNilai(this,'${esc(period)}')"></label>
+        <div class="row flex-wrap">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="dlTemplateNilai('${esc(period)}')">${ICON.download} Template CSV</button>
+          <label class="btn btn-primary btn-sm" style="cursor:pointer">
+            <span class="btn-label">${ICON.upload} Import Excel (.xlsx)</span>
+            <input type="file" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display:none" onchange="importExcel(this,'${esc(period)}')">
+          </label>
+          <label class="btn btn-secondary btn-sm" style="cursor:pointer">
+            <span class="btn-label">${ICON.upload} Import CSV</span>
+            <input type="file" accept=".csv,text/csv" style="display:none" onchange="importNilai(this,'${esc(period)}')">
+          </label>
         </div>
-        <div class="alert alert-info">
-          <b>Excel (.xlsx)</b> — sudah ada dropdown L/CL/KL & validasi angka. Kolom <code>kode</code>, <code>nama</code>, <code>kelas</code> terkunci (tidak bisa diubah).<br>
-          <b>Nilai valid:</b> <b>L</b> (Lancar=90), <b>CL</b> (Cukup Lancar=80), <b>KL</b> (Kurang Lancar=70), atau kosong.
+        <div class="alert alert-info" style="margin-top:1rem">
+          ${ICON.info}
+          <span><b>Excel (.xlsx)</b> sudah ada dropdown L/CL/KL & validasi angka. Kolom kode/nama/kelas terkunci.<br>
+          <b>Nilai valid:</b> L (Lancar=90), CL (Cukup Lancar=80), KL (Kurang Lancar=70), atau kosong.</span>
         </div>
       </div>
+
       <div class="card">
-        <h3>📋 Model Data (ringkas)</h3>
-        <div class="tw"><table>
-          <thead><tr><th>Koleksi</th><th>ID Dokumen</th><th>Field</th></tr></thead>
-          <tbody>
-            <tr><td><code>siswa</code></td><td><code>{KODE}</code></td><td>nama, kelas, access_code</td></tr>
-            <tr><td><code>nilai</code></td><td><code>{KODE}__{PERIODE}</code></td><td>siswaId, period, a0..a3</td></tr>
-            <tr><td><code>absensi</code></td><td><code>{KODE}__{PERIODE}</code></td><td>siswaId, period, hadir, sakit, izin, alfa</td></tr>
-            <tr><td><code>catatan</code></td><td>auto</td><td>siswaId, period, text, ts</td></tr>
-            <tr><td><code>kelas</code></td><td><code>{KELAS}</code></td><td>wali</td></tr>
-            <tr><td><code>settings</code></td><td><code>main</code></td><td>name, npsn, address, logo, year, headmaster</td></tr>
-          </tbody>
-        </table></div>
-        <p class="sub" style="margin-top:.8rem">Urutan aspek: <code>a0</code>=Membaca, <code>a1</code>=Menulis, <code>a2</code>=Berhitung, <code>a3</code>=Menghafal</p>
-      </div>
-    `;
+        <div class="section-title">${ICON['file-text']} Model Data</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Koleksi</th><th>ID Dokumen</th><th>Field</th></tr></thead>
+            <tbody>
+              <tr><td><code class="mono">siswa</code></td><td><code class="mono">{KODE}</code></td><td>nama, kelas, access_code</td></tr>
+              <tr><td><code class="mono">nilai</code></td><td><code class="mono">{KODE}__{PERIODE}</code></td><td>siswaId, period, a0..a3</td></tr>
+              <tr><td><code class="mono">absensi</code></td><td><code class="mono">{KODE}__{PERIODE}</code></td><td>siswaId, period, hadir, sakit, izin, alfa</td></tr>
+              <tr><td><code class="mono">catatan</code></td><td>auto</td><td>siswaId, period, text, ts</td></tr>
+              <tr><td><code class="mono">kelas</code></td><td><code class="mono">{KELAS}</code></td><td>wali</td></tr>
+              <tr><td><code class="mono">settings</code></td><td><code class="mono">main</code></td><td>name, npsn, address, logo, year, headmaster</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-muted" style="font-size:0.8125rem;margin-top:0.875rem">Urutan aspek: <code class="mono">a0</code>=Membaca, <code class="mono">a1</code>=Menulis, <code class="mono">a2</code>=Berhitung, <code class="mono">a3</code>=Menghafal</p>
+      </div>`;
   }
+
+  // ---------- TAB SETTING ----------
   else if (tab === 'setting') {
     const [sc, classes, students] = await Promise.all([getSchool(), getClasses(), getStudents()]);
     const kelasSet = [...new Set([...students.map(s => s.kelas), ...Object.keys(classes)])].sort();
     content = `
       <form onsubmit="saveSetting(event)">
-        <div class="card"><h3>🏫 Informasi Sekolah</h3>
-          <div class="grid g2">
-            <div class="fg"><label for="sn">Nama sekolah</label><input id="sn" name="school_name" value="${esc(sc.name)}"></div>
-            <div class="fg"><label for="sp">NPSN</label><input id="sp" name="school_npsn" value="${esc(sc.npsn)}"></div>
-            <div class="fg"><label for="sa">Alamat</label><input id="sa" name="school_address" value="${esc(sc.address)}"></div>
-            <div class="fg"><label for="sl">Logo (emoji)</label><input id="sl" name="school_logo" value="${esc(sc.logo)}" maxlength="4"></div>
-            <div class="fg"><label for="sy">Tahun ajaran</label><input id="sy" name="school_year" value="${esc(sc.year)}"></div>
-            <div class="fg"><label for="sh">Kepala sekolah</label><input id="sh" name="school_headmaster" value="${esc(sc.headmaster)}"></div>
+        <div class="card">
+          <div class="section-title">${ICON.home} Informasi Sekolah</div>
+          <div class="grid grid-2">
+            <div class="field"><label for="sn">Nama sekolah</label><input id="sn" name="school_name" class="input" value="${esc(sc.name)}"></div>
+            <div class="field"><label for="sp">NPSN</label><input id="sp" name="school_npsn" class="input" value="${esc(sc.npsn)}"></div>
+            <div class="field"><label for="sa">Alamat</label><input id="sa" name="school_address" class="input" value="${esc(sc.address)}"></div>
+            <div class="field"><label for="sl">Logo (emoji, max 4)</label><input id="sl" name="school_logo" class="input" value="${esc(sc.logo)}" maxlength="4"></div>
+            <div class="field"><label for="sy">Tahun ajaran</label><input id="sy" name="school_year" class="input" value="${esc(sc.year)}"></div>
+            <div class="field"><label for="sh">Kepala sekolah</label><input id="sh" name="school_headmaster" class="input" value="${esc(sc.headmaster)}"></div>
           </div>
         </div>
-        <div class="card"><h3>👥 Wali Kelas</h3>
-          <div class="grid g2">${kelasSet.map(k => `<div class="fg"><label for="w${esc(k)}">Wali kelas ${esc(k)}</label><input id="w${esc(k)}" name="wali_${esc(k)}" value="${esc(classes[k] || '')}"></div>`).join('') || '<div class="empty">Belum ada kelas.</div>'}</div>
+        <div class="card">
+          <div class="section-title">${ICON.users} Wali Kelas</div>
+          <div class="grid grid-2">
+            ${kelasSet.length
+              ? kelasSet.map(k => `<div class="field"><label for="w${esc(k)}">Wali kelas ${esc(k)}</label><input id="w${esc(k)}" name="wali_${esc(k)}" class="input" value="${esc(classes[k] || '')}" placeholder="Nama & gelar"></div>`).join('')
+              : '<p class="text-muted">Belum ada kelas.</p>'}
+          </div>
         </div>
-        <button class="btn bp" type="submit">💾 Simpan Pengaturan</button>
+        <button class="btn btn-primary" type="submit">${ICON.save} Simpan Pengaturan</button>
       </form>`;
   }
+
+  // ---------- TAB SEED ----------
   else if (tab === 'seed') {
     content = `
-      <div class="card"><h3>🌱 Data Awal</h3>
-        <p class="sub" style="margin-bottom:.9rem">Mengisi database dengan siswa kelas 4B, 4C, dan 4D beserta nilai STS 1. Hanya berjalan jika database kosong.</p>
-        <div class="alert alert-info">Akan menambahkan 68 siswa beserta nilai dan absensi.</div>
-        <button class="btn bp" onclick="doSeed(this)">🌱 Jalankan</button>
+      <div class="card">
+        <div class="section-title">${ICON.plus} Data Awal</div>
+        <p class="text-muted mb-4" style="font-size:0.875rem">Mengisi database dengan 68 siswa contoh (kelas 4B, 4C, 4D) beserta nilai & absensi STS 1. Hanya berjalan jika database kosong.</p>
+        <div class="alert alert-info">${ICON.info}<span>Akan menambahkan 68 siswa beserta nilai dan absensi.</span></div>
+        <button type="button" class="btn btn-primary" onclick="doSeed(this)">${ICON.plus} Jalankan</button>
       </div>
-      <div class="card"><h3>🗑️ Hapus Semua Data Siswa</h3>
-        <p class="sub" style="margin-bottom:.9rem">Menghapus siswa, nilai, absensi, dan catatan. Pengaturan sekolah tetap tersimpan.</p>
-        <button class="btn bd" onclick="resetData(this)">Hapus Semua Data Siswa</button>
+      <div class="card">
+        <div class="section-title" style="color:var(--error)">${ICON.trash} Hapus Semua Data Siswa</div>
+        <p class="text-muted mb-4" style="font-size:0.875rem">Menghapus siswa, nilai, absensi, dan catatan. Pengaturan sekolah tetap tersimpan.</p>
+        <button type="button" class="btn btn-danger" onclick="resetData(this)">${ICON.trash} Hapus Semua Data Siswa</button>
       </div>`;
   }
 
   return {
     html: `
-      <div class="shead"><div><h2 class="pt">Panel Guru</h2><p class="sub">Kelola nilai, siswa, dan pengaturan</p></div>
-        <button class="btn bo bsm np" onclick="doLogout()">Keluar</button></div>
-      <div class="card">${tabs}${content}</div>`,
-    after
+      <div class="page-header">
+        <div>
+          <div class="page-title">Panel Guru</div>
+          <div class="page-sub">Kelola nilai, siswa, dan pengaturan</div>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm no-print" onclick="doLogout()">${ICON.logout} Keluar</button>
+      </div>
+      <div class="card">${tabs}${content}</div>`
   };
 }
 
+// ============ ADMIN HELPERS ============
 window.filterRows = function (q, sel) {
   const s = (q || '').toLowerCase();
-  document.querySelectorAll(sel).forEach(r => { r.style.display = r.textContent.toLowerCase().includes(s) ? '' : 'none'; });
+  document.querySelectorAll(sel).forEach(r => {
+    r.style.display = r.textContent.toLowerCase().includes(s) ? '' : 'none';
+  });
 };
 
 window.livePreview = function (f) {
@@ -940,8 +2011,7 @@ window.livePreview = function (f) {
   const pn = $('pvN');
   if (!pn) return;
   pn.textContent = n ?? '—';
-  pn.className = 'sbig s' + kt.k;
-  pn.style.fontSize = '3.2rem';
+  pn.className = 'big-score s-' + kt.k;
   $('pvK').textContent = kt.label;
 };
 
@@ -953,15 +2023,17 @@ window.saveEdit = async function (ev, sid, period) {
   const buttons = [...f.querySelectorAll('button')];
   const labels = buttons.map(b => b.innerHTML);
   buttons.forEach(b => { b.disabled = true; });
-  if (btn) btn.innerHTML = '⏳ Menyimpan…';
+  if (btn) btn.innerHTML = 'Menyimpan…';
   try {
     await saveNilai(sid, period, [f.a0.value, f.a1.value, f.a2.value, f.a3.value]);
     await saveAbsen(sid, period, {
-      hadir: +f.hadir.value || 0, sakit: +f.sakit.value || 0,
-      izin: +f.izin.value || 0, alfa: +f.alfa.value || 0
+      hadir: +f.hadir.value || 0,
+      sakit: +f.sakit.value || 0,
+      izin: +f.izin.value || 0,
+      alfa: +f.alfa.value || 0
     });
     if (f.note.value.trim()) await addCatatan(sid, period, f.note.value.trim());
-    toast('✅ Tersimpan', 'ok');
+    toast('Tersimpan', 'success');
     if (goNext) {
       const all = await getStudents();
       const cur = all.find(s => s.id === sid);
@@ -972,7 +2044,7 @@ window.saveEdit = async function (ev, sid, period) {
     }
     render();
   } catch (e) {
-    toast('Gagal menyimpan: ' + friendly(e), 'err');
+    toast('Gagal menyimpan: ' + friendly(e), 'error');
     buttons.forEach((b, i) => { b.disabled = false; b.innerHTML = labels[i]; });
   }
 };
@@ -984,12 +2056,15 @@ window.addSiswa = async function (ev) {
   const nama = f.nama.value.trim().replace(/\s+/g, ' ');
   const kelas = f.kelas.value.trim().toUpperCase();
   const kode = f.kode.value.trim().toUpperCase();
-  if (!nama || !kelas || !/^[A-Z0-9-]+$/.test(kode)) { toast('Lengkapi nama, kelas, dan kode (huruf, angka, minus).', 'err'); return; }
+  if (!nama || !kelas || !/^[A-Z0-9-]+$/.test(kode)) {
+    toast('Lengkapi nama, kelas, dan kode (huruf, angka, minus).', 'error');
+    return;
+  }
   await run(btn, 'Menyimpan…', async () => {
     const ref = doc(db, 'siswa', kode);
-    if ((await getDoc(ref)).exists()) { toast('Kode akses sudah dipakai.', 'err'); return; }
+    if ((await getDoc(ref)).exists()) { toast('Kode akses sudah dipakai.', 'error'); return; }
     await setDoc(ref, { nama, kelas, access_code: kode });
-    toast('✅ Siswa ditambahkan', 'ok');
+    toast('Siswa ditambahkan', 'success');
     go('/admin/siswa');
   });
 };
@@ -1002,7 +2077,7 @@ window.editSiswa = async function (ev, sid) {
       nama: f.nama.value.trim().replace(/\s+/g, ' '),
       kelas: f.kelas.value.trim().toUpperCase()
     });
-    toast('✅ Perubahan disimpan', 'ok');
+    toast('Perubahan disimpan', 'success');
     go('/admin/siswa');
   });
 };
@@ -1016,7 +2091,7 @@ window.hapusSiswa = async function (sid, nama, btn) {
       await deleteDoc(doc(db, 'absensi', `${sid}__${p}`));
     }
     for (const n of await getCatatan(sid)) await deleteDoc(doc(db, 'catatan', n.id));
-    toast('🗑️ Siswa dihapus', 'ok');
+    toast('Siswa dihapus', 'success');
     render();
   });
 };
@@ -1027,15 +2102,18 @@ window.saveSetting = async function (ev) {
   const btn = f.querySelector('button[type="submit"]');
   await run(btn, 'Menyimpan…', async () => {
     await setDoc(doc(db, 'settings', 'main'), {
-      name: f.school_name.value.trim(), npsn: f.school_npsn.value.trim(),
-      address: f.school_address.value.trim(), logo: f.school_logo.value.trim() || '🏫',
-      year: f.school_year.value.trim(), headmaster: f.school_headmaster.value.trim()
+      name: f.school_name.value.trim(),
+      npsn: f.school_npsn.value.trim(),
+      address: f.school_address.value.trim(),
+      logo: f.school_logo.value.trim(),
+      year: f.school_year.value.trim(),
+      headmaster: f.school_headmaster.value.trim()
     }, { merge: true });
     for (const el of f.querySelectorAll('input[name^="wali_"]')) {
       const k = el.name.slice(5);
       await setDoc(doc(db, 'kelas', k), { wali: el.value.trim() }, { merge: true });
     }
-    toast('✅ Pengaturan disimpan', 'ok');
+    toast('Pengaturan disimpan', 'success');
     updateBrand(await getSchool());
   });
 };
@@ -1044,13 +2122,16 @@ window.doSeed = async function (btn) {
   if (!confirm('Jalankan data awal? Proses ini hanya berjalan jika database kosong.')) return;
   await run(btn, 'Memproses…', async () => {
     const done = await seedIfEmpty();
-    toast(done ? '✅ Data awal selesai' : '⚠️ Data sudah ada, dilewati', done ? 'ok' : 'info');
+    toast(done ? 'Data awal selesai' : 'Data sudah ada, dilewati', done ? 'success' : 'info');
     render();
   });
 };
 
 window.resetData = async function (btn) {
-  if (prompt('Ketik HAPUS (huruf kapital) untuk menghapus semua data siswa. Tindakan ini tidak bisa dibatalkan.') !== 'HAPUS') { toast('Dibatalkan.', 'info'); return; }
+  if (prompt('Ketik HAPUS untuk menghapus semua data siswa. Tindakan ini tidak bisa dibatalkan.') !== 'HAPUS') {
+    toast('Dibatalkan.', 'info');
+    return;
+  }
   await run(btn, 'Menghapus…', async () => {
     const students = await getStudents();
     for (const s of students) {
@@ -1061,56 +2142,32 @@ window.resetData = async function (btn) {
       }
       for (const n of await getCatatan(s.id)) await deleteDoc(doc(db, 'catatan', n.id));
     }
-    toast('🗑️ Semua data siswa dihapus', 'ok');
+    toast('Semua data siswa dihapus', 'success');
     render();
   });
 };
 
-window.exportCSV = async function (kelas, period, btn) {
-  await run(btn, 'Menyiapkan…', async () => {
-    const [all, p] = await Promise.all([getStudents(), loadPeriod(period)]);
-    const list = all.filter(s => s.kelas === kelas).sort((a, b) => a.nama.localeCompare(b.nama));
-    const safe = v => { const t = String(v ?? ''); return /^[=+\-@]/.test(t) ? "'" + t : t; };
-    const header = ['Kode', 'Nama', 'Kelas', ...ASPECTS, 'Nilai', 'Kategori', 'Hadir', 'Sakit', 'Izin', 'Alfa'];
-    const rows = [header];
-    for (const s of list) {
-      const a = p.nilai[s.id] || EMPTY;
-      const n = hitungNilai(a);
-      const att = p.absen[s.id] || {};
-      rows.push([s.access_code, s.nama, s.kelas, ...a, n ?? '', kategori(n).label, att.hadir || 0, att.sakit || 0, att.izin || 0, att.alfa || 0].map(safe));
-    }
-    const csv = '\ufeff' + rows.map(r => r.map(x => `"${String(x).replace(/"/g, '""')}"`).join(',')).join('\n');
-    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
-    const a = document.createElement('a');
-    a.href = url; a.download = `rekap_${kelas}_${period.replace(/\s/g, '_')}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  });
-};
-
-
 window.manualSeed = async function (btn) {
-  await run(btn, 'Memproses\u2026', async () => {
+  await run(btn, 'Memproses…', async () => {
     if (!currentUser) {
       toast('Login sebagai guru dulu untuk memuat data awal', 'info');
       setTimeout(() => go('/admin'), 700);
       return;
     }
     const done = await seedIfEmpty();
-    toast(done ? '\u2705 Data awal dimuat' : '\u26a0\ufe0f Data sudah ada', done ? 'ok' : 'info');
+    toast(done ? 'Data awal dimuat' : 'Data sudah ada', done ? 'success' : 'info');
     render();
   });
 };
 
-
-// ============ CSV IMPORT ============
+// ============ CSV UTIL ============
 function parseCSV(text) {
   const rows = [];
   let row = [], cell = '', q = false;
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
     if (q) {
-      if (ch === '"' && text[i+1] === '"') { cell += '"'; i++; }
+      if (ch === '"' && text[i + 1] === '"') { cell += '"'; i++; }
       else if (ch === '"') q = false;
       else cell += ch;
     } else {
@@ -1124,13 +2181,19 @@ function parseCSV(text) {
   if (cell || row.length) { row.push(cell); rows.push(row); }
   return rows.filter(r => r.some(x => String(x).trim()));
 }
+
 function csvDownload(filename, rows) {
-  const csv = '\ufeff' + rows.map(r => r.map(x => '"' + String(x).replace(/"/g, '""') + '"').join(',')).join('\n');
+  const csv = '\ufeff' + rows.map(r =>
+    r.map(x => '"' + String(x).replace(/"/g, '""') + '"').join(',')
+  ).join('\n');
   const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
   const a = document.createElement('a');
-  a.href = url; a.download = filename; a.click();
+  a.href = url;
+  a.download = filename;
+  a.click();
   URL.revokeObjectURL(url);
 }
+
 window.dlTemplateSiswa = function () {
   csvDownload('template_siswa.csv', [
     ['kode', 'nama', 'kelas'],
@@ -1138,25 +2201,29 @@ window.dlTemplateSiswa = function () {
     ['4B-002', 'ALMAIRA ZEA ACHMAD', '4B'],
     ['4C-001', 'ABDUL JALAL SAPUTRA', '4C']
   ]);
+  toast('Template CSV siswa terunduh', 'success');
 };
+
 window.dlTemplateNilai = function (period) {
   csvDownload('template_nilai_' + period.replace(/\s/g, '_') + '.csv', [
     ['kode', 'nama', 'kelas', 'membaca', 'menulis', 'berhitung', 'menghafal', 'hadir', 'sakit', 'izin', 'alfa'],
     ['4B-001', 'ADZKIYA RARAS MAHFUDZA', '4B', 'CL', 'KL', 'L', 'L', '20', '0', '0', '0'],
     ['4B-002', 'ALMAIRA ZEA ACHMAD', '4B', 'CL', 'CL', 'L', 'L', '19', '1', '0', '0']
   ]);
+  toast('Template CSV nilai terunduh', 'success');
 };
+
 window.importSiswa = async function (input) {
   const file = input.files && input.files[0];
   if (!file) return;
   const lbl = input.previousElementSibling;
-  const orig = lbl ? lbl.textContent : '';
+  const orig = lbl ? lbl.innerHTML : '';
   try {
     const rows = parseCSV(await file.text());
-    if (rows.length < 2) { toast('File kosong atau format salah', 'err'); return; }
+    if (rows.length < 2) { toast('File kosong atau format salah', 'error'); return; }
     const h = rows[0].map(x => x.trim().toLowerCase());
     const iK = h.indexOf('kode'), iN = h.indexOf('nama'), iC = h.indexOf('kelas');
-    if (iK < 0 || iN < 0 || iC < 0) { toast('Header harus: kode, nama, kelas', 'err'); return; }
+    if (iK < 0 || iN < 0 || iC < 0) { toast('Header harus: kode, nama, kelas', 'error'); return; }
     const items = [];
     for (let i = 1; i < rows.length; i++) {
       const r = rows[i];
@@ -1164,12 +2231,15 @@ window.importSiswa = async function (input) {
       const nama = String(r[iN] || '').trim().replace(/\s+/g, ' ');
       const kelas = String(r[iC] || '').trim().toUpperCase();
       if (!kode || !nama || !kelas) continue;
-      if (!/^[A-Z0-9-]+$/.test(kode)) { toast('Baris ' + (i+1) + ': kode "' + kode + '" tidak valid', 'err'); return; }
+      if (!/^[A-Z0-9-]+$/.test(kode)) {
+        toast('Baris ' + (i + 1) + ': kode "' + kode + '" tidak valid', 'error');
+        return;
+      }
       items.push({ kode, nama, kelas });
     }
-    if (!items.length) { toast('Tidak ada baris valid', 'err'); return; }
+    if (!items.length) { toast('Tidak ada baris valid', 'error'); return; }
     if (!confirm('Import ' + items.length + ' siswa? Kode yang sama akan ditimpa.')) return;
-    if (lbl) lbl.textContent = '⏳ Mengimpor…';
+    if (lbl) lbl.innerHTML = 'Mengimpor…';
     input.disabled = true;
     for (let i = 0; i < items.length; i += 400) {
       const b = writeBatch(db);
@@ -1178,28 +2248,29 @@ window.importSiswa = async function (input) {
       }
       await b.commit();
     }
-    toast('✅ ' + items.length + ' siswa diimpor', 'ok');
+    toast(items.length + ' siswa diimpor', 'success');
     input.value = '';
   } catch (e) {
     console.error(e);
-    toast('Gagal: ' + friendly(e), 'err');
+    toast('Gagal: ' + friendly(e), 'error');
   } finally {
     input.disabled = false;
-    if (lbl) lbl.textContent = orig;
+    if (lbl) lbl.innerHTML = orig;
     render();
   }
 };
+
 window.importNilai = async function (input, period) {
   const file = input.files && input.files[0];
   if (!file) return;
   const lbl = input.previousElementSibling;
-  const orig = lbl ? lbl.textContent : '';
+  const orig = lbl ? lbl.innerHTML : '';
   try {
     const rows = parseCSV(await file.text());
-    if (rows.length < 2) { toast('File kosong atau format salah', 'err'); return; }
+    if (rows.length < 2) { toast('File kosong atau format salah', 'error'); return; }
     const h = rows[0].map(x => x.trim().toLowerCase());
     for (const k of ['kode', 'membaca', 'menulis', 'berhitung', 'menghafal']) {
-      if (h.indexOf(k) < 0) { toast('Header "' + k + '" tidak ditemukan', 'err'); return; }
+      if (h.indexOf(k) < 0) { toast('Header "' + k + '" tidak ditemukan', 'error'); return; }
     }
     const iK = h.indexOf('kode'), iN = h.indexOf('nama'), iC = h.indexOf('kelas');
     const iA = ['membaca', 'menulis', 'berhitung', 'menghafal'].map(k => h.indexOf(k));
@@ -1216,19 +2287,19 @@ window.importNilai = async function (input, period) {
       const att = {
         hadir: iH >= 0 ? (+r[iH] || 0) : 0,
         sakit: iS >= 0 ? (+r[iS] || 0) : 0,
-        izin:  iI >= 0 ? (+r[iI] || 0) : 0,
-        alfa:  iF >= 0 ? (+r[iF] || 0) : 0
+        izin: iI >= 0 ? (+r[iI] || 0) : 0,
+        alfa: iF >= 0 ? (+r[iF] || 0) : 0
       };
       items.push({
         kode,
-        nama:  iN >= 0 ? String(r[iN] || '').trim() : '',
+        nama: iN >= 0 ? String(r[iN] || '').trim() : '',
         kelas: iC >= 0 ? String(r[iC] || '').trim().toUpperCase() : '',
         a, att
       });
     }
-    if (!items.length) { toast('Tidak ada baris valid', 'err'); return; }
+    if (!items.length) { toast('Tidak ada baris valid', 'error'); return; }
     if (!confirm('Import ' + items.length + ' baris untuk periode ' + period + '?')) return;
-    if (lbl) lbl.textContent = '⏳ Mengimpor…';
+    if (lbl) lbl.innerHTML = 'Mengimpor…';
     input.disabled = true;
     for (let i = 0; i < items.length; i += 200) {
       const b = writeBatch(db);
@@ -1237,37 +2308,61 @@ window.importNilai = async function (input, period) {
           siswaId: it.kode, period,
           a0: it.a[0], a1: it.a[1], a2: it.a[2], a3: it.a[3]
         });
-        if (it.att.hadir || it.att.sakit || it.att.izin || it.att.alfa) {
-          b.set(doc(db, 'absensi', it.kode + '__' + period), {
-            siswaId: it.kode, period, ...it.att
-          });
-        }
+        b.set(doc(db, 'absensi', it.kode + '__' + period), {
+          siswaId: it.kode, period, ...it.att
+        });
       }
       await b.commit();
     }
-    toast('✅ Nilai ' + items.length + ' siswa diimpor untuk ' + period, 'ok');
+    toast('Nilai ' + items.length + ' siswa diimpor untuk ' + period, 'success');
     input.value = '';
   } catch (e) {
     console.error(e);
-    toast('Gagal: ' + friendly(e), 'err');
+    toast('Gagal: ' + friendly(e), 'error');
   } finally {
     input.disabled = false;
-    if (lbl) lbl.textContent = orig;
+    if (lbl) lbl.innerHTML = orig;
     render();
   }
 };
 
+window.exportCSV = async function (kelas, period, btn) {
+  await run(btn, 'Menyiapkan…', async () => {
+    const [all, p] = await Promise.all([getStudents(), loadPeriod(period)]);
+    const list = all.filter(s => s.kelas === kelas).sort((a, b) => a.nama.localeCompare(b.nama));
+    const safe = v => { const t = String(v ?? ''); return /^[=+\-@]/.test(t) ? "'" + t : t; };
+    const header = ['Kode', 'Nama', 'Kelas', ...ASPECTS, 'Nilai', 'Kategori', 'Hadir', 'Sakit', 'Izin', 'Alfa'];
+    const rows = [header];
+    for (const s of list) {
+      const a = p.nilai[s.id] || EMPTY;
+      const n = hitungNilai(a);
+      const att = p.absen[s.id] || {};
+      rows.push([s.access_code, s.nama, s.kelas, ...a, n ?? '', kategori(n).label,
+        att.hadir || 0, att.sakit || 0, att.izin || 0, att.alfa || 0].map(safe));
+    }
+    const csv = '\ufeff' + rows.map(r =>
+      r.map(x => '"' + String(x).replace(/"/g, '""') + '"').join(',')
+    ).join('\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `rekap_${kelas}_${period.replace(/\s/g, '_')}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Rekap diexport', 'success');
+  });
+};
 
-// ============ EXCEL IMPORT/EXPORT (ExcelJS) ============
+// ============ EXCEL (ExcelJS) ============
 window.dlExcelTemplate = async function (period) {
   const sel = document.getElementById('xlsKelas');
   const kelas = sel && sel.value;
-  if (!kelas) { toast('Pilih kelas dulu', 'err'); return; }
-  if (!window.ExcelJS) { toast('Library Excel belum termuat, coba refresh', 'err'); return; }
+  if (!kelas) { toast('Pilih kelas dulu', 'error'); return; }
+  if (!window.ExcelJS) { toast('Library Excel belum termuat, refresh halaman', 'error'); return; }
 
   const students = await getStudents();
   const list = students.filter(s => s.kelas === kelas).sort((a, b) => a.nama.localeCompare(b.nama));
-  if (!list.length) { toast('Tidak ada siswa di kelas ' + kelas, 'err'); return; }
+  if (!list.length) { toast('Tidak ada siswa di kelas ' + kelas, 'error'); return; }
 
   const existing = await loadPeriod(period);
   const wb = new ExcelJS.Workbook();
@@ -1278,17 +2373,17 @@ window.dlExcelTemplate = async function (period) {
   });
 
   ws.columns = [
-    { header: 'kode',     key: 'kode',     width: 12 },
-    { header: 'nama',     key: 'nama',     width: 38 },
-    { header: 'kelas',    key: 'kelas',    width: 8  },
-    { header: 'membaca',  key: 'membaca',  width: 11 },
-    { header: 'menulis',  key: 'menulis',  width: 11 },
-    { header: 'berhitung',key: 'berhitung',width: 11 },
-    { header: 'menghafal',key: 'menghafal',width: 11 },
-    { header: 'hadir',    key: 'hadir',    width: 8  },
-    { header: 'sakit',    key: 'sakit',    width: 8  },
-    { header: 'izin',     key: 'izin',     width: 8  },
-    { header: 'alfa',     key: 'alfa',     width: 8  }
+    { header: 'kode',      key: 'kode',      width: 12 },
+    { header: 'nama',      key: 'nama',      width: 38 },
+    { header: 'kelas',     key: 'kelas',     width: 8  },
+    { header: 'membaca',   key: 'membaca',   width: 11 },
+    { header: 'menulis',   key: 'menulis',   width: 11 },
+    { header: 'berhitung', key: 'berhitung', width: 11 },
+    { header: 'menghafal', key: 'menghafal', width: 11 },
+    { header: 'hadir',     key: 'hadir',     width: 8  },
+    { header: 'sakit',     key: 'sakit',     width: 8  },
+    { header: 'izin',      key: 'izin',      width: 8  },
+    { header: 'alfa',      key: 'alfa',      width: 8  }
   ];
 
   const hRow = ws.getRow(1);
@@ -1296,17 +2391,17 @@ window.dlExcelTemplate = async function (period) {
   hRow.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 11 };
   hRow.alignment = { vertical: 'middle', horizontal: 'center' };
   hRow.eachCell(c => {
-    c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E40AF' } };
+    c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0078D4' } };
     c.border = {
-      top: { style: 'thin', color: { argb: 'FF1E40AF' } },
-      left: { style: 'thin', color: { argb: 'FF1E40AF' } },
-      bottom: { style: 'thin', color: { argb: 'FF1E40AF' } },
-      right: { style: 'thin', color: { argb: 'FF1E40AF' } }
+      top:    { style: 'thin', color: { argb: 'FF0078D4' } },
+      left:   { style: 'thin', color: { argb: 'FF0078D4' } },
+      bottom: { style: 'thin', color: { argb: 'FF0078D4' } },
+      right:  { style: 'thin', color: { argb: 'FF0078D4' } }
     };
   });
 
-  const LOCK_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } };
-  list.forEach((s) => {
+  const LOCK_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF2F2F2' } };
+  list.forEach(s => {
     const a = existing.nilai[s.id] || ['', '', '', ''];
     const at = existing.absen[s.id] || { hadir: 0, sakit: 0, izin: 0, alfa: 0 };
     const row = ws.addRow({
@@ -1322,30 +2417,26 @@ window.dlExcelTemplate = async function (period) {
       izin: at.izin || 0,
       alfa: at.alfa || 0
     });
-
     ['kode', 'nama', 'kelas'].forEach(k => {
       const cell = row.getCell(k);
       cell.fill = LOCK_FILL;
-      cell.font = { color: { argb: 'FF64748B' } };
+      cell.font = { color: { argb: 'FF767676' } };
       cell.protection = { locked: true };
     });
-
     row.eachCell(c => {
       c.border = {
-        top: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-        left: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-        bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-        right: { style: 'thin', color: { argb: 'FFE2E8F0' } }
+        top:    { style: 'thin', color: { argb: 'FFE1E1E1' } },
+        left:   { style: 'thin', color: { argb: 'FFE1E1E1' } },
+        bottom: { style: 'thin', color: { argb: 'FFE1E1E1' } },
+        right:  { style: 'thin', color: { argb: 'FFE1E1E1' } }
       };
       c.alignment = { vertical: 'middle' };
     });
   });
 
   const maxRow = list.length + 1;
-
-  const aspectCols = [4, 5, 6, 7];
   for (let r = 2; r <= maxRow; r++) {
-    aspectCols.forEach(col => {
+    [4, 5, 6, 7].forEach(col => {
       const cell = ws.getCell(r, col);
       cell.dataValidation = {
         type: 'list',
@@ -1358,7 +2449,6 @@ window.dlExcelTemplate = async function (period) {
       };
       cell.alignment = { horizontal: 'center', vertical: 'middle' };
     });
-
     [8, 9, 10, 11].forEach(col => {
       const cell = ws.getCell(r, col);
       cell.dataValidation = {
@@ -1377,11 +2467,11 @@ window.dlExcelTemplate = async function (period) {
 
   const noteRow = maxRow + 2;
   ws.getCell('A' + noteRow).value = 'PETUNJUK:';
-  ws.getCell('A' + noteRow).font = { bold: true, color: { argb: 'FF1E40AF' } };
-  ws.getCell('A' + (noteRow + 1)).value = '• Kolom membaca/menulis/berhitung/menghafal — pilih L / CL / KL dari dropdown.';
-  ws.getCell('A' + (noteRow + 2)).value = '• Kolom hadir/sakit/izin/alfa — isi angka (jumlah hari).';
-  ws.getCell('A' + (noteRow + 3)).value = '• JANGAN ubah kolom kode / nama / kelas.';
-  ws.getCell('A' + (noteRow + 4)).value = '• Setelah selesai: simpan sebagai .xlsx lalu upload lewat tab Import.';
+  ws.getCell('A' + noteRow).font = { bold: true, color: { argb: 'FF0078D4' } };
+  ws.getCell('A' + (noteRow + 1)).value = 'Kolom membaca/menulis/berhitung/menghafal - pilih L / CL / KL dari dropdown.';
+  ws.getCell('A' + (noteRow + 2)).value = 'Kolom hadir/sakit/izin/alfa - isi angka (jumlah hari).';
+  ws.getCell('A' + (noteRow + 3)).value = 'JANGAN ubah kolom kode / nama / kelas.';
+  ws.getCell('A' + (noteRow + 4)).value = 'Setelah selesai: simpan sebagai .xlsx lalu upload lewat tab Import.';
 
   ws.autoFilter = { from: 'A1', to: 'K1' };
 
@@ -1393,7 +2483,7 @@ window.dlExcelTemplate = async function (period) {
   a.download = `nilai_${kelas}_${period.replace(/\s/g, '')}.xlsx`;
   a.click();
   URL.revokeObjectURL(url);
-  toast('📊 Template Excel terunduh', 'ok');
+  toast('Template Excel terunduh', 'success');
 };
 
 async function parseXLSX(file) {
@@ -1402,7 +2492,7 @@ async function parseXLSX(file) {
   await wb.xlsx.load(buf);
   const ws = wb.worksheets[0];
   const rows = [];
-  ws.eachRow({ includeEmpty: false }, (row) => {
+  ws.eachRow({ includeEmpty: false }, row => {
     const values = row.values;
     rows.push(values.slice(1).map(v => {
       if (v === null || v === undefined) return '';
@@ -1418,18 +2508,18 @@ window.importExcel = async function (input, period) {
   const file = input.files && input.files[0];
   if (!file) return;
   const lbl = input.previousElementSibling;
-  const orig = lbl ? lbl.textContent : '';
+  const orig = lbl ? lbl.innerHTML : '';
   try {
-    if (!window.ExcelJS) { toast('Library Excel belum termuat, refresh', 'err'); return; }
-    if (lbl) lbl.textContent = '⏳ Membaca…';
+    if (!window.ExcelJS) { toast('Library Excel belum termuat, refresh', 'error'); return; }
+    if (lbl) lbl.innerHTML = 'Membaca…';
     input.disabled = true;
 
     const rows = await parseXLSX(file);
-    if (rows.length < 2) { toast('File kosong', 'err'); return; }
+    if (rows.length < 2) { toast('File kosong', 'error'); return; }
 
     const h = rows[0].map(x => String(x).trim().toLowerCase());
     for (const k of ['kode', 'membaca', 'menulis', 'berhitung', 'menghafal']) {
-      if (h.indexOf(k) < 0) { toast('Header "' + k + '" tidak ditemukan', 'err'); return; }
+      if (h.indexOf(k) < 0) { toast('Header "' + k + '" tidak ditemukan', 'error'); return; }
     }
     const iK = h.indexOf('kode');
     const iN = h.indexOf('nama');
@@ -1442,7 +2532,7 @@ window.importExcel = async function (input, period) {
       const r = rows[i];
       const kode = String(r[iK] || '').trim().toUpperCase();
       if (!kode) continue;
-      if (/^petunjuk/i.test(kode) || kode.startsWith('•')) continue;
+      if (/^petunjuk/i.test(kode) || kode.startsWith('-')) continue;
       if (!/^[A-Z0-9-]+$/.test(kode)) continue;
 
       const a = iA.map(idx => {
@@ -1455,13 +2545,18 @@ window.importExcel = async function (input, period) {
         izin:  iI >= 0 ? Math.max(0, +r[iI] || 0) : 0,
         alfa:  iF >= 0 ? Math.max(0, +r[iF] || 0) : 0
       };
-      items.push({ kode, nama: iN >= 0 ? String(r[iN] || '').trim() : '', kelas: iC >= 0 ? String(r[iC] || '').trim().toUpperCase() : '', a, att });
+      items.push({
+        kode,
+        nama: iN >= 0 ? String(r[iN] || '').trim() : '',
+        kelas: iC >= 0 ? String(r[iC] || '').trim().toUpperCase() : '',
+        a, att
+      });
     }
 
-    if (!items.length) { toast('Tidak ada baris valid', 'err'); return; }
+    if (!items.length) { toast('Tidak ada baris valid', 'error'); return; }
     if (!confirm(`Import ${items.length} siswa untuk ${period}?`)) return;
 
-    if (lbl) lbl.textContent = `⏳ Import ${items.length}…`;
+    if (lbl) lbl.innerHTML = `Import ${items.length}…`;
     for (let i = 0; i < items.length; i += 200) {
       const b = writeBatch(db);
       for (const it of items.slice(i, i + 200)) {
@@ -1475,49 +2570,83 @@ window.importExcel = async function (input, period) {
       }
       await b.commit();
     }
-    toast(`✅ ${items.length} nilai diimpor`, 'ok');
+    toast(`${items.length} nilai diimpor`, 'success');
     input.value = '';
   } catch (e) {
     console.error(e);
-    toast('Gagal: ' + friendly(e), 'err');
+    toast('Gagal: ' + friendly(e), 'error');
   } finally {
     input.disabled = false;
-    if (lbl) lbl.textContent = orig;
+    if (lbl) lbl.innerHTML = orig;
     render();
   }
 };
 
-// ============ TEMA & BOOT ============
+// ============ TEMA ============
 window.toggleTheme = function () {
   const h = document.documentElement;
   const next = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   h.setAttribute('data-theme', next);
   localStorage.setItem('theme', next);
-  $('tbtn').textContent = next === 'dark' ? '☀' : '🌙';
+  updateThemeIcon(next);
   render();
 };
 
-function updateBrand(sc) {
-  $('blogo').textContent = sc.logo || '🏫';
-  $('bname').textContent = sc.name;
-  $('binfo').textContent = [sc.npsn && `NPSN ${sc.npsn}`, sc.year && `T.A. ${sc.year}`].filter(Boolean).join(' · ');
-  $('fname').textContent = [sc.name, sc.address].filter(Boolean).join(' · ');
-  document.title = `${sc.name} · Info Walimurid`;
+function updateThemeIcon(theme) {
+  const ico = $('theme-icon');
+  if (!ico) return;
+  if (theme === 'dark') {
+    ico.innerHTML = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>';
+  } else {
+    ico.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  }
 }
 
+// ============ BRAND ============
+function updateBrand(sc) {
+  const logo = $('brand-logo');
+  const name = $('brand-name');
+  const info = $('brand-info');
+  const fname = $('footer-name');
+  if (logo && sc.logo) logo.innerHTML = `<span style="font-size:1.125rem">${esc(sc.logo)}</span>`;
+  if (name) name.textContent = sc.name;
+  if (info) {
+    const parts = [];
+    if (sc.npsn) parts.push('NPSN ' + sc.npsn);
+    if (sc.year) parts.push('T.A. ' + sc.year);
+    info.textContent = parts.join(' · ');
+  }
+  if (fname) fname.textContent = [sc.name, sc.address].filter(Boolean).join(' · ');
+  document.title = sc.name + ' · Info Walimurid';
+}
+
+// ============ BOOT ============
 async function boot() {
   const th = localStorage.getItem('theme') || 'light';
   document.documentElement.setAttribute('data-theme', th);
-  $('tbtn').textContent = th === 'dark' ? '☀' : '🌙';
-  $('hdr').style.display = '';
-  $('ftr').style.display = '';
-  $('loading').classList.add('hide');
-  try { updateBrand(await getSchool()); } catch (e) { console.warn('brand', e); }
+  updateThemeIcon(th);
+
+  const hdr = $('app-header'), ftr = $('app-footer'), load = $('loading-overlay');
+  if (hdr) hdr.style.display = '';
+  if (ftr) ftr.style.display = '';
+
+  try { updateBrand(await getSchool()); }
+  catch (e) { console.warn('brand', e); }
+
+  if (load) load.classList.add('hidden');
+
   window.addEventListener('hashchange', render);
-  window.addEventListener('online', () => toast('Kembali online', 'ok'));
-  window.addEventListener('offline', () => toast('Sedang offline. Menampilkan data tersimpan.', 'info'));
+  window.addEventListener('online',  () => toast('Kembali online', 'success'));
+  window.addEventListener('offline', () => toast('Offline. Menampilkan data tersimpan.', 'info'));
+
+  // Service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
   await render();
 }
+
 boot();
 </script>
 </body>
