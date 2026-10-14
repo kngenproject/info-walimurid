@@ -1,26 +1,56 @@
-# 📚 Info Walimurid - MIT Al Falah
+# 📚 Info Walimurid — MIT Al Falah
 
-Sistem Informasi Perkembangan Siswa berbasis Web Statis yang terintegrasi langsung dengan Firebase Firestore.
+Sistem Informasi Perkembangan Siswa berbasis web statis, terintegrasi Firebase Firestore.
 
-## 🌟 Fitur Utama
-- **Akses Tanpa Login untuk Walimurid**: Cari nama anak atau pilih kelas secara instan.
-- **Monitoring Nilai & Absensi**: Menampilkan grafik perkembangan nilai, kehadiran, serta rekomendasi guru.
-- **Panel Guru**: Kelola data siswa, input nilai, dan cetak laporan.
-- **Progressive Web App (PWA)**: Dapat diinstal langsung di layar utama smartphone.
-- **Simpan ke Favorit & QR Code**: Memudahkan walimurid mengakses profil anak.
+## 🌟 Fitur
 
-## 🚀 Cara Menjalankan Lokal
-1. Buat berkas `.env` dari contoh `.env.example`:
-   ```bash
-   cp .env.example .env
+**Walimurid (tanpa login):**
+- Cari nama anak / pilih kelas
+- Nilai 4 aspek (Membaca, Menulis, Berhitung, Menghafal)
+- Absensi, grafik tren, catatan guru
+- Cetak, share WhatsApp, favorit
 
-Isi kredensial Firebase di .env.
-Generate konfigurasi JS:
-bash generate-config.sh
+**Guru (login):**
+- Input nilai manual per siswa
+- Import CSV & Excel (.xlsx dropdown + validasi)
+- Export CSV per kelas
+- Kelola siswa, atur identitas sekolah
+- Seed data awal 68 siswa contoh
 
-Jalankan server lokal:
-python -m http.server 8000
+**Teknis:**
+- PWA, offline-first, auto-seed, force server fetch
 
-Buka http://localhost:8000 di browser.
-🌐 Deploy ke GitHub Pages
-​Cukup upload seluruh berkas proyek ke repositori GitHub, lalu aktifkan GitHub Pages di menu Settings > Pages repositori Anda.
+## 🚀 Menjalankan Lokal
+
+1. Clone repo & masuk folder
+2. `cp .env.example .env` lalu isi kredensial Firebase
+3. `bash generate-config.sh`
+4. `python3 -m http.server 8000`
+5. Buka http://localhost:8000
+
+## 🌐 Deploy GitHub Pages
+
+1. Push semua file
+2. `.env` & `config.js` tidak ikut ter-push (sudah di-`.gitignore`)
+3. Untuk Pages: commit `config.js` manual ke `gh-pages`, atau pakai GitHub Actions secrets
+4. Aktifkan di Settings → Pages
+
+## 🔐 Firestore Rules
+
+Wajib di-publish ke Firebase Console:
+1. Buka https://console.firebase.google.com/project/NAMA-PROJECT/firestore/rules
+2. Paste isi `firestore.rules`
+3. Klik Publish
+
+- **Publik baca** — siswa, nilai, absensi, catatan, kelas, settings
+- **Guru tulis** — semua koleksi (login Firebase Auth)
+
+## 📖 Dokumentasi
+
+- `PANDUAN_GURU.md` — cara mengisi nilai
+- `DATA_MODEL.md` — struktur Firestore
+- `templates/` — contoh CSV
+
+## 📄 Lisensi
+
+MIT — lihat `LICENSE`.

@@ -1,6 +1,17 @@
-#!/usr/bin/env bash
-if [ ! -f .env ]; then echo "❌ File .env tidak ditemukan. Salin dari .env.example"; exit 1; fi
-# Load .env dan generate config.js
+#!/data/data/com.termux/files/usr/bin/bash
+# Generate config.js dari .env
+# Jalankan: bash generate-config.sh
+
+set -e
+cd "$(dirname "$0")"
+
+if [ ! -f .env ]; then
+  echo "❌ File .env tidak ditemukan."
+  echo "   Salin dulu: cp .env.example .env"
+  echo "   Lalu isi kredensial Firebase Anda."
+  exit 1
+fi
+
 set -a
 source .env
 set +a

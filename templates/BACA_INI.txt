@@ -1,0 +1,24 @@
+TEMPLATE IMPORT — INFO WALIMURID
+=================================
+
+File di folder ini:
+- siswa.csv   → contoh import siswa baru
+- nilai.csv   → contoh import nilai
+
+Cara pakai:
+1. Buka .csv di Excel / Google Sheets
+2. Jangan ubah baris pertama (header)
+3. Isi mulai baris kedua
+4. Kolom "kode" WAJIB & tidak boleh diubah
+5. Simpan sebagai CSV UTF-8
+6. Upload lewat Panel Guru > tab Import
+
+Kode nilai:
+L  = Lancar          (90)
+CL = Cukup Lancar    (80)
+KL = Kurang Lancar   (70)
+(kosong) = belum dinilai
+
+Cara lebih mudah:
+Gunakan template Excel (.xlsx) di Panel Guru > tab Import
+— sudah ada dropdown & validasi otomatis.

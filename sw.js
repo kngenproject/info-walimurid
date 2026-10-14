@@ -1,7 +1,8 @@
-const CACHE = 'walimurid-v2';
+const CACHE = 'walimurid-v3';
 const PRECACHE = [
   './', './index.html', './config.js', './manifest.json',
   'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js',
+  'https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js',
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'
 ];
 
